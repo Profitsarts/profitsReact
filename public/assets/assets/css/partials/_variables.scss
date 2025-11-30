@@ -1,0 +1,78 @@
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3 / 2), only screen and (min-device-pixel-ratio: 1.5), only screen and (min-resolution: 192dpi) {
+  /* Style Rules */
+}
+$black: #0D080C;
+$white: #f8f8f8;
+$primary: #323A45;
+$secondary:#F61067;
+$tertiary: #3AAFB9;
+$perla: #E1E1E1; 
+$gris: #7c7b79;
+$gris-dot: rgb(187, 187, 187);
+$gris-JH: #EDEDED;
+
+//GRADIENTS//
+$grad01: linear-gradient(13deg, lighten($tertiary, 35%), lighten(#83a4d4, 25%));
+//FONTS//
+$times: TimesNewRoman, "Times New Roman", Times, Baskerville, Georgia, serif;
+$open: "Open Sans", sans-serif;
+$museo: "Museo Slab";
+$avant: "ITCAVANTGARDEGOTHICLTMEDIUM";
+@mixin transition($transition-property, $transition-time, $method) {
+  -webkit-transition: $transition-property $transition-time $method;
+  -moz-transition: $transition-property $transition-time $method;
+  -ms-transition: $transition-property $transition-time $method;
+  -o-transition: $transition-property $transition-time $method;
+  transition: $transition-property $transition-time $method;
+}
+//Mixins
+@mixin breakpoint($point) {
+  @if $point == xl {
+    @media (min-width: 1200px) {
+      @content;
+    }
+  } @else if $point == lg {
+    @media (min-width: 992px) and (max-width: 1199px) {
+      @content;
+    }
+  } @else if $point == md {
+    @media (min-width: 768px) and (max-width: 991px) {
+      @content;
+    }
+  } @else if $point == sm {
+    @media (min-width: 576px) and (max-width: 767px) {
+      @content;
+    }
+  } @else if $point == xs {
+    @media (min-width: 320px) and (max-width: 575px) {
+      @content;
+    }
+  }
+}
+
+
+@mixin spacing($property, $size) {
+  @if $property == mt {
+    @if $size == 1 {
+      .mt-1 { margin-top: 1rem !important; }
+    } @else if $size == 1.5 {
+      .mt-1_5 { margin-top: 1.5rem !important; }
+    } @else if $size == 2 {
+      .mt-2 { margin-top: 2rem !important; }
+    } @else if $size == 3 {
+      .mt-3 { margin-top: 3rem !important; }
+    }
+  } @else if $property == mb {
+    @if $size == 1 {
+      .mb-1 { margin-bottom: 1rem !important; }
+    } @else if $size == 1.5 {
+      .mb-1_5 { margin-bottom: 1.5rem !important; }
+    } @else if $size == 2 {
+      .mb-2 { margin-bottom: 2rem !important; }
+    } @else if $size == 3 {
+      .mb-3 { margin-bottom: 3rem !important; }
+    }
+  }
+}
+
+

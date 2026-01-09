@@ -166,7 +166,7 @@ export const projects = [
       "design",
       "illustration"
     ],
-    "thumbnail": "assets/img/portfolio/thumb/lecture-THMB.jpg",
+    "thumbnail": "/assets/img/portfolio/thumb/Lecture-THMB.jpg",
     "images": [
       {
         "name": "Lecture-01-FULL.jpg",

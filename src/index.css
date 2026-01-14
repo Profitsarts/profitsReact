@@ -4,24 +4,46 @@
 
 @layer base {
     body {
-        @apply bg-neutral-950 text-white antialiased;
-        font-family: 'Inter', sans-serif;
+        @apply antialiased;
+        background-color: #f8f8f8;
+        color: #323a45;
+        font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: 'Museo Slab', serif;
+        color: #323a45;
+        @apply font-normal;
+    }
+
+    a {
+        @apply transition-colors;
+    }
+
+    a:hover {
+        color: #f61067;
     }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar matching Jekyll/Modern aesthetic */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    @apply bg-neutral-900;
+    background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-neutral-700 rounded-full;
+    background: #323a45;
+    border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    @apply bg-neutral-600;
+    background: #f61067;
 }

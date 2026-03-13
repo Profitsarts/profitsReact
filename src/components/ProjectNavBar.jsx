@@ -33,7 +33,8 @@ const ProjectNavBar = ({ prevProject, nextProject, isFirst, isLast }) => {
                     {/* Center Group: Grid/Home */}
                     <div className="flex-shrink-0 mx-4">
                         <Link
-                            to="/#see"
+                            to="/"
+                            state={{ scrollTo: 'see' }}
                             className="w-10 h-10 flex items-center justify-center border border-[#323a45] rounded-[2px] hover:bg-[#323a45] hover:text-[#f8f8f8] transition-all group"
                             title="Back to Portfolio"
                         >

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { projects } from '../data/projects_v2';
 import ProjectCard from '../components/ProjectCard';
+import HeroHeader from '../components/HeroHeader';
 import HeroCarousel from '../components/HeroCarousel';
 
 const FILTERS = [
@@ -28,6 +29,9 @@ const Portfolio = () => {
 
     return (
         <div>
+            {/* Hero Header */}
+            <HeroHeader />
+
             {/* Hero Carousel */}
             <HeroCarousel />
 
@@ -102,7 +106,7 @@ const Portfolio = () => {
                 <div className="container mx-auto px-6 py-20">
                     <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-12">
                         {/* Contact Details (span3) */}
-                        <div className="md:col-span-3">
+                        <div className="md:col-span-3 md:pt-[5rem]">
                             <div className="contact-details border-y-2 border-[#323a45] py-6 text-center md:text-left">
                                 <h4 className="text-sm font-bold uppercase tracking-wider mb-6">Contact Details</h4>
                                 <h3 className="text-[1.3rem] mb-2">Profits Arts'n'Grafx</h3>

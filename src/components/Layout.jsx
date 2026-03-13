@@ -24,11 +24,12 @@ const Layout = () => {
                 const element = document.getElementById(targetId);
                 if (element) {
                     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    // Clear state to avoid re-scrolling
-                    window.history.replaceState({ ...location.state, scrollTo: undefined }, '');
                 }
-            }, 200);
+            }, 100);
             return () => clearTimeout(timer);
+        } else if (location.pathname === '/' && !location.state) {
+            // Scroll to top when navigating to home without specific scroll state
+            window.scrollTo({ top: 0, behavior: 'auto' });
         }
     }, [location.pathname, location.state]);
 
@@ -50,22 +51,22 @@ const Layout = () => {
         <div className="min-h-screen flex flex-col bg-[#f8f8f8]">
             {/* Header */}
             <header className="bg-[#f8f8f8]">
-                <div className="container mx-auto px-6 py-6 flex flex-col items-center">
+                <div className="container mx-auto px-6 py-4 flex flex-col items-center">
                     {/* P Logo */}
                     <Link
                         to="/"
-                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                        className="mb-4 hover:opacity-80 transition-opacity"
+                        state={null}
+                        className="mb-2 hover:opacity-80 transition-opacity"
                     >
                         <img
                             src="/assets/img/logos/profits_logo.svg"
                             alt="Profits Arts"
-                            className="h-12 w-auto"
+                            className="h-10 w-auto"
                         />
                     </Link>
 
                     {/* Navigation: SEE | TOUCH | HEAR */}
-                    <nav className="mt-8 flex items-center justify-center space-x-12 font-['Museo_Slab'] text-[1.4rem] tracking-[-0.2px] uppercase">
+                    <nav className="mt-4 flex items-center justify-center space-x-12 font-['Museo_Slab'] text-[1.4rem] tracking-[-0.2px] uppercase">
                         <Link
                             to="/"
                             state={{ scrollTo: 'see' }}
@@ -96,18 +97,19 @@ const Layout = () => {
 
             {/* Main Content */}
             <main className="flex-grow">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                     <motion.div
                         key={location.pathname}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
                     >
                         <Outlet />
                     </motion.div>
                 </AnimatePresence>
             </main>
+
 
             {/* Footer - Dark theme */}
             <footer className="bg-neutral-950 border-t border-neutral-800 py-8 text-center text-neutral-500 text-sm">

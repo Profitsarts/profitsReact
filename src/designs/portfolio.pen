@@ -1,0 +1,265 @@
+{
+  "version": "2.8",
+  "children": [
+    {
+      "type": "frame",
+      "id": "kotqd",
+      "x": 0,
+      "y": 0,
+      "name": "Portfolio Homepage",
+      "width": 1440,
+      "height": 2500,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "3c6Kz",
+          "name": "Navbar",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            40,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "bN8H1",
+              "name": "logo",
+              "fill": "$brand-dark",
+              "content": "P",
+              "fontFamily": "Inter",
+              "fontSize": 32,
+              "fontWeight": "bold"
+            },
+            {
+              "type": "frame",
+              "id": "9RruE",
+              "name": "navLinks",
+              "gap": 40,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "qApGE",
+                  "name": "L1",
+                  "fill": "$brand-dark",
+                  "content": "SEE",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "medium"
+                },
+                {
+                  "type": "text",
+                  "id": "mu2Jx",
+                  "name": "L2",
+                  "fill": "$brand-dark",
+                  "content": "TOUCH",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "medium"
+                },
+                {
+                  "type": "text",
+                  "id": "s15VS",
+                  "name": "L3",
+                  "fill": "$brand-dark",
+                  "content": "HEAR",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "medium"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "6me6x",
+          "name": "Hero",
+          "width": "fill_container",
+          "gap": 80,
+          "padding": [
+            100,
+            120
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "TKusX",
+              "name": "profileCol",
+              "width": 300,
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "zc9XX",
+                  "name": "avatar",
+                  "width": 200,
+                  "height": 240,
+                  "fill": "#E8E8E8",
+                  "cornerRadius": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "TUXFU",
+                      "width": 48,
+                      "height": 48,
+                      "iconFontName": "user",
+                      "iconFontFamily": "lucide",
+                      "fill": "$brand-dark"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "BPmKp",
+                  "name": "name",
+                  "fill": "$brand-dark",
+                  "content": "I'm Luis Sierra",
+                  "fontFamily": "Inter",
+                  "fontSize": 32,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "BXYrb",
+                  "name": "bio",
+                  "fill": "$brand-dark",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Digital Product Designer & Design Systems Owner. Specialized in Enterprise B2B SaaS, Backoffice & Operations.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ts3wx",
+              "name": "valueCol",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 32,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "6PdbS",
+                  "name": "headline",
+                  "fill": "$brand-dark",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Orchestrating scalable design systems for data-dense, Enterprise B2B products.",
+                  "lineHeight": 1.1,
+                  "fontFamily": "Inter",
+                  "fontSize": 56,
+                  "fontWeight": "bold"
+                },
+                {
+                  "type": "text",
+                  "id": "mziE7",
+                  "name": "subHeadline",
+                  "fill": "$brand-dark",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "I specialize in designing complex, industrial interfaces where clarity is critical. Beyond the pixels, I drive DesignOps processes—establishing governance, defining metrics, and leading cross-functional orchestration to ensure design and engineering operate as one.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "FBGrg",
+                  "name": "btnRow",
+                  "gap": 20,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "sqyyw",
+                      "name": "talkBtn",
+                      "fill": "$brand-dark",
+                      "cornerRadius": 4,
+                      "padding": [
+                        16,
+                        32
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "3l66v",
+                          "fill": "$font-white",
+                          "content": "LET'S TALK",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "bold"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "kDZZL",
+                      "name": "exploreBtn",
+                      "cornerRadius": 4,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "$brand-dark"
+                      },
+                      "padding": [
+                        16,
+                        32
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "8jPlL",
+                          "fill": "$brand-dark",
+                          "content": "SEE ↓",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "bold"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "bg": {
+      "type": "color",
+      "value": "#fcfcfc"
+    },
+    "brand-accent": {
+      "type": "color",
+      "value": "#f61067"
+    },
+    "brand-dark": {
+      "type": "color",
+      "value": "#323a45"
+    },
+    "font-primary": {
+      "type": "color",
+      "value": "#323a45"
+    },
+    "font-white": {
+      "type": "color",
+      "value": "#f8f8f8"
+    }
+  }
+}

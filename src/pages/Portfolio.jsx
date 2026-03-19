@@ -24,8 +24,8 @@ const Portfolio = () => {
         return projects.filter(project => project.tags.includes(activeFilter));
     }, [activeFilter]);
 
-    // First 7 projects for Case Studies
-    const caseStudies = projects.slice(0, 7);
+    // First 8 projects for Case Studies
+    const caseStudies = projects.slice(0, 8);
 
     return (
         <div>

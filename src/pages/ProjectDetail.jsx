@@ -81,16 +81,16 @@ const ProjectDetail = () => {
                 }
             `}</style>
 
-            {/* Sticky Project Navigation Bar */}
-            <ProjectNavBar
-                prevProject={prevProject}
-                nextProject={nextProject}
-                isFirst={isFirst}
-                isLast={isLast}
-            />
+            {/* Wrapper for Aligned Navigation and Content */}
+            <div className="max-w-5xl mx-auto px-6">
+                <ProjectNavBar
+                    prevProject={prevProject}
+                    nextProject={nextProject}
+                    isFirst={isFirst}
+                    isLast={isLast}
+                />
 
-            {/* Project Content Container */}
-            <div className="container mx-auto px-6 py-8 max-w-5xl">
+                <div className="py-8">
 
                 {/* 1. Project Carousel (Top) */}
                 <div className="mb-12 relative group">
@@ -194,7 +194,17 @@ const ProjectDetail = () => {
                         </div>
                     </div>
                 )}
-
+                    {/* 4. Bottom Navigation */}
+                    <div className="mt-16 pt-8 border-t border-dotted border-[#939fb0]">
+                        <ProjectNavBar
+                            prevProject={prevProject}
+                            nextProject={nextProject}
+                            isFirst={isFirst}
+                            isLast={isLast}
+                            sticky={false}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );

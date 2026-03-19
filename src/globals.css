@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --font-sans: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
+        --font-serif: 'Museo Slab', serif;
+        --foreground: #323a45;
+        --muted-foreground: #64748b;
+        --background: #f8f8f8;
+        --accent: #f61067;
+    }
+
+    body {
+        @apply antialiased;
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        line-height: normal;
+    }
+
+    /* Typography System Architecture */
+
+    h1, h2, h3, h4, h5 {
+        font-family: var(--font-serif);
+        color: var(--foreground);
+    }
+
+    /* Font for labels and content */
+    h6, p, li, strong {
+        font-family: var(--font-sans);
+    }
+
+    h1 {
+        @apply text-5xl font-bold tracking-tight leading-tight mb-4;
+    }
+
+    h2 {
+        @apply text-4xl font-bold tracking-tight leading-tight mb-[0.875rem];
+    }
+
+    h3 {
+        @apply text-3xl font-semibold tracking-tight mb-3;
+    }
+
+    h4 {
+        @apply text-2xl font-semibold tracking-tight mb-2;
+    }
+
+    h5 {
+        @apply text-xl font-medium mb-2;
+    }
+
+    /* Treated as label/meta-information */
+    h6 {
+        @apply text-xs font-semibold uppercase tracking-widest mt-6 mb-1;
+        color: var(--muted-foreground);
+    }
+
+    figcaption {
+        @apply text-sm mt-2 text-center italic;
+        color: var(--muted-foreground);
+    }
+
+    figure {
+        @apply my-8;
+    }
+
+    figure img {
+        @apply w-full rounded-sm;
+    }
+
+    .prose h6 + p,
+    .prose-lg h6 + p {
+        margin-top: 0;
+        margin-bottom: 1.25rem;
+    }
+
+    p {
+        @apply text-base leading-relaxed mb-4 font-normal;
+    }
+
+    strong {
+        @apply font-semibold;
+    }
+
+    /* Rhythmic System - Spacing between sections */
+    
+    * + h2 { @apply mt-8; }
+    * + h3 { @apply mt-6; }
+    * + h4 { @apply mt-4; }
+
+    /* Vertical Flow Context Resets */
+    h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child, p:first-child {
+        @apply mt-0;
+    }
+
+    /* Links & Interactions */
+    a {
+        @apply transition-colors;
+    }
+
+    a:hover {
+        color: var(--accent);
+    }
+}
+
+/* Professional Scrollbar Aesthetic */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--foreground);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}

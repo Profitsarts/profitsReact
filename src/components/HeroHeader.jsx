@@ -102,7 +102,7 @@ const HeroHeader = () => {
                                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-[#323a45] text-[#323a45] rounded-full text-sm font-medium tracking-wider uppercase hover:bg-[#323a45] hover:text-white transition-all duration-300"
                                 style={{ fontFamily: "'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif" }}
                             >
-                                Explore my work ↓
+                                SEE ↓
                             </button>
                         </div>
                     </motion.div>

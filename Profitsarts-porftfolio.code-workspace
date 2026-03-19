@@ -8,7 +8,18 @@
 		},
 		{
 			"path": "../../Documents/Docs/web_profits/profits-jekyll/staging"
+		},
+		{
+			"name": "GEMINI CONFIG & SKILLS",
+			"path": "../../.gemini"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.exclude": {
+			"**/.gemini": false
+		},
+		"search.exclude": {
+			"**/.gemini": false
+		}
+	}
 }

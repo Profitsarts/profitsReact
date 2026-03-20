@@ -112,25 +112,31 @@ const ProjectDetail = () => {
                         loop={slides.length > 1}
                         className="w-full aspect-auto min-h-[300px] bg-neutral-100"
                     >
-                        {slides.map((img, index) => (
-                            <SwiperSlide key={index}>
-                                <div className="relative w-full h-full flex items-center justify-center">
-                                    <img
-                                        src={`${project.imagePath || '/assets/img/portfolio/full/'}${img.name}`}
-                                        alt={img.text || project.title}
-                                        className="max-w-full max-h-[80vh] w-auto h-auto object-contain"
-                                    />
-                                    {/* Optional caption overlay */}
-                                    {img.text && (
-                                        <div className="absolute bottom-4 left-0 right-0 text-center">
-                                            <span className="bg-black/50 text-white px-3 py-1 text-sm rounded-sm">
-                                                {img.text}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                            </SwiperSlide>
-                        ))}
+                        {slides.map((img, index) => {
+                            const basePath = project.imagePath || '/assets/img/portfolio/full/';
+                            const src = `${basePath}${img.name}`;
+                            const at2x = src.replace(/\.(jpg|png|webp)/, '@2x.$1');
+                            return (
+                                <SwiperSlide key={index}>
+                                    <div className="relative w-full h-full flex items-center justify-center">
+                                        <img
+                                            src={src}
+                                            srcSet={`${src} 1x, ${at2x} 2x`}
+                                            alt={img.text || project.title}
+                                            className="max-w-full max-h-[80vh] w-auto h-auto object-contain"
+                                        />
+                                        {/* Optional caption overlay */}
+                                        {img.text && (
+                                            <div className="absolute bottom-4 left-0 right-0 text-center">
+                                                <span className="bg-black/50 text-white px-3 py-1 text-sm rounded-sm">
+                                                    {img.text}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </SwiperSlide>
+                            );
+                        })}
                     </Swiper>
 
                     {/* Custom Navigation Buttons - Only if more than 1 slide */}
@@ -153,7 +159,7 @@ const ProjectDetail = () => {
                     </h1>
                     {/* Subtitle/Heading if available */}
                     <h2 className="text-[1.5rem] md:text-[1.7rem] font-light mb-8">
-                        {project.tags.join(', ')}
+                        {(project.tags || (project.category ? project.category.split(/\s*\/\s*/) : [])).join(', ')}
                     </h2>
 
                     {project.description && (
@@ -172,25 +178,46 @@ const ProjectDetail = () => {
                         prose-a:text-[#f61067] prose-a:no-underline hover:prose-a:text-[#323a45]
                         prose-img:shadow-md prose-img:border prose-img:border-neutral-100 prose-img:p-2 prose-img:bg-white"
                         dangerouslySetInnerHTML={{ __html: project.content }}
+                        ref={(el) => {
+                            if (el) {
+                                // Automatically add srcset to images inside raw HTML content
+                                const images = el.querySelectorAll('img');
+                                images.forEach(img => {
+                                    const src = img.getAttribute('src');
+                                    // Avoid double-processing or adding to external/already-retina images
+                                    if (src && !img.dataset.processed && !src.includes('@2x') && !src.startsWith('http')) {
+                                        const at2x = src.replace(/\.(jpg|png|webp)/, (match) => `@2x${match}`);
+                                        img.srcset = `${src} 1x, ${at2x} 2x`;
+                                        img.dataset.processed = 'true';
+                                    }
+                                });
+                            }
+                        }}
                     />
                 ) : (
                     <div className="space-y-12">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {project.images.map((img, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1 }}
-                                >
-                                    <img
-                                        src={`${project.imagePath || '/assets/img/portfolio/full/'}${img.name}`}
-                                        alt={img.text || project.title}
-                                        className="w-full shadow-md bg-white p-2 border border-neutral-100"
-                                    />
-                                </motion.div>
-                            ))}
+                            {project.images.map((img, index) => {
+                                const basePath = project.imagePath || '/assets/img/portfolio/full/';
+                                const src = `${basePath}${img.name}`;
+                                const at2x = src.replace(/\.(jpg|png|webp)/, '@2x.$1');
+                                return (
+                                    <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: index * 0.1 }}
+                                    >
+                                        <img
+                                            src={src}
+                                            srcSet={`${src} 1x, ${at2x} 2x`}
+                                            alt={img.text || project.title}
+                                            className="w-full shadow-md bg-white p-2 border border-neutral-100"
+                                        />
+                                    </motion.div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}

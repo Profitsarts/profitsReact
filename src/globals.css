@@ -5,7 +5,7 @@
 @layer base {
     :root {
         --font-sans: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
-        --font-serif: 'Museo Slab', serif;
+        --font-serif: 'Charter', 'Georgia', serif;
         --foreground: #323a45;
         --muted-foreground: #64748b;
         --background: #f8f8f8;
@@ -16,50 +16,53 @@
         @apply antialiased;
         background-color: var(--background);
         color: var(--foreground);
-        font-family: var(--font-sans);
-        line-height: normal;
+        font-family: var(--font-serif);
+        line-height: 1.6;
     }
 
     /* Typography System Architecture */
 
     h1, h2, h3, h4, h5 {
-        font-family: var(--font-serif);
+        font-family: var(--font-sans);
         color: var(--foreground);
+        font-weight: 500;
+        letter-spacing: -0.02em;
     }
 
     /* Font for labels and content */
-    h6, p, li, strong {
+    h6, strong {
         font-family: var(--font-sans);
     }
 
     h1 {
-        @apply text-5xl font-bold tracking-tight leading-tight mb-4;
+        @apply text-5xl leading-tight mb-4;
     }
 
     h2 {
-        @apply text-4xl font-bold tracking-tight leading-tight mb-[0.875rem];
+        @apply text-4xl leading-tight mb-[0.875rem];
     }
 
     h3 {
-        @apply text-3xl font-semibold tracking-tight mb-3;
+        @apply text-3xl mb-3;
     }
 
     h4 {
-        @apply text-2xl font-semibold tracking-tight mb-2;
+        @apply text-2xl mb-2;
     }
 
     h5 {
-        @apply text-xl font-medium mb-2;
+        @apply text-xl mb-2;
     }
 
     /* Treated as label/meta-information */
     h6 {
-        @apply text-xs font-semibold uppercase tracking-widest mt-6 mb-1;
+        @apply text-xs font-medium uppercase tracking-widest mt-6 mb-1;
         color: var(--muted-foreground);
     }
 
     figcaption {
-        @apply text-sm mt-2 text-center italic;
+        @apply text-[0.95rem] mt-2 text-center italic;
+        font-family: var(--font-serif);
         color: var(--muted-foreground);
     }
 
@@ -77,8 +80,9 @@
         margin-bottom: 1.25rem;
     }
 
-    p {
-        @apply text-base leading-relaxed mb-4 font-normal;
+    p, li {
+        @apply text-[1.15rem] leading-[1.6] mb-6 font-normal;
+        font-family: var(--font-serif);
     }
 
     strong {

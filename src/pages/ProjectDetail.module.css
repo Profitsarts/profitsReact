@@ -1,0 +1,176 @@
+.pageWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  background-color: #f8f8f8;
+  color: rgba(0, 0, 0, 0.84);
+}
+
+.article {
+  width: 100%;
+  max-width: 1000px; /* Allows header and cover image to remain wide */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- HEADERS (FULL WIDTH) --- */
+.kicker {
+  font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B6B6B;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.h1 {
+  font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+  color: #111111;
+}
+
+.subtitle {
+  font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #6B6B6B;
+  margin-bottom: 40px;
+}
+
+/* --- FIGURE & IMAGE (FULL WIDTH) --- */
+.figure {
+  width: 100%;
+  margin: 0 0 48px 0;
+}
+
+.figureImg {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  cursor: pointer !important;
+}
+
+.caption {
+  font-family: "Charter", Georgia, serif;
+  font-size: 14px;
+  font-style: italic;
+  color: #6B6B6B;
+  text-align: center;
+  margin-top: 14px;
+  line-height: normal;
+}
+
+/* --- CONTENT WRAPPER: MEDIUM 680px CONSTRAINT --- */
+.contentWrapper {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  font-family: "Charter", Georgia, serif; /* Force scoped inheritance */
+}
+
+.contentWrapper p,
+.contentWrapper div,
+.contentWrapper span,
+.contentWrapper strong {
+  font-family: "Charter", Georgia, serif;
+  font-size: 19px;
+  line-height: 1.62;
+  color: rgba(0, 0, 0, 0.84);
+  margin-bottom: 1.5rem;
+  letter-spacing: normal;
+}
+
+.contentWrapper strong {
+    font-weight: 700;
+}
+
+/* --- MEDIUM BODY HEADINGS (H2-H6) --- */
+.contentWrapper h1,
+.contentWrapper h2,
+.contentWrapper h3,
+.contentWrapper h4,
+.contentWrapper h5,
+.contentWrapper h6 {
+  color: rgba(0, 0, 0, 0.84);
+  letter-spacing: -0.02em;
+}
+
+/* Medium Reading Headers (Serif) */
+.contentWrapper h1,
+.contentWrapper h2,
+.contentWrapper h3,
+.contentWrapper h4,
+.contentWrapper h6 {
+  font-family: "Charter", Georgia, serif;
+  font-weight: 700;
+}
+
+/* Meta Labels (now H5) - Sans-Serif, Sentence Case, Gray */
+.contentWrapper h5 {
+    font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: none;
+    color: rgba(0, 0, 0, 0.6);
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    letter-spacing: 0.02em;
+}
+
+.contentWrapper h5::first-letter {
+    text-transform: uppercase;
+}
+
+.contentWrapper h1 {
+  font-size: 42px;
+  line-height: 1.15;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.contentWrapper h2 {
+  font-size: 30px;
+  line-height: 1.22;
+  margin-top: 1.9em;
+  margin-bottom: 0.1em;
+}
+
+.contentWrapper h3 {
+  font-size: 24px;
+  line-height: 1.25;
+  margin-top: 1.5em;
+  margin-bottom: 0.1em;
+}
+
+.contentWrapper blockquote {
+    font-family: "Charter", Georgia, serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.62;
+    border-left: 3px solid #f61067;
+    padding-left: 20px;
+    margin-left: -23px;
+    margin-bottom: 1.5rem;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+/* --- RESPONSIVE DOWN-SCALING --- */
+@media (max-width: 768px) {
+  .body {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .h1 {
+    font-size: 32px;
+  }
+  .subtitle {
+    font-size: 18px;
+  }
+}

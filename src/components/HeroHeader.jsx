@@ -41,7 +41,7 @@ const HeroHeader = () => {
                         {/* Name & Title */}
                         <h2
                             className="text-[2rem] md:text-[2.4rem] leading-tight mb-3 text-center lg:text-left"
-                            style={{ fontFamily: "'Museo Slab', serif" }}
+                            style={{ fontFamily: "'ITCAVANTGARDEGOTHICLTMEDIUM', sans-serif" }}
                         >
                             I'm Luis Sierra
                         </h2>
@@ -67,7 +67,7 @@ const HeroHeader = () => {
                         {/* Main Headline */}
                         <h1
                             className="text-[2.2rem] md:text-[2.8rem] lg:text-[3.2rem] leading-[1.15] tracking-[-0.02em] mb-8 text-[#323a45]"
-                            style={{ fontFamily: "'Museo Slab', serif" }}
+                            style={{ fontFamily: "'ITCAVANTGARDEGOTHICLTMEDIUM', sans-serif" }}
                         >
                             Orchestrating scalable design systems for data-dense, Enterprise B2B products.
                         </h1>

@@ -1,20 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, EffectFade, Autoplay } from 'swiper/modules';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { projects } from '../data/projects_v2';
+import mediumZoom from 'medium-zoom';
 import ProjectNavBar from '../components/ProjectNavBar';
-
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/effect-fade';
+import styles from './ProjectDetail.module.css';
 
 const ProjectDetail = () => {
     const { id } = useParams();
+    const articleRef = useRef(null);
 
     const projectIndex = projects.findIndex(p => p.id === id);
     const project = projects[projectIndex];
@@ -29,209 +22,166 @@ const ProjectDetail = () => {
         window.scrollTo(0, 0);
     }, [id]);
 
+    useEffect(() => {
+        // Medium zoom initialization
+        const images = articleRef.current?.querySelectorAll('img[data-zoomable]');
+        if (!images || images.length === 0) return;
+        
+        const zoom = mediumZoom(images, {
+          margin: 24,
+          background: '#111111e6',
+          scrollOffset: 60,
+        });
+        
+        return () => zoom.detach();
+    }, [id]);
+
+    useEffect(() => {
+        const handleZoomOpened = () => document.body.classList.add('is-zooming');
+        const handleZoomClosed = () => document.body.classList.remove('is-zooming');
+        document.addEventListener('medium-zoom:open', handleZoomOpened);
+        document.addEventListener('medium-zoom:close', handleZoomClosed);
+        return () => {
+            document.removeEventListener('medium-zoom:open', handleZoomOpened);
+            document.removeEventListener('medium-zoom:close', handleZoomClosed);
+        };
+    }, []);
+
     if (!project) return <div className="container mx-auto px-6 py-20 text-center">Project not found</div>;
 
-    // Filter only full images for the carousel
-    const carouselImages = project.images ? project.images.filter(img => img.name.includes('FULL')) : [];
-    // If no explicit FULL images found, use all images
-    const slides = carouselImages.length > 0 ? carouselImages : (project.images || []);
+    // Determine Cover Image
+    let coverImageSrc = project.featuredImage;
+    if (!coverImageSrc && project.images && project.images.length > 0) {
+        const basePath = project.imagePath || 'assets/img/portfolio/full/';
+        coverImageSrc = `${basePath}${project.images[0].name}`;
+    }
+    const coverImageAt2x = coverImageSrc ? coverImageSrc.replace(/\.(jpg|png|webp)/, '@2x.$1') : '';
 
     return (
-        <div className="bg-[#f8f8f8] min-h-screen">
-            <style>{`
-                /* Original Blockquote Styles */
-                .prose blockquote {
-                    background: #e1e1e1;
-                    border-left: 3px solid #f61067;
-                    padding: 10px 15px;
-                    font-style: normal;
-                    color: #323a45;
-                    font-family: inherit;
-                    quotes: none;
-                    margin-bottom: 1.5em;
-                }
-                /* Use this class in your HTML content for user quotes */
-                .prose .user-quote {
-                    font-style: italic;
-                    background-color: #fdd0e1;
-                    border-left: 4px solid #f61067;
-                    padding: 15px;
-                    margin-bottom: 1rem;
-                    border-radius: 4px;
-                    color: #323a45;
-                }
-                
-                /* Custom Swiper Navigation */
-                .swiper-button-next-custom,
-                .swiper-button-prev-custom {
-                    transition: all 0.25s ease-in-out !important;
-                }
-                .swiper-button-next-custom:hover,
-                .swiper-button-prev-custom:hover {
-                    opacity: 1 !important;
-                }
-                .swiper-button-next-custom:disabled,
-                .swiper-button-prev-custom:disabled {
-                    opacity: 0.2 !important;
-                    cursor: auto !important;
-                }
-                /* Pagination bullets */
-                .swiper-pagination-bullet-active {
-                    background: #0d080c !important;
-                }
-            `}</style>
+        <div className="bg-[#f8f8f8] min-h-screen pb-20">
+            {/* Sticky Navigation */}
+            <div className="sticky top-0 z-[99] bg-[#f8f8f8]/95 backdrop-blur-sm">
+                <div className="max-w-5xl mx-auto px-6">
+                    <ProjectNavBar
+                        prevProject={prevProject}
+                        nextProject={nextProject}
+                        isFirst={isFirst}
+                        isLast={isLast}
+                        sticky={false}
+                    />
+                </div>
+            </div>
 
-            {/* Wrapper for Aligned Navigation and Content */}
             <div className="max-w-5xl mx-auto px-6">
+                <div className={styles.pageWrapper}>
+                    <article ref={articleRef} className={styles.article}>
+
+                        {/* HEADER: Medium Styled, Full Width */}
+                        <p className={styles.kicker}>
+                            {(project.tags || (project.category ? project.category.split(/\s*\/\s*/) : [])).join(' · ')}
+                        </p>
+                        <h1 className={styles.h1}>{project.title}</h1>
+                        <p className={styles.subtitle}>{project.description}</p>
+
+                        {/* COVER IMAGE: Full Width */}
+                        {coverImageSrc && (
+                            <figure className={styles.figure}>
+                                <img
+                                    src={coverImageSrc}
+                                    srcSet={coverImageAt2x ? `${coverImageSrc} 1x, ${coverImageAt2x} 2x` : undefined}
+                                    alt={project.title}
+                                    data-zoomable
+                                    className={styles.figureImg}
+                                />
+                                {project.description && (
+                                    <figcaption className={styles.caption}>
+                                        {project.description}
+                                    </figcaption>
+                                )}
+                            </figure>
+                        )}
+
+                        {/* MEDIUM READING COLUMN: Constrained to 680px */}
+                        <div className={styles.contentWrapper}>
+                            {project.content ? (
+                                <div
+                                    className="medium-content-render"
+                                    dangerouslySetInnerHTML={{ __html: project.content }}
+                                    ref={(el) => {
+                                        if (el) {
+                                            // Ensure all images in content are zoomable and have retina fallback
+                                            const contentImages = el.querySelectorAll('img');
+                                            contentImages.forEach(img => {
+                                                if (!img.hasAttribute('data-zoomable')) {
+                                                    img.setAttribute('data-zoomable', 'true');
+                                                    img.style.cursor = 'pointer';
+                                                    img.style.width = '100%';
+                                                    img.style.marginBottom = '0.5em';
+                                                }
+                                                const src = img.getAttribute('src');
+                                                if (src && !img.dataset.processed && !src.includes('@2x') && !src.startsWith('http')) {
+                                                    const at2x = src.replace(/\.(jpg|png|webp)/, (match) => `@2x${match}`);
+                                                    img.srcset = `${src} 1x, ${at2x} 2x`;
+                                                    img.dataset.processed = 'true';
+                                                }
+                                            });
+                                            
+                                            // Clean up inline styles that might break Medium look
+                                            const blockquotes = el.querySelectorAll('blockquote');
+                                            blockquotes.forEach(bq => {
+                                                bq.style.backgroundColor = '#f4f4f4';
+                                                bq.style.borderLeft = '3px solid #323a45';
+                                                bq.style.padding = '15px 20px';
+                                                bq.style.fontStyle = 'italic';
+                                                bq.style.color = 'rgba(0, 0, 0, 0.7)';
+                                                bq.style.boxShadow = 'none';
+                                                bq.style.borderRadius = '2px';
+                                            });
+                                        }
+                                    }}
+                                />
+                            ) : (
+                                <div className="space-y-12">
+                                    {/* Fallback for projects with only an image array and no HTML content */}
+                                    {project.images.slice(1).map((img, index) => {
+                                        const basePath = project.imagePath || 'assets/img/portfolio/full/';
+                                        const src = `${basePath}${img.name}`;
+                                        const at2x = src.replace(/\.(jpg|png|webp)/, '@2x.$1');
+                                        return (
+                                            <figure key={index} className="my-8">
+                                                <img
+                                                    src={src}
+                                                    srcSet={`${src} 1x, ${at2x} 2x`}
+                                                    alt={img.text || project.title}
+                                                    data-zoomable
+                                                    className="w-full h-auto rounded-[4px] cursor-pointer"
+                                                    style={{ width: '100%', marginBottom: '0.5em' }}
+                                                />
+                                                {img.text && (
+                                                    <figcaption className="text-center text-sm text-gray-500 mt-2 italic">
+                                                        {img.text}
+                                                    </figcaption>
+                                                )}
+                                            </figure>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+
+                    </article>
+                </div>
+            </div>
+
+            {/* Bottom Navigation */}
+            <div className="max-w-5xl mx-auto px-6 mt-16 pb-12">
                 <ProjectNavBar
                     prevProject={prevProject}
                     nextProject={nextProject}
                     isFirst={isFirst}
                     isLast={isLast}
+                    sticky={false}
                 />
-
-                <div className="py-8">
-
-                {/* 1. Project Carousel (Top) */}
-                <div className="mb-12 relative group">
-                    <Swiper
-                        modules={[Navigation, Pagination, EffectFade, Autoplay]}
-                        spaceBetween={0}
-                        slidesPerView={1}
-                        effect="fade"
-                        navigation={{
-                            nextEl: '.swiper-button-next-custom',
-                            prevEl: '.swiper-button-prev-custom',
-                        }}
-                        onBeforeInit={(swiper) => {
-                            swiper.params.navigation.nextEl = '.swiper-button-next-custom';
-                            swiper.params.navigation.prevEl = '.swiper-button-prev-custom';
-                        }}
-                        pagination={slides.length > 1 ? { clickable: true } : false}
-                        autoplay={slides.length > 1 ? { delay: 5000, disableOnInteraction: false } : false}
-                        loop={slides.length > 1}
-                        className="w-full aspect-auto min-h-[300px] bg-neutral-100"
-                    >
-                        {slides.map((img, index) => {
-                            const basePath = project.imagePath || '/assets/img/portfolio/full/';
-                            const src = `${basePath}${img.name}`;
-                            const at2x = src.replace(/\.(jpg|png|webp)/, '@2x.$1');
-                            return (
-                                <SwiperSlide key={index}>
-                                    <div className="relative w-full h-full flex items-center justify-center">
-                                        <img
-                                            src={src}
-                                            srcSet={`${src} 1x, ${at2x} 2x`}
-                                            alt={img.text || project.title}
-                                            className="max-w-full max-h-[80vh] w-auto h-auto object-contain"
-                                        />
-                                        {/* Optional caption overlay */}
-                                        {img.text && (
-                                            <div className="absolute bottom-4 left-0 right-0 text-center">
-                                                <span className="bg-black/50 text-white px-3 py-1 text-sm rounded-sm">
-                                                    {img.text}
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </SwiperSlide>
-                            );
-                        })}
-                    </Swiper>
-
-                    {/* Custom Navigation Buttons - Only if more than 1 slide */}
-                    {slides.length > 1 && (
-                        <>
-                            <button className="swiper-button-prev-custom absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-[#323a45] text-[#f8f8f8] rounded-[2px] hover:bg-[#e1e1e1] hover:text-[#323a45] transition-colors shadow-md">
-                                <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
-                            </button>
-                            <button className="swiper-button-next-custom absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center bg-[#323a45] text-[#f8f8f8] rounded-[2px] hover:bg-[#e1e1e1] hover:text-[#323a45] transition-colors shadow-md">
-                                <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
-                            </button>
-                        </>
-                    )}
-                </div>
-
-                {/* 2. Title & Description (Below Carousel) */}
-                <div className="mb-12 text-center pb-8 border-b border-dotted border-[#939fb0]">
-                    <h1 className="text-[2.2rem] md:text-[2.9rem] tracking-tight mb-2">
-                        {project.title}
-                    </h1>
-                    {/* Subtitle/Heading if available */}
-                    <h2 className="text-[1.5rem] md:text-[1.7rem] font-light mb-8">
-                        {(project.tags || (project.category ? project.category.split(/\s*\/\s*/) : [])).join(', ')}
-                    </h2>
-
-                    {project.description && (
-                        <div className="max-w-3xl mx-auto">
-                            <p className="text-base leading-relaxed">{project.description}</p>
-                        </div>
-                    )}
-                </div>
-
-                {/* 3. Main Content / Details */}
-                {project.content ? (
-                    <div
-                        className="prose prose-neutral prose-lg max-w-none 
-                        prose-headings:text-[#323a45]
-                        prose-p:text-[#323a45] prose-p:leading-relaxed
-                        prose-a:text-[#f61067] prose-a:no-underline hover:prose-a:text-[#323a45]
-                        prose-img:shadow-md prose-img:border prose-img:border-neutral-100 prose-img:p-2 prose-img:bg-white"
-                        dangerouslySetInnerHTML={{ __html: project.content }}
-                        ref={(el) => {
-                            if (el) {
-                                // Automatically add srcset to images inside raw HTML content
-                                const images = el.querySelectorAll('img');
-                                images.forEach(img => {
-                                    const src = img.getAttribute('src');
-                                    // Avoid double-processing or adding to external/already-retina images
-                                    if (src && !img.dataset.processed && !src.includes('@2x') && !src.startsWith('http')) {
-                                        const at2x = src.replace(/\.(jpg|png|webp)/, (match) => `@2x${match}`);
-                                        img.srcset = `${src} 1x, ${at2x} 2x`;
-                                        img.dataset.processed = 'true';
-                                    }
-                                });
-                            }
-                        }}
-                    />
-                ) : (
-                    <div className="space-y-12">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {project.images.map((img, index) => {
-                                const basePath = project.imagePath || '/assets/img/portfolio/full/';
-                                const src = `${basePath}${img.name}`;
-                                const at2x = src.replace(/\.(jpg|png|webp)/, '@2x.$1');
-                                return (
-                                    <motion.div
-                                        key={index}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: index * 0.1 }}
-                                    >
-                                        <img
-                                            src={src}
-                                            srcSet={`${src} 1x, ${at2x} 2x`}
-                                            alt={img.text || project.title}
-                                            className="w-full shadow-md bg-white p-2 border border-neutral-100"
-                                        />
-                                    </motion.div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-                    {/* 4. Bottom Navigation */}
-                    <div className="mt-16 pt-8 border-t border-dotted border-[#939fb0]">
-                        <ProjectNavBar
-                            prevProject={prevProject}
-                            nextProject={nextProject}
-                            isFirst={isFirst}
-                            isLast={isLast}
-                            sticky={false}
-                        />
-                    </div>
-                </div>
             </div>
         </div>
     );

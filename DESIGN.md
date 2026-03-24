@@ -3,7 +3,7 @@
 ## Global Governance Rule
 - **Workspace-Wide Implementation**: Any stylistic or structural order (Typography, Spacing, Navigation, Zoom behavior) MUST be executed globally across the entire workspace. 
 - **Anti-Fragmentation**: Do NOT apply changes only to specific project modules (e.g., SoC or Maintenance). All modifications must propagate to `globals.css`, `index.css`, and the shared `ProjectDetail` components to ensure absolute portfolio consistency.
-- **Typography Standard**: All Sans-serif elements must use **ITC Avant Garde Gothic LTM** with a standard heading weight of **500**. Any use of system fonts or bold/extrabold is strictly forbidden.
+- **Typography Standard**: All Sans-serif elements must use **ITC Avant Garde Gothic LTM**. Standard headings (h1, h2, h3, h4, h6) follow a **500** weight. **H5 (Meta Labels)** must use a **700** weight with **0.05em tracking**. Any use of other weights or system fonts is strictly forbidden.
 
 ## Portfolio Strategy: Profits Portfolio 2026
 
@@ -16,7 +16,8 @@ The identity is **Architectural, Authoritative, and Geometric**. It follows a "S
 * **Studio White (#f8f8f8):** Studio canvas. A premium off-white that feels warmer than raw digital white.
 
 ## 3. Mandatory Typography System
-- **Headers (h1-h5)**: `ITC Avant Garde Gothic LTM`. Weight: `500`. No exceptions.
+- **Headers (h1-h4, h6)**: `ITC Avant Garde Gothic LTM`. Weight: `500`. 
+- **Headers (h5 - Meta Labels)**: `ITC Avant Garde Gothic LTM`. Weight: `700`, `letter-spacing: 0.05em`, color: `rgba(0, 0, 0, 0.84)`.
 - **System Consolidation**: Museo Slab and all system-default font stacks (-apple-system, Segoe UI, Roboto) are **removed**.
 - **The Narrative (Serif)**: Charter or Georgia is used ONLY for long-form case study body text to ensure high readability.
 - **Metadata (h6/Kickers)**: All-caps, ultra-wide tracking, `text-xs`. Always `ITC Avant Garde Gothic`.

@@ -12,10 +12,17 @@
         @apply mb-4 leading-relaxed font-normal;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1, h2, h3, h4, h6 {
         font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
         color: #323a45;
         letter-spacing: -0.02em;
+    }
+
+    h5 {
+        font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: rgba(0, 0, 0, 0.84);
     }
 
     h1 {
@@ -40,7 +47,6 @@
 
     h5 {
         @apply text-lg;
-        font-weight: 400;
     }
 
     h6 {

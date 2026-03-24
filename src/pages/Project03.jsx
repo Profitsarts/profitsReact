@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import mediumZoom from 'medium-zoom'
-import styles from './Project03.module.css'
+import styles from './ProjectDetail.module.css'
 import ProjectNavBar from '../components/ProjectNavBar'
 import { projects_v2 } from '../data/projects_v2'
 

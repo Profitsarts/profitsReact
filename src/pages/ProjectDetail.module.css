@@ -112,16 +112,16 @@
   font-weight: 700;
 }
 
-/* Meta Labels (now H5) - Sans-Serif, Sentence Case, Gray */
+/* Meta Labels (now H5) - Sans-Serif, Sentence Case, Governing Standard */
 .contentWrapper h5 {
     font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 700;
     text-transform: none;
-    color: rgba(0, 0, 0, 0.6);
+    color: rgba(0, 0, 0, 0.84);
     margin-top: 2em;
     margin-bottom: 0.5em;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.05em;
 }
 
 .contentWrapper h5::first-letter {

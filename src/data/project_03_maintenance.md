@@ -58,10 +58,10 @@ I collaborated closely with the UX Researcher to extract maintenance-specific in
 - **Support ticket analysis:** Categorized recurring tickets into visibility, navigation, and action-barrier clusters.
 - **Industrial ethnography:** Observed back-office maintenance coordinators at Jungheinrich client sites managing multi-shift service schedules.
 - **Task-flow mapping:** Mapped end-to-end user stories — from future-service browsing through past-activity export — identifying 6–8 discrete user actions per workflow, with critical friction at filtering, sorting, and cross-system handoffs.
-- **Structured question capture:** Documented open questions surfaced at each flow stage during stakeholder reviews — feeding directly into design requirements for scope controls and navigation boundaries.
+- **Structured question capture:** Documented 15+ open questions surfaced during stakeholder reviews (e.g., *“How are mult-column sorts handled?”*, *“What is the trigger for status expiration?”*, *“How do we communicate navigation boundaries beyond the 1-year forecast?”*) — feeding directly into design requirements for scope controls and navigation logic.
 - **Competitive analysis:** Evaluated calendar-grid patterns across enterprise resource planning tools (SAP PM, IBM Maximo).
 
-> **The Unifying Insight:** The pain points weren't isolated usability issues — they were symptoms of a missing operational layer. Users needed a single interface that functioned simultaneously as a planning calendar, a compliance dashboard, and an action launcher.
+> **The Unifying Insight:** The pain points weren't isolated usability issues — they were symptoms of a missing operational layer. Users needed a single interface that functioned simultaneously as a planning calendar, an equipment monitoring grid, and an action launcher.
 
 ---
 

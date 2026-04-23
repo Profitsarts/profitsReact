@@ -137,3 +137,4 @@ dist
 
 # Old Jekyll project (don't include in React repo)
 profits_jekyll/
+.DS_Store

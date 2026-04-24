@@ -137,3 +137,7 @@ dist
 
 # Old Jekyll project (don't include in React repo)
 profits_jekyll/
+
+.claude
+.agent
+.antigravity_bridge

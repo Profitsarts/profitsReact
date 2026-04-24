@@ -138,3 +138,16 @@ dist
 # Old Jekyll project (don't include in React repo)
 profits_jekyll/
 .DS_Store
+
+
+# AI & Bridge (Evita errores en GitHub Desktop)
+.claude/
+.agent/
+.antigravity_bridge/
+.gemini/contexts/
+
+node_modules/
+dist/
+.git/
+*.pen
+contexts/

@@ -1,3 +1,8 @@
+.claude/
+.antigravity/
+.agent/
+node_modules/
+
 # Logs
 logs
 *.log
@@ -141,3 +146,6 @@ profits_jekyll/
 .claude
 .agent
 .antigravity_bridge
+.DS_Store
+**/.DS_Store
+*.code-workspace

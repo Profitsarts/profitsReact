@@ -4,12 +4,6 @@
 			"path": "."
 		},
 		{
-			"path": "../GitHub/profits_jekyll"
-		},
-		{
-			"path": "../../Documents/Docs/web_profits/profits-jekyll/staging"
-		},
-		{
 			"name": "GEMINI CONFIG & SKILLS",
 			"path": "../../.gemini"
 		}

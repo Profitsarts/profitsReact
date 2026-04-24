@@ -3,7 +3,7 @@
     "*.css": "tailwindcss"
   },
   "css.lint.unknownAtRules": "ignore",
-  
+
   "files.watcherExclude": {
     "**/.git/**": true,
     "**/.claude/**": true,

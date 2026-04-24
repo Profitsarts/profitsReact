@@ -141,9 +141,10 @@ profits_jekyll/
 
 
 # AI & Bridge (Evita errores en GitHub Desktop)
-.claude/
-.agent/
-.antigravity_bridge/
+.claude
+.agent
+.antigravity_bridge
+
 .gemini/contexts/
 
 node_modules/

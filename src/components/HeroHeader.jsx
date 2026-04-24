@@ -2,10 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const ROLES = [
-    'Design Systems Architect',
+    'Design System Owner · Design Engineer',
+    'Digital Product Designer',
     'UX Research → UI',
     'AI-Augmented DesignOps',
-    'Enterprise B2B · Backoffice · Industrial',
 ];
 
 const HeroHeader = () => {
@@ -72,27 +72,27 @@ const HeroHeader = () => {
                             className="text-[2.2rem] md:text-[2.8rem] lg:text-[3.2rem] leading-[1.15] tracking-[-0.02em] mb-4 text-[#323a45]"
                             style={{ fontFamily: "'ITCAVANTGARDEGOTHICLTMEDIUM', sans-serif" }}
                         >
-                            Building the systems that make enterprise operations legible —
-                            <span className="text-[#f61067]"> where design precision is a safety requirement, not an aesthetic choice.</span>
+                            Designing systems for data-dense digital products —
+                            <span className="text-[#f61067]"> where complexity demands architectural thinking and clarity is never negotiable.</span>
                         </h1>
 
                         {/* Divider */}
                         <div className="w-16 h-[2px] bg-[#f61067] mb-8" />
 
-                        {/* Paragraph 1 */}
+                        {/* Paragraph 1: Surgeon + Scale */}
                         <p
                             className="text-[0.95rem] md:text-[1.05rem] text-[#555] leading-[1.75] mb-5"
                             style={{ fontFamily: "'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif" }}
                         >
-                            Design Engineering Lead and sole Design System Architect for Jungheinrich's Enterprise FMS — a multi-module platform serving DHL, Amazon, and LIDL across thousands of industrial vehicles. I govern 150+ components across 8 product modules and ~40 engineers, establishing the single source of truth between design and production.
+                            I operate at the hardest end of the spectrum — multi-module, operationally critical products where a misread data point has real consequences. As Design System Owner for Jungheinrich's Enterprise FMS, I built and governed 150+ components across 8 product modules alongside multiple software engineering teams, establishing the single source of truth between design and production. That level of precision transfers to any product.
                         </p>
 
-                        {/* Paragraph 2 */}
+                        {/* Paragraph 2: Bridge + AI */}
                         <p
                             className="text-[0.95rem] md:text-[1.05rem] text-[#555] leading-[1.75] mb-10"
                             style={{ fontFamily: "'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif" }}
                         >
-                            I translate UX research and complex discovery into high-density industrial interfaces — then close the loop by integrating AI tooling into the DesignOps pipeline, converting Figma data into machine-readable assets and shipping interpretation-free handoffs direct to the IDE.
+                            Beyond the pixels, I bridge Design, Product, and Engineering — translating UX research and complex discovery into precise, high-density interfaces. I ship functional prototypes that validate business logic from day one, and close the loop with AI-augmented pipelines that convert design data into machine-readable assets for interpretation-free handoffs direct to the IDE.
                         </p>
 
                         {/* CTAs */}

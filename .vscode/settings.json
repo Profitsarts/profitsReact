@@ -1,6 +1,21 @@
 {
-    "files.associations": {
-        "*.css": "tailwindcss"
-    },
-    "css.lint.unknownAtRules": "ignore"
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "css.lint.unknownAtRules": "ignore",
+
+  "files.watcherExclude": {
+    "**/.git/**": true,
+    "**/.claude/**": true,
+    "**/node_modules/**": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/.claude": true
+  },
+  "search.exclude": {
+    "**/.git": true,
+    "**/.claude": true
+  }
 }

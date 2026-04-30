@@ -99,3 +99,13 @@ coverage
 profits_jekyll/GEMINI_CONFIG_SKILLS
 briefing_sync.md
 Profitsarts-porftfolio.code-workspace
+
+# ==========================================
+# 8. SCRIPTS & SECRETS (DesignOps)
+# ==========================================
+scripts/**/.env
+scripts/**/*.local
+scripts/**/credentials.json
+scripts/**/secrets.json
+scripts/**/output/
+scripts/**/cache/

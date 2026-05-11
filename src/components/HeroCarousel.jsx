@@ -5,13 +5,13 @@ import 'swiper/css';
 import 'swiper/css/effect-fade';
 
 const SLIDER_IMAGES = [
-    '/assets/img/slider-images/image-10.jpg',
-    '/assets/img/slider-images/image-00.jpg',
-    '/assets/img/slider-images/image-01.jpg',
-    '/assets/img/slider-images/image-09.jpg',
-    '/assets/img/slider-images/image-03.jpg',
-    '/assets/img/slider-images/image-04.jpg',
-    '/assets/img/slider-images/image-08.jpg',
+    'assets/img/slider-images/image-10.jpg',
+    'assets/img/slider-images/image-00.jpg',
+    'assets/img/slider-images/image-01.jpg',
+    'assets/img/slider-images/image-09.jpg',
+    'assets/img/slider-images/image-03.jpg',
+    'assets/img/slider-images/image-04.jpg',
+    'assets/img/slider-images/image-08.jpg',
 ];
 
 const HeroCarousel = () => {

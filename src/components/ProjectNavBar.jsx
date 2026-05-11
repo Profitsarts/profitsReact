@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Grid3X3 } from 'lucide-react';
 
 const ProjectNavBar = ({ prevProject, nextProject, isFirst, isLast, sticky = true }) => {
     return (
-        <div className={`${sticky ? 'sticky top-0 z-[100] bg-[#f8f8f8]/95 backdrop-blur-sm' : ''} border-y border-dotted border-[#939fb0]`}>
+        <div className={`${sticky ? 'sticky top-0 z-[99] bg-[#f8f8f8]/95 backdrop-blur-sm' : ''} border-y border-dotted border-[#939fb0]`}>
             <div className="flex items-center justify-between py-4">
                 {/* Left Group: Previous */}
                 <div className="flex-1 flex items-center justify-start min-w-0">
@@ -20,7 +20,7 @@ const ProjectNavBar = ({ prevProject, nextProject, isFirst, isLast, sticky = tru
                             {/* Text Label */}
                             <div className="hidden sm:flex flex-col items-start truncate">
                                 <div className="text-[10px] font-bold uppercase tracking-widest text-[#939fb0] mb-0.5">Previous</div>
-                                <div className="font-['Museo_Slab'] font-medium text-[#323a45] text-sm md:text-base truncate">{prevProject.title}</div>
+                                <div className="font-['ITCAVANTGARDEGOTHICLTMEDIUM'] font-medium text-[#323a45] text-sm md:text-base truncate">{prevProject.title}</div>
                             </div>
                         </Link>
                     ) : (
@@ -54,7 +54,7 @@ const ProjectNavBar = ({ prevProject, nextProject, isFirst, isLast, sticky = tru
                             {/* Text Label */}
                             <div className="hidden sm:flex flex-col items-end truncate">
                                 <div className="text-[10px] font-bold uppercase tracking-widest text-[#939fb0] mb-0.5">Next</div>
-                                <div className="font-['Museo_Slab'] font-medium text-[#323a45] text-sm md:text-base truncate">{nextProject.title}</div>
+                                <div className="font-['ITCAVANTGARDEGOTHICLTMEDIUM'] font-medium text-[#323a45] text-sm md:text-base truncate">{nextProject.title}</div>
                             </div>
                             {/* Arrow Box */}
                             <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#e1e1e1] rounded-[2px] group-hover:bg-[#323a45] group-hover:text-[#f8f8f8] transition-colors">

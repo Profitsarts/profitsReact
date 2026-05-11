@@ -59,14 +59,14 @@ const Layout = () => {
                         className="mb-2 hover:opacity-80 transition-opacity"
                     >
                         <img
-                            src="/assets/img/logos/profits_logo.svg"
+                            src="assets/img/logos/profits_logo.svg"
                             alt="Profits Arts"
                             className="h-10 w-auto"
                         />
                     </Link>
 
                     {/* Navigation: SEE | TOUCH | HEAR */}
-                    <nav className="mt-4 flex items-center justify-center space-x-12 font-['Museo_Slab'] text-[1.4rem] tracking-[-0.2px] uppercase">
+                    <nav className="mt-4 flex items-center justify-center space-x-12 font-['ITCAVANTGARDEGOTHICLTMEDIUM'] text-[1.4rem] tracking-[-0.2px] uppercase">
                         <Link
                             to="/"
                             state={{ scrollTo: 'see' }}

@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const ProjectCard = ({ project }) => {
+    // Derive tags: use tags array if present, otherwise split category string, or default to empty
+    const tags = project.tags && project.tags.length > 0
+        ? project.tags
+        : project.category
+            ? project.category.split(/\s*\/\s*/)
+            : [];
+
     return (
         <motion.div
             layout
@@ -15,6 +22,7 @@ const ProjectCard = ({ project }) => {
             <Link to={`/project/${project.id}`} className="block w-full h-full">
                 <img
                     src={project.thumbnail}
+                    srcSet={`${project.thumbnail} 1x, ${project.thumbnail.replace(/\.(jpg|png|webp)/, '@2x.$1')} 2x`}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     loading="lazy"
@@ -24,7 +32,7 @@ const ProjectCard = ({ project }) => {
                         {project.title}
                     </h3>
                     <div className="flex flex-wrap justify-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                        {project.tags.map(tag => (
+                        {tags.map(tag => (
                             <span key={tag} className="text-[10px] uppercase font-bold tracking-widest text-[#f8f8f8] border border-white/30 px-2 py-1 rounded-[2px]">
                                 {tag}
                             </span>

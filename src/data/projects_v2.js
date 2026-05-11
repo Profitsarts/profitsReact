@@ -321,6 +321,39 @@ export const projects_v2 = [
 
 <div class=\"slide-separator\"></div>
 
+<!-- ========== SOLUTION & IMPLEMENTATION ========== -->
+<section class=\"row\" id=\"solution-implementation\">
+    <div class=\"span12\">
+        <h4>Solution & Implementation</h4>
+    </div>
+</section>
+<section class=\"row\">
+    <div class=\"span6\">
+        <h5>1. Contextual Empty State Communication</h5>
+        <ul class=\"challenge-list\">
+            <li>Time-range-aware messaging adapts to 24h, 7-day, and 30-day views</li>
+            <li>Unified coordinate system, grid, and legends persist during data gaps</li>
+            <li>Standardized color coding: 0–39% / 40–79% / 80–100%</li>
+        </ul>
+        <h5>2. Interactive Brush-Zoom Molecule</h5>
+        <ul class=\"challenge-list\">
+            <li>Handle controls (grip dots) and selection areas built with Figma Auto Layout</li>
+            <li>Responsive container behavior (Hug width: 830×80, 310×80, 443×80, 536×80 px)</li>
+            <li>Auto-scaling segmented control updates based on zoom range</li>
+        </ul>
+    </div>
+    <div class=\"span6\">
+        <h5>3. DesignOps & Handoff</h5>
+        <ul class=\"challenge-list\">
+            <li>Personally reviewed CSS properties of every component in Storybook, filing Jira tickets for implementation gaps</li>
+            <li>Migrated the <strong>entire FMS design system from Sketch to Figma</strong> with full Auto Layout — not just this component</li>
+            <li>Lean UX approach: contacted both frontend and backend teams <em>before</em> designing to validate technical feasibility, eliminating design-engineering friction</li>
+        </ul>
+    </div>
+</section>
+
+<div class=\"slide-separator\"></div>
+
 <!-- ========== IMPACT & RESULTS ========== -->
 <section class=\"row\" id=\"impact-results\">
     <div class=\"span12\">

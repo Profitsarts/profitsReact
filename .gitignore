@@ -109,3 +109,12 @@ scripts/**/credentials.json
 scripts/**/secrets.json
 scripts/**/output/
 scripts/**/cache/
+
+# ==========================================
+# 9. WORKFLOW TOOLS (en profits-tools repo)
+# ==========================================
+scripts/narrative_restorer.js
+scripts/notion_bridge.py
+scripts/scraper/
+scripts/upscale.py
+scripts/youtube_transcript/

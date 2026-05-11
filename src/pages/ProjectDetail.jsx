@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { projects } from '../data/projects_v2';
 import mediumZoom from 'medium-zoom';
 import ProjectNavBar from '../components/ProjectNavBar';
@@ -7,6 +6,8 @@ import styles from './ProjectDetail.module.css';
 
 const ProjectDetail = () => {
     const { id } = useParams();
+    const [searchParams] = useSearchParams();
+    const version = searchParams.get('v');
     const articleRef = useRef(null);
 
     const projectIndex = projects.findIndex(p => p.id === id);
@@ -103,10 +104,10 @@ const ProjectDetail = () => {
 
                         {/* MEDIUM READING COLUMN: Constrained to 680px */}
                         <div className={styles.contentWrapper}>
-                            {project.content ? (
+                            {(project.content || project.legacy_content) ? (
                                 <div
                                     className="medium-content-render"
-                                    dangerouslySetInnerHTML={{ __html: project.content }}
+                                    dangerouslySetInnerHTML={{ __html: (version === 'legacy' && project.legacy_content) ? project.legacy_content : project.content }}
                                     ref={(el) => {
                                         if (el) {
                                             // Ensure all images in content are zoomable and have retina fallback

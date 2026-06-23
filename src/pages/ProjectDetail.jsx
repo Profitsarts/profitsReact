@@ -1,7 +1,8 @@
 import { useParams, Link, useSearchParams } from 'react-router-dom';
-import { projects } from '../data/projects_v2';
+import { projects_v2 as projects } from '../data/projects_v2';
 import mediumZoom from 'medium-zoom';
 import ProjectNavBar from '../components/ProjectNavBar';
+import CaseSnapshot from '../components/CaseSnapshot';
 import styles from './ProjectDetail.module.css';
 
 const ProjectDetail = () => {
@@ -83,6 +84,8 @@ const ProjectDetail = () => {
                         </p>
                         <h1 className={styles.h1}>{project.title}</h1>
                         <p className={styles.subtitle}>{project.description}</p>
+
+                        <CaseSnapshot tldr={project.tldr} />
 
                         {/* COVER IMAGE: Full Width */}
                         {coverImageSrc && (

@@ -17,6 +17,15 @@ export const projects_v2 = [
     ],
     "technologies": ["React", "Figma", "Design Systems", "IoT"],
     "imagePath":  "assets/img/portfolio/full/",
+    "tldr": {
+        "problem": "The battery chart failed in 3 critical scenarios — empty data indistinguishable from failure, micro-operations obscuring trends, and no historical navigation for incident investigation.",
+        "solution": "Brush-zoom tool inspired by Ableton Live's waveform navigation + contextual in-chart messaging. One component solves all 3 scenarios.",
+        "result": "100% resolution of pain points in post-launch testing · Incident investigation: 15 min → 3 min · Reusable molecule across all 8 FMS modules.",
+        "client": "Jungheinrich Digital Solutions",
+        "role": "Design System Owner",
+        "sector": "Enterprise IoT · B2B SaaS",
+        "year": "2023 – 2024"
+    },
     "content": `<!-- ========== HERO STATEMENT ========== -->
 <section class=\"row\" id=\"hero-statement\">
     <div class=\"span12\">
@@ -597,18 +606,18 @@ export const projects_v2 = [
 
 <section class=\"row\" id=\"solution-1\">
     <div class=\"span6\">
-        <h5>Problem 1: Grid Overload → Consolidated Legend & Scope Controls</h5>
+        <h5>Problem 1: Scattered Visibility → Unified Calendar Grid</h5>
         <blockquote class=\"user-quote\">
-            \"I want to see quickly which trucks are scheduled for maintenance this month.\"
+            \"Maintenance data lives in three different places — I never know if I'm looking at the latest version.\"
         </blockquote>
-        <p><strong>This revealed:</strong> On first load, the 6-month grid displayed dense rows of status-coded tiles without context for forecasted dates. Forecast tooltips and legend information were hidden behind icon hovers, delaying comprehension.</p>
-        <p><strong>I architected:</strong> A consolidated visual system with always-visible status legend and intuitive scope controls.</p>
+        <p><strong>This revealed:</strong> The system had no canonical surface for maintenance state. Truth was fragmented across tools by accident, not design — and fleet managers paid the cost in reconciliation work.</p>
+        <p><strong>I architected:</strong> A calendar-grid workspace with equipment rows × monthly columns, status-coded tiles, and an always-visible legend.</p>
         <ul class=\"challenge-list\">
-            <li>Designed an always-visible status legend positioned adjacent to the forecast icon — eliminating the hover-to-discover pattern.</li>
-            <li>Established <strong>status-coded service tiles</strong> with distinct icons per service type (Oil Service, Safety Check, Planned Maintenance, Other Services) and color dots per state (Done, Overdue, Open, Cancelled, Forecast).</li>
-            <li>Default 6-month window for focused planning, with a prominent toggle to 12-month for long-term strategic oversight.</li>
+            <li>Always-visible status legend positioned adjacent to the forecast icon — eliminating the <em>\"what does this color mean?\"</em> question on every encounter.</li>
+            <li><strong>Status-coded service tiles</strong> with distinct icons per service type (Oil Service, Safety Check, Planned Maintenance) and color dots per state (Done, Overdue, Open, Cancelled, Forecast).</li>
+            <li>Default 6-month forecast window for focused operational planning, with a toggle to 12-month for strategic oversight.</li>
         </ul>
-        <p><strong>Why always-visible over hover?</strong> Industrial back-office users scan dashboards under time pressure. Information architecture must respect glanceability — critical context cannot be gated behind interactions.</p>
+        <p><strong>Why calendar-grid over alternatives:</strong> Maintenance is inherently temporal and per-equipment. Users think in <em>\"this truck, this month\"</em> — the grid encoded that mental model directly. No translation layer required.</p>
     </div>
     <div class=\"span6 mt-3\">
         <figure>
@@ -617,7 +626,7 @@ export const projects_v2 = [
         </figure>
         <figure>
           <img src=\"assets/img/portfolio/maintenance/slide-03.jpg\" alt=\"\" />
-          <figcaption>12-month scope: strategic long-term maintenance planning view</figcaption>
+          <figcaption>12-month scope — strategic long-term maintenance planning view</figcaption>
         </figure>
     </div>
 </section>
@@ -626,26 +635,27 @@ export const projects_v2 = [
 
 <section class=\"row\" id=\"solution-2\">
     <div class=\"span6\">
-        <h5>Problem 2: Density Mismatch → Adaptive Density Controls</h5>
+        <h5>Problem 2: Opaque Forecasting → Transparent Derivation</h5>
         <blockquote class=\"user-quote\">
-            \"The grid is either too compressed or too sparse depending on how many trucks I'm managing.\"
+            \"The forecasting logic isn't clear to me. I see a date but I don't know how the system got there.\"
         </blockquote>
-        <p><strong>This revealed:</strong> Fleet sizes varied dramatically across clients — from 30 vehicles (SMEs) to 500+ (DHL, Amazon). A fixed grid density served neither extreme well.</p>
-        <p><strong>I architected:</strong> A two-mode density system with persistent user preference.</p>
+        <p><strong>This revealed:</strong> Trust in predicted dates collapsed without visible derivation. Users defaulted to manual spreadsheets to recover certainty — undermining the value of the forecast itself.</p>
+        <p><strong>I architected:</strong> A progressive disclosure system that exposed the calculation behind every forecasted date.</p>
         <ul class=\"challenge-list\">
-            <li><strong>Comfortable mode:</strong> 6-month scope with larger tiles optimized for fleets under 100 vehicles — maximizing readability per cell.</li>
-            <li><strong>Compact mode:</strong> 12-month scope with smaller tiles for large-fleet overview — prioritizing pattern recognition over individual cell detail.</li>
-            <li>Density preference persisted per session — users don't re-adjust on every visit.</li>
+            <li>Forecast tooltip explicitly defined the formula: <em>\"All future service dates are forecast using the planned date and the service interval.\"</em></li>
+            <li>Visual differentiation between <strong>actual</strong> dates (rendered fully) and <strong>forecast</strong> dates (rendered with the forecast icon).</li>
+            <li>Boundary indicators communicating one-year access limits — <em>\"You can only access services one year back and forth from the present time\"</em> — surfacing system constraints before users hit them.</li>
         </ul>
+        <p><strong>Why tooltips over modals:</strong> Trust is built through <em>availability on demand</em>, not through onboarding ceremony. Tooltips placed the explanation where the question forms — exactly when the user pauses on the forecast icon.</p>
     </div>
     <div class=\"span6 mt-3\">
         <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-04.jpg\" alt=\"\" />
-          <figcaption>Density toggle: Comfortable (6-month, larger tiles) vs. Compact (12-month, smaller tiles)</figcaption>
+          <img src=\"assets/img/portfolio/maintenance/slide-02.jpg\" alt=\"\" />
+          <figcaption>Forecast tooltip surfaces the derivation formula on hover over the \"i\" icon</figcaption>
         </figure>
         <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-12.jpg\" alt=\"\" />
-          <figcaption>Flexible time-range controls with custom date selectors</figcaption>
+          <img src=\"assets/img/portfolio/maintenance/slide-15.jpg\" alt=\"\" />
+          <figcaption>Boundary indicator with today marker and always-visible color-code legend</figcaption>
         </figure>
     </div>
 </section>
@@ -654,31 +664,27 @@ export const projects_v2 = [
 
 <section class=\"row\" id=\"solution-3\">
     <div class=\"span6\">
-        <h5>Problem 3: Navigation Dead Ends → Transparent Boundary Communication</h5>
+        <h5>Problem 3: Action Barriers → Integrated Service Creation</h5>
         <blockquote class=\"user-quote\">
-            \"The arrows just disappeared — I thought the system was broken.\"
+            \"Creating a repair order means switching to another system entirely — by the time I get there I've lost half the context.\"
         </blockquote>
-        <p><strong>This revealed:</strong> When navigating beyond one-year limits, forward/back arrows disappeared without explanation. Users interpreted this as a bug rather than an intentional data boundary.</p>
-        <p><strong>I architected:</strong> A progressive disclosure system for navigation boundaries.</p>
+        <p><strong>This revealed:</strong> The handoff to external service-creation tools nullified everything users had just learned from the grid. Context was the entire deliverable — and the system was throwing it away at the worst possible moment.</p>
+        <p><strong>I architected:</strong> A details drawer that opens from any tile, preserving grid context while exposing equipment data, service metadata, and a one-click Call4Service launcher.</p>
         <ul class=\"challenge-list\">
-            <li>Out-of-range months rendered with reduced opacity — visually communicating unavailability without removing spatial context.</li>
-            <li>Hovering unavailable months triggers an explanatory tooltip: <em>\"You can only access services one year back and forth from present time.\"</em></li>
-            <li>Added a custom range picker enabling arbitrary date selection for investigations beyond the standard window.</li>
+            <li>Service metadata (type, status, interval, dates), full equipment information with visual reference, and direct link to detailed service reports — all rendered in a single drawer.</li>
+            <li><strong>Call4Service integration:</strong> <em>\"Create repair service\"</em> / <em>\"Create interval service\"</em> buttons prefill service-creation forms using equipment and maintenance context.</li>
+            <li>First-time user guidance surfaced inline: <em>\"If this is your first time using Call4Service, CustomerID and EquipmentID are required to create your account.\"</em></li>
         </ul>
-        <p><strong>Design decision:</strong> Keeping greyed-out months visible rather than hiding them was deliberate — it preserved the user's mental model of the timeline and avoided the \"where did it go?\" confusion that triggered support tickets.</p>
+        <p><strong>Why drawer over modal or full-screen takeover:</strong> The drawer preserved the grid behind it — users could re-anchor visually without losing investigative state. Modals hide context; drawers extend it.</p>
     </div>
     <div class=\"span6 mt-3\">
         <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-13.jpg\" alt=\"\" />
-          <figcaption>Timeline navigation at limit — arrows removed with no explanation (before)</figcaption>
+          <img src=\"assets/img/portfolio/maintenance/slide-08.jpg\" alt=\"\" />
+          <figcaption>Details drawer opens from a tile click — preserves grid context behind the panel</figcaption>
         </figure>
         <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-14.jpg\" alt=\"\" />
-          <figcaption>Disabled months with reduced opacity — preserved spatial context (after)</figcaption>
-        </figure>
-        <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-15.jpg\" alt=\"\" />
-          <figcaption>Navigation boundary tooltip explaining the one-year constraint</figcaption>
+          <img src=\"assets/img/portfolio/maintenance/slide-09.jpg\" alt=\"\" />
+          <figcaption>Call4Service launcher integrated in the drawer, with color-code legend visible</figcaption>
         </figure>
     </div>
 </section>

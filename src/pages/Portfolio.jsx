@@ -1,5 +1,5 @@
 import React from 'react'; // eslint-disable-line
-import { projects } from '../data/projects_v2';
+import { projects_v2 as projects } from '../data/projects_v2';
 import ProjectCard from '../components/ProjectCard';
 import HeroHeader from '../components/HeroHeader';
 import ScaleStrip from '../components/ScaleStrip';

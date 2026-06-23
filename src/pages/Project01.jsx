@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import mediumZoom from 'medium-zoom'
 import styles from './ProjectDetail.module.css'
 import ProjectNavBar from '../components/ProjectNavBar'
+import CaseSnapshot from '../components/CaseSnapshot'
 import { projects_v2 } from '../data/projects_v2'
 
 export default function Project01() {
@@ -73,9 +74,11 @@ export default function Project01() {
           <p className={styles.kicker}>Product Design · IoT · SaaS</p>
           <h1 className={styles.h1}>FMS: Battery Monitoring (SoC)</h1>
           <p className={styles.subtitle}>
-            Architecting a unified IoT battery-monitoring visualization 
+            Architecting a unified IoT battery-monitoring visualization
             for enterprise fleet management.
           </p>
+
+          <CaseSnapshot tldr={project.tldr} />
 
           {/* COVER IMAGE: Full Width */}
           <figure className={styles.figure}>

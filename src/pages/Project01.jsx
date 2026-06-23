@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import mediumZoom from 'medium-zoom'
 import styles from './ProjectDetail.module.css'
 import ProjectNavBar from '../components/ProjectNavBar'
 import CaseSnapshot from '../components/CaseSnapshot'
 import { projects_v2 } from '../data/projects_v2'
+import { sanitizeHtml } from '../utils/sanitize'
 
 export default function Project01() {
   const { id } = useParams()
-  const navigate = useNavigate()
   const articleRef = useRef(null)
 
   // This component is specifically for project "01" (SoC)
@@ -97,7 +97,7 @@ export default function Project01() {
           <div className={styles.contentWrapper}>
             <div 
                 className="medium-content-render"
-                dangerouslySetInnerHTML={{ __html: project.content }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(project.content) }}
                 ref={(el) => {
                     if (el) {
                         // Ensure all images in content are zoomable

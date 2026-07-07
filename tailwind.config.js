@@ -5,7 +5,18 @@ export default {
         "./src/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                foreground: 'var(--foreground)',
+                'muted-foreground': 'var(--muted-foreground)',
+                background: 'var(--background)',
+                accent: 'var(--accent)',
+            },
+            fontFamily: {
+                sans: ['ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', 'sans-serif'],
+                serif: ['Charter', 'Georgia', 'serif'],
+            },
+        },
     },
     plugins: [
         require('@tailwindcss/typography'),

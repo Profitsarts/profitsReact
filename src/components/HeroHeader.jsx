@@ -27,11 +27,15 @@ const HeroHeader = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6, ease: 'easeOut' }}
                     >
-                        {/* Photo Placeholder */}
-                        <div className="w-48 h-48 md:w-56 md:h-56 rounded-2xl bg-[#e8e8e8] border-2 border-[#d0d0d0] overflow-hidden mb-8 flex items-center justify-center shadow-sm">
-                            <svg className="w-16 h-16 text-[#b0b0b0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                            </svg>
+                        {/* Photo */}
+                        <div className="w-48 h-48 md:w-56 md:h-56 rounded-full bg-white overflow-hidden mb-8 shadow-sm">
+                            <img
+                                src="assets/img/avatar-luis-sierra.jpg"
+                                alt="Luis Sierra, Senior Digital Product Designer"
+                                className="w-full h-full object-cover"
+                                width="448"
+                                height="448"
+                            />
                         </div>
 
                         {/* Name */}

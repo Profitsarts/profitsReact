@@ -195,7 +195,7 @@ export const projects_v2 = [
         <h5>Industrial ethnography</h5>
         <p>Visited Jungheinrich manufacturing sites to observe back-office usage in high-pressure environments.</p>
         <h5>Discovery workshops</h5>
-        <p>Card sorting + surveys across all 8 modules to isolate technical vs. usability friction.</p>
+        <p>Card sorting + surveys across all 18 modules to isolate technical vs. usability friction.</p>
         <h5>Competitive analysis</h5>
         <p>Studied the forklift's built-in display interfaces to understand how operators read battery variables on-machine.</p>
     </div>
@@ -803,7 +803,7 @@ export const projects_v2 = [
     "technologies": ["Figma", "Storybook", "Design Tokens", "React"],
     "imagePath": "assets/img/portfolio/full/",
     "tldr": {
-        "problem": "Jungheinrich's FMS pattern library was a flat Sketch symbol set with no responsive behavior — 8 module teams couldn't tell if a component variant already existed before building a new one.",
+        "problem": "Jungheinrich's FMS pattern library was a flat Sketch symbol set with no responsive behavior — 18 module teams couldn't tell if a component variant already existed before building a new one.",
         "solution": "Led the full Sketch-to-Figma migration, rebuilt every component with Auto Layout, and restructured the library into a Utilities → Atoms → Molecules → Organisms taxonomy with a consistent State × Mode × Type variant grammar.",
         "result": "1,469 symbols under one taxonomy · two-tier token architecture (Raw + semantic Light/Dark) · Storybook parity checks catching implementation gaps before they shipped.",
         "client": "Jungheinrich Digital Solutions",
@@ -815,7 +815,7 @@ export const projects_v2 = [
 <section class=\"row\" id=\"hero-statement\">
     <div class=\"span12\">
         <blockquote style=\"border-left: 4px solid #f61067; padding: 20px 25px; background: #f0f0f0; font-size: 1.15rem; line-height: 1.6; margin-bottom: 2rem;\">
-            Owner of the unified Design System for Jungheinrich's Enterprise FMS — led the full Sketch-to-Figma migration and governed the single source of truth serving ~40 engineers across 8 product modules.
+            Owner of the unified Design System for Jungheinrich's Enterprise FMS — led the full Sketch-to-Figma migration and governed the single source of truth serving ~40 engineers across 18 product modules.
         </blockquote>
     </div>
 </section>
@@ -839,7 +839,7 @@ export const projects_v2 = [
     </div>
     <div class=\"span6\">
         <h5>Scale</h5>
-        <p><strong>1,469 symbols</strong> in the FMS_PatternLib Figma file — components and their variants combined. Serving 8 product modules and ~40 engineers.</p>
+        <p><strong>1,469 symbols</strong> in the FMS_PatternLib Figma file — components and their variants combined. Serving 18 product modules and ~40 engineers.</p>
         <h5>Tech Stack</h5>
         <p>Figma (Variables/Tokens, Auto Layout) · Storybook · React · Jira-driven DesignOps.</p>
         <h5>Timeline</h5>
@@ -990,6 +990,20 @@ export const projects_v2 = [
         </ul>
     </div>
 </section>
+<section class=\"row\">
+    <div class=\"span6\">
+        <figure>
+          <img src=\"assets/img/portfolio/design-system/authorship-01-version-history.jpg\" alt=\"\" />
+          <figcaption>Figma version history — components published and governed under a single author of record</figcaption>
+        </figure>
+    </div>
+    <div class=\"span6\">
+        <figure>
+          <img src=\"assets/img/portfolio/design-system/authorship-02-comments.jpg\" alt=\"\" />
+          <figcaption>Team review comment thread — the audit cadence in practice</figcaption>
+        </figure>
+    </div>
+</section>
 
 <div class=\"slide-separator\"></div>
 
@@ -1000,7 +1014,7 @@ export const projects_v2 = [
         <ul class=\"challenge-list\">
             <li>A library of 1,469 symbols organized under a taxonomy that scales to new product areas without restructuring.</li>
             <li>The Brush Zoom Tool, designed as a polyvalent Molecule, became eligible for reuse across the full FMS module suite — a direct product of the atomic restructure making reuse possible in the first place.</li>
-            <li>Led the full Sketch-to-Figma migration while the system continued serving 8 live product modules.</li>
+            <li>Led the full Sketch-to-Figma migration while the system continued serving 18 live product modules.</li>
         </ul>
         <blockquote style=\"border-left: 4px solid #f61067; padding: 15px 20px; background: #f0f0f0; margin: 2rem 0;\">
             Owning a design system used by 40 engineers across many product teams is fundamentally a governance problem before it's a component problem. The most durable decisions in this system weren't individual components — they were the taxonomy and the token architecture that made every future component easier to place correctly.

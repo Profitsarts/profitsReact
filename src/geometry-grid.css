@@ -1,0 +1,662 @@
+/* ==========================================================================
+   GEOMETRY OF DESIGN — CSS Grid & Layout Patterns
+   Based on Kimberly Elam's principles
+   ========================================================================== */
+
+/* ============================================================================
+   CSS CUSTOM PROPERTIES — All scales available
+   ============================================================================ */
+
+:root {
+    /* Golden Section Scale (φ = 1.618) — Maximum aesthetic harmony */
+    --golden-space-0: 4px;
+    --golden-space-1: 6.5px;
+    --golden-space-2: 10.5px;
+    --golden-space-3: 17px;
+    --golden-space-4: 27.5px;
+    --golden-space-5: 44.5px;
+    --golden-space-6: 72px;
+    --golden-space-7: 116.5px;
+    --golden-space-8: 188.5px;
+
+    --golden-text-xs: 10px;
+    --golden-text-sm: 16px;
+    --golden-text-base: 26px;
+    --golden-text-lg: 42px;
+    --golden-text-xl: 68px;
+    --golden-text-2xl: 110px;
+
+    /* Root-2 Scale (√2 = 1.414) — Practical, DIN-compatible */
+    --root2-space-0: 4px;
+    --root2-space-1: 5.7px;
+    --root2-space-2: 8px;
+    --root2-space-3: 11.3px;
+    --root2-space-4: 16px;
+    --root2-space-5: 22.6px;
+    --root2-space-6: 32px;
+    --root2-space-7: 45.3px;
+    --root2-space-8: 64px;
+    --root2-space-9: 90.5px;
+
+    --root2-text-xs: 10px;
+    --root2-text-sm: 14px;
+    --root2-text-base: 20px;
+    --root2-text-lg: 28px;
+    --root2-text-xl: 40px;
+    --root2-text-2xl: 56px;
+    --root2-text-3xl: 80px;
+
+    /* Fibonacci Scale — Organic growth */
+    --fib-space-0: 4px;
+    --fib-space-1: 8px;
+    --fib-space-2: 12px;
+    --fib-space-3: 20px;
+    --fib-space-4: 32px;
+    --fib-space-5: 52px;
+    --fib-space-6: 84px;
+    --fib-space-7: 136px;
+    --fib-space-8: 220px;
+
+    --fib-text-xs: 10px;
+    --fib-text-sm: 13px;
+    --fib-text-base: 23px;
+    --fib-text-lg: 36px;
+    --fib-text-xl: 59px;
+    --fib-text-2xl: 95px;
+
+    /* Corner Radii (Golden progression) */
+    --radius-none: 0;
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 6.5px;
+    --radius-lg: 10.5px;
+    --radius-xl: 17px;
+    --radius-xxl: 27.5px;
+    --radius-full: 9999px;
+
+    /* Default scale (can be overridden per-component) */
+    --space-unit: var(--golden-space-0);
+}
+
+/* ============================================================================
+   SCALE SWITCHER CLASSES
+   Apply to any container to switch its token context
+   ============================================================================ */
+
+.scale-golden {
+    --space-unit: var(--golden-space-0);
+    --space-xs: var(--golden-space-1);
+    --space-sm: var(--golden-space-2);
+    --space-md: var(--golden-space-3);
+    --space-lg: var(--golden-space-4);
+    --space-xl: var(--golden-space-5);
+    --space-2xl: var(--golden-space-6);
+
+    --text-xs: var(--golden-text-xs);
+    --text-sm: var(--golden-text-sm);
+    --text-base: var(--golden-text-base);
+    --text-lg: var(--golden-text-lg);
+    --text-xl: var(--golden-text-xl);
+    --text-2xl: var(--golden-text-2xl);
+}
+
+.scale-root2 {
+    --space-unit: var(--root2-space-0);
+    --space-xs: var(--root2-space-1);
+    --space-sm: var(--root2-space-2);
+    --space-md: var(--root2-space-3);
+    --space-lg: var(--root2-space-4);
+    --space-xl: var(--root2-space-5);
+    --space-2xl: var(--root2-space-6);
+    --space-3xl: var(--root2-space-7);
+    --space-4xl: var(--root2-space-8);
+
+    --text-xs: var(--root2-text-xs);
+    --text-sm: var(--root2-text-sm);
+    --text-base: var(--root2-text-base);
+    --text-lg: var(--root2-text-lg);
+    --text-xl: var(--root2-text-xl);
+    --text-2xl: var(--root2-text-2xl);
+    --text-3xl: var(--root2-text-3xl);
+}
+
+.scale-fibonacci {
+    --space-unit: var(--fib-space-0);
+    --space-xs: var(--fib-space-1);
+    --space-sm: var(--fib-space-2);
+    --space-md: var(--fib-space-3);
+    --space-lg: var(--fib-space-4);
+    --space-xl: var(--fib-space-5);
+    --space-2xl: var(--fib-space-6);
+    --space-3xl: var(--fib-space-7);
+
+    --text-xs: var(--fib-text-xs);
+    --text-sm: var(--fib-text-sm);
+    --text-base: var(--fib-text-base);
+    --text-lg: var(--fib-text-lg);
+    --text-xl: var(--fib-text-xl);
+    --text-2xl: var(--fib-text-2xl);
+}
+
+/* ============================================================================
+   GOLDEN SECTION GRIDS (13:8 ratio ≈ 1.618:1)
+   ============================================================================ */
+
+/**
+ * Golden Main + Sidebar
+ * 13 parts main, 8 parts sidebar
+ */
+.grid-golden-main-sidebar {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr) repeat(8, 1fr);
+    gap: var(--space-md);
+}
+
+.grid-golden-main-sidebar > .col-main {
+    grid-column: span 13;
+}
+
+.grid-golden-main-sidebar > .col-sidebar {
+    grid-column: span 8;
+}
+
+/**
+ * Golden Large (21:13 ratio)
+ * For wider screens
+ */
+.grid-golden-large {
+    display: grid;
+    grid-template-columns: repeat(21, 1fr) repeat(13, 1fr);
+    gap: var(--space-lg);
+}
+
+.grid-golden-large > .col-main {
+    grid-column: span 21;
+}
+
+.grid-golden-large > .col-sidebar {
+    grid-column: span 13;
+}
+
+/**
+ * Golden Two-Thirds
+ * Content takes 2/3 (golden major), sidebar 1/3 (golden minor)
+ * Approximation using 8:5 ratio
+ */
+.grid-golden-two-thirds {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr) repeat(5, 1fr);
+    gap: var(--space-md);
+}
+
+.grid-golden-two-thirds > .col-content {
+    grid-column: span 8;
+}
+
+.grid-golden-two-thirds > .col-sidebar {
+    grid-column: span 5;
+}
+
+/* ============================================================================
+   ROOT-2 GRIDS (10:7 ratio ≈ 1.414:1)
+   DIN paper proportions, excellent for responsive
+   ============================================================================ */
+
+/**
+ * Root-2 Wide + Narrow
+ * 10 parts wide, 7 parts narrow
+ */
+.grid-root2-wide-narrow {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr) repeat(7, 1fr);
+    gap: var(--space-md);
+}
+
+.grid-root2-wide-narrow > .col-wide {
+    grid-column: span 10;
+}
+
+.grid-root2-wide-narrow > .col-narrow {
+    grid-column: span 7;
+}
+
+/**
+ * Root-2 Equal Halves with √2 rhythm
+ * Each half = 7 units, gap = 1 unit
+ */
+.grid-root2-halves {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr) repeat(7, 1fr);
+    gap: var(--space-unit);
+}
+
+.grid-root2-halves > .col-half {
+    grid-column: span 7;
+}
+
+/* ============================================================================
+   FIBONACCI RESPONSIVE GRIDS
+   Each breakpoint uses adjacent Fibonacci numbers
+   ============================================================================ */
+
+/**
+ * Fibonacci Mobile (5 columns)
+ */
+.grid-fib-mobile {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-sm);
+}
+
+.grid-fib-mobile > .col-full { grid-column: span 5; }
+.grid-fib-mobile > .col-four-fifths { grid-column: span 4; }
+.grid-fib-mobile > .col-three-fifths { grid-column: span 3; }
+.grid-fib-mobile > .col-two-fifths { grid-column: span 2; }
+.grid-fib-mobile > .col-one-fifth { grid-column: span 1; }
+
+/**
+ * Fibonacci Tablet (8 columns)
+ */
+.grid-fib-tablet {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: var(--space-md);
+}
+
+.grid-fib-tablet > .col-full { grid-column: span 8; }
+.grid-fib-tablet > .col-three-quarters { grid-column: span 6; }
+.grid-fib-tablet > .col-two-thirds { grid-column: span 5; }
+.grid-fib-tablet > .col-half { grid-column: span 4; }
+.grid-fib-tablet > .col-third { grid-column: span 2; }
+.grid-fib-tablet > .col-quarter { grid-column: span 2; }
+
+/**
+ * Fibonacci Desktop (13 columns)
+ */
+.grid-fib-desktop {
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    gap: var(--space-lg);
+}
+
+.grid-fib-desktop > .col-full { grid-column: span 13; }
+.grid-fib-desktop > .col-main { grid-column: span 8; }
+.grid-fib-desktop > .col-sidebar { grid-column: span 5; }
+.grid-fib-desktop > .col-two-thirds { grid-column: span 8; }
+.grid-fib-desktop > .col-third { grid-column: span 5; }
+.grid-fib-desktop > .col-half { grid-column: span 6; }
+
+/**
+ * Fibonacci Wide (21 columns)
+ */
+.grid-fib-wide {
+    display: grid;
+    grid-template-columns: repeat(21, 1fr);
+    gap: var(--space-xl);
+}
+
+.grid-fib-wide > .col-full { grid-column: span 21; }
+.grid-fib-wide > .col-main { grid-column: span 13; }
+.grid-fib-wide > .col-sidebar { grid-column: span 8; }
+.grid-fib-wide > .col-golden-main { grid-column: span 13; }
+.grid-fib-wide > .col-golden-sidebar { grid-column: span 8; }
+
+/* ============================================================================
+   CLASSIC DESIGN GRIDS
+   Based on analyzed works in Geometry of Design
+   ============================================================================ */
+
+/**
+ * 3×3 Grid (Rossi's Il Conico kettle)
+ * Simple ternary division
+ */
+.grid-three-by-three {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: var(--space-md);
+}
+
+.grid-three-by-three > .cell-center {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.grid-three-by-three > .cell-corner-tl {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.grid-three-by-three > .cell-corner-tr {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.grid-three-by-three > .cell-corner-bl {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.grid-three-by-three > .cell-corner-br {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+/**
+ * 6×8 Cassandre Grid (L'Intransigéant poster)
+ * 48 square visual fields
+ */
+.grid-cassandre {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: var(--space-sm);
+}
+
+/* Common Cassandre positions */
+.grid-cassandre > .pos-top-left {
+    grid-column: 1 / 4;
+    grid-row: 1 / 3;
+}
+
+.grid-cassandre > .pos-top-right {
+    grid-column: 5 / 9;
+    grid-row: 1 / 3;
+}
+
+.grid-cassandre > .pos-bottom-left {
+    grid-column: 1 / 4;
+    grid-row: 4 / 7;
+}
+
+.grid-cassandre > .pos-bottom-right {
+    grid-column: 5 / 9;
+    grid-row: 4 / 7;
+}
+
+.grid-cassandre > .pos-center {
+    grid-column: 3 / 7;
+    grid-row: 2 / 5;
+}
+
+/**
+ * 5×5 Bauhaus Grid (Schleifer, Mies van der Rohe)
+ * Modular square grid
+ */
+.grid-bauhaus {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: var(--space-md);
+}
+
+.grid-bauhaus > .cell-center {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+.grid-bauhaus > .quadrant-tl {
+    grid-column: 1 / 3;
+    grid-row: 1 / 3;
+}
+
+.grid-bauhaus > .quadrant-tr {
+    grid-column: 4 / 6;
+    grid-row: 1 / 3;
+}
+
+.grid-bauhaus > .quadrant-bl {
+    grid-column: 1 / 3;
+    grid-row: 4 / 6;
+}
+
+.grid-bauhaus > .quadrant-br {
+    grid-column: 4 / 6;
+    grid-row: 4 / 6;
+}
+
+/* ============================================================================
+   GOLDEN SECTION FOCAL POINTS
+   For positioning key elements
+   ============================================================================ */
+
+/**
+ * Golden focal point container
+ * Use with position: relative on parent
+ */
+.golden-focal-container {
+    position: relative;
+}
+
+.golden-focal-point {
+    position: absolute;
+    /* Focal point at golden section from top-left */
+    top: 38.2%;  /* (1 - 1/φ) × 100% ≈ 38.2% */
+    left: 38.2%;
+    transform: translate(-50%, -50%);
+}
+
+.golden-focal-point-tr {
+    position: absolute;
+    top: 38.2%;
+    right: 38.2%;
+    transform: translate(50%, -50%);
+}
+
+.golden-focal-point-bl {
+    position: absolute;
+    bottom: 38.2%;
+    left: 38.2%;
+    transform: translate(-50%, 50%);
+}
+
+.golden-focal-point-br {
+    position: absolute;
+    bottom: 38.2%;
+    right: 38.2%;
+    transform: translate(50%, 50%);
+}
+
+/* ============================================================================
+   REGULATING LINES (Le Corbusier)
+   Diagonal-based alignment system
+   ============================================================================ */
+
+/**
+ * Regulating lines overlay
+ * Use as a debug/alignment guide
+ */
+.regulating-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.15;
+}
+
+.regulating-lines::before {
+    /* Main diagonal TL to BR */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        transparent 49.5%,
+        currentColor 49.5%,
+        currentColor 50.5%,
+        transparent 50.5%
+    );
+}
+
+.regulating-lines::after {
+    /* Counter diagonal TR to BL */
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        -45deg,
+        transparent 49.5%,
+        currentColor 49.5%,
+        currentColor 50.5%,
+        transparent 50.5%
+    );
+}
+
+/* ============================================================================
+   HARMONIC SUBDIVISION PATTERNS
+   For nested grid structures
+   ============================================================================ */
+
+/**
+ * Golden spiral subdivision pattern
+ * Each cell contains a smaller golden rectangle
+ */
+.golden-subdivision {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.golden-subdivision > .golden-square {
+    aspect-ratio: 1;
+}
+
+.golden-subdivision > .golden-rectangle-h {
+    aspect-ratio: 1.618 / 1;
+}
+
+.golden-subdivision > .golden-rectangle-v {
+    aspect-ratio: 1 / 1.618;
+}
+
+/**
+ * Root-2 harmonic subdivision
+ * Infinitely divisible while maintaining proportion
+ */
+.root2-subdivision {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.root2-subdivision.root2-v {
+    grid-template-rows: repeat(2, 1fr);
+}
+
+/* ============================================================================
+   RESPONSIVE CONTAINERS WITH GEOMETRIC MAX-WIDTH
+   ============================================================================ */
+
+/**
+ * Golden container
+ * Max-width based on golden section of viewport
+ */
+.container-golden {
+    width: 100%;
+    max-width: min(100vw - var(--space-2xl), 1170px); /* 1170 ≈ golden major of 1900 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/**
+ * Root-2 container
+ * Max-width scales with √2 rhythm
+ */
+.container-root2 {
+    width: 100%;
+    max-width: min(100vw - var(--space-2xl), 1131px); /* 1131 ≈ 800 × √2 */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+}
+
+/**
+ * Fibonacci container
+ * Organic max-width scaling
+ */
+.container-fibonacci {
+    width: 100%;
+    max-width: min(100vw - var(--space-2xl), 1152px); /* 1152 ≈ 704 + 448 (Fibonacci) */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ============================================================================
+   TYPOGRAPHIC GRID UTILITIES
+   ============================================================================ */
+
+/**
+ * Golden type rhythm
+ * Line heights in golden proportion
+ */
+.type-golden p,
+.type-golden h1,
+.type-golden h2,
+.type-golden h3,
+.type-golden h4,
+.type-golden h5,
+.type-golden h6 {
+    line-height: 1.618;
+}
+
+.type-golden h1 { font-size: var(--text-2xl); }
+.type-golden h2 { font-size: var(--text-xl); }
+.type-golden h3 { font-size: var(--text-lg); }
+.type-golden h4 { font-size: var(--text-base); }
+.type-golden h5 { font-size: var(--text-sm); }
+.type-golden h6 { font-size: var(--text-xs); }
+
+/**
+ * Root-2 type rhythm
+ * Line heights in √2 proportion
+ */
+.type-root2 p,
+.type-root2 h1,
+.type-root2 h2,
+.type-root2 h3,
+.type-root2 h4,
+.type-root2 h5,
+.type-root2 h6 {
+    line-height: 1.414;
+}
+
+.type-root2 h1 { font-size: var(--text-3xl); }
+.type-root2 h2 { font-size: var(--text-2xl); }
+.type-root2 h3 { font-size: var(--text-xl); }
+.type-root2 h4 { font-size: var(--text-lg); }
+.type-root2 h5 { font-size: var(--text-base); }
+.type-root2 h6 { font-size: var(--text-sm); }
+
+/* ============================================================================
+   CORNER RADIUS UTILITIES
+   Golden progression radii
+   ============================================================================ */
+
+.radius-none { border-radius: var(--radius-none); }
+.radius-xs { border-radius: var(--radius-xs); }
+.radius-sm { border-radius: var(--radius-sm); }
+.radius-md { border-radius: var(--radius-md); }
+.radius-lg { border-radius: var(--radius-lg); }
+.radius-xl { border-radius: var(--radius-xl); }
+.radius-xxl { border-radius: var(--radius-xxl); }
+.radius-full { border-radius: var(--radius-full); }
+
+/* ============================================================================
+   DEBUG MODE — Visualize grid structure
+   ============================================================================ */
+
+.debug-grid .grid-golden-main-sidebar,
+.debug-grid .grid-golden-large,
+.debug-grid .grid-root2-wide-narrow,
+.debug-grid .grid-fib-desktop,
+.debug-grid .grid-cassandre,
+.debug-grid .grid-bauhaus {
+    background-image:
+        linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: var(--space-md) var(--space-md);
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>Spanish</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.profits.macos.half-size-image</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>Half Size Image</string>
+	<key>CFBundlePackageType</key>
+	<string>Workflow</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>NSServices</key>
+	<array>
+		<dict>
+			<key>NSBackgroundColorName</key>
+			<string>backgroundColor</string>
+			<key>NSIconName</key>
+			<string>NSActionTemplate</string>
+			<key>NSMenuItem</key>
+			<dict>
+				<key>default</key>
+				<string>Half Size Image</string>
+			</dict>
+			<key>NSMessage</key>
+			<string>runWorkflowAsService</string>
+			<key>NSRequiredContext</key>
+			<dict>
+				<key>NSTextContent</key>
+				<string>FilePath</string>
+			</dict>
+			<key>NSSendTypes</key>
+			<array>
+				<string>public.image</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.13</string>
+</dict>
+</plist>

@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Grid3X3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ProjectNavBar = ({ prevProject, nextProject, isFirst, isLast, sticky = true }) => {
     return (

@@ -5,7 +5,7 @@ export const projects_v2 = [
     "title": "FMS: Battery Monitoring (SoC)",
     "category": "Product Design / IoT / SaaS",
     "client": "Jungheinrich Digital Solutions",
-    "date": "2022 - 2023",
+    "date": "2023 - 2024",
     "description": "Architecting a unified IoT battery-monitoring visualization for enterprise fleet management.",
     "thumbnail":  "assets/img/portfolio/thumb/07-soc-00-THMB.jpg",
     "featuredImage":  "assets/img/portfolio/full/07-soc-00-FULL.jpg",
@@ -17,6 +17,15 @@ export const projects_v2 = [
     ],
     "technologies": ["React", "Figma", "Design Systems", "IoT"],
     "imagePath":  "assets/img/portfolio/full/",
+    "tldr": {
+        "problem": "The battery chart failed in 3 critical scenarios — empty data indistinguishable from failure, micro-operations obscuring trends, and no historical navigation for incident investigation.",
+        "solution": "Brush-zoom tool inspired by Ableton Live's waveform navigation + contextual in-chart messaging. One component solves all 3 scenarios.",
+        "result": "100% resolution of pain points in post-launch testing · Incident investigation: 15 min → 3 min · Reusable molecule across all 8 FMS modules.",
+        "client": "Jungheinrich Digital Solutions",
+        "role": "Design System Owner",
+        "sector": "Enterprise IoT · B2B SaaS",
+        "year": "2023 – 2024"
+    },
     "content": `<!-- ========== HERO STATEMENT ========== -->
 <section class=\"row\" id=\"hero-statement\">
     <div class=\"span12\">
@@ -41,7 +50,7 @@ export const projects_v2 = [
         <h5>Company</h5>
         <p><strong>Jungheinrich Digital Solutions</strong> — global leader in Material Handling Equipment.</p>
         <h5>My Role</h5>
-        <p><strong>Senior Digital Product Designer & Design System Owner.</strong> Autonomous design authority across 4 of 8 modules. Sole owner of the design system serving all 8 modules and ~40 engineers.</p>
+        <p><strong>Senior Digital Product Designer & Design System Owner.</strong> Personally owned 3 modules (Maintenance, SoC, Service Reports) plus hands-on design work across the rest of the FMS suite. Sole owner of the design system serving ~40 engineers.</p>
     </div>
     <div class=\"span6\">
         <h5>Team</h5>
@@ -186,7 +195,7 @@ export const projects_v2 = [
         <h5>Industrial ethnography</h5>
         <p>Visited Jungheinrich manufacturing sites to observe back-office usage in high-pressure environments.</p>
         <h5>Discovery workshops</h5>
-        <p>Card sorting + surveys across all 8 modules to isolate technical vs. usability friction.</p>
+        <p>Card sorting + surveys across all 18 modules to isolate technical vs. usability friction.</p>
         <h5>Competitive analysis</h5>
         <p>Studied the forklift's built-in display interfaces to understand how operators read battery variables on-machine.</p>
     </div>
@@ -428,6 +437,15 @@ export const projects_v2 = [
     ],
     "technologies": ["React", "Figma", "Data Visualization", "User Research"],
     "imagePath":  "assets/img/portfolio/full/",
+    "tldr": {
+        "problem": "Fleet operators had no unified view of service schedules — maintenance planning, compliance verification, and repair requests lived in separate flows, forcing manual cross-checking across months of service data.",
+        "solution": "A calendar-grid maintenance workspace with 6/12-month scope toggles, a 4-state service status system (icon + color, never color alone), forecast transparency for upcoming months, and a detail drawer that launches Call4Service repairs directly.",
+        "result": "Shipped in production across the FMS fleet · Service planning, compliance checks, and repair initiation unified in one interface · 15 documented interaction states (B-01–B-15).",
+        "client": "Jungheinrich Digital Solutions",
+        "role": "Design System Owner",
+        "sector": "Enterprise IoT · B2B SaaS",
+        "year": "2022 – 2023"
+    },
     "content": `<!-- ========== HERO STATEMENT ========== -->
 <section class=\"row\" id=\"hero-statement\">
     <div class=\"span12\">
@@ -452,7 +470,7 @@ export const projects_v2 = [
         <h5>Company</h5>
         <p><strong>Jungheinrich Digital Solutions</strong> — global leader in Material Handling Equipment.</p>
         <h5>My Role</h5>
-        <p><strong>Senior Digital Product Designer & Design System Owner.</strong> Autonomous design authority across 4 of 8 modules. Sole owner of the design system serving all 8 modules and ~40 engineers.</p>
+        <p><strong>Senior Digital Product Designer & Design System Owner.</strong> Personally owned 3 modules (Maintenance, SoC, Service Reports) plus hands-on design work across the rest of the FMS suite. Sole owner of the design system serving ~40 engineers.</p>
     </div>
     <div class=\"span6\">
         <h5>Team</h5>
@@ -597,18 +615,18 @@ export const projects_v2 = [
 
 <section class=\"row\" id=\"solution-1\">
     <div class=\"span6\">
-        <h5>Problem 1: Grid Overload → Consolidated Legend & Scope Controls</h5>
+        <h5>Problem 1: Scattered Visibility → Unified Calendar Grid</h5>
         <blockquote class=\"user-quote\">
-            \"I want to see quickly which trucks are scheduled for maintenance this month.\"
+            \"Maintenance data lives in three different places — I never know if I'm looking at the latest version.\"
         </blockquote>
-        <p><strong>This revealed:</strong> On first load, the 6-month grid displayed dense rows of status-coded tiles without context for forecasted dates. Forecast tooltips and legend information were hidden behind icon hovers, delaying comprehension.</p>
-        <p><strong>I architected:</strong> A consolidated visual system with always-visible status legend and intuitive scope controls.</p>
+        <p><strong>This revealed:</strong> The system had no canonical surface for maintenance state. Truth was fragmented across tools by accident, not design — and fleet managers paid the cost in reconciliation work.</p>
+        <p><strong>I architected:</strong> A calendar-grid workspace with equipment rows × monthly columns, status-coded tiles, and an always-visible legend.</p>
         <ul class=\"challenge-list\">
-            <li>Designed an always-visible status legend positioned adjacent to the forecast icon — eliminating the hover-to-discover pattern.</li>
-            <li>Established <strong>status-coded service tiles</strong> with distinct icons per service type (Oil Service, Safety Check, Planned Maintenance, Other Services) and color dots per state (Done, Overdue, Open, Cancelled, Forecast).</li>
-            <li>Default 6-month window for focused planning, with a prominent toggle to 12-month for long-term strategic oversight.</li>
+            <li>Always-visible status legend positioned adjacent to the forecast icon — eliminating the <em>\"what does this color mean?\"</em> question on every encounter.</li>
+            <li><strong>Status-coded service tiles</strong> with distinct icons per service type (Oil Service, Safety Check, Planned Maintenance) and color dots per state (Done, Overdue, Open, Cancelled, Forecast).</li>
+            <li>Default 6-month forecast window for focused operational planning, with a toggle to 12-month for strategic oversight.</li>
         </ul>
-        <p><strong>Why always-visible over hover?</strong> Industrial back-office users scan dashboards under time pressure. Information architecture must respect glanceability — critical context cannot be gated behind interactions.</p>
+        <p><strong>Why calendar-grid over alternatives:</strong> Maintenance is inherently temporal and per-equipment. Users think in <em>\"this truck, this month\"</em> — the grid encoded that mental model directly. No translation layer required.</p>
     </div>
     <div class=\"span6 mt-3\">
         <figure>
@@ -617,7 +635,7 @@ export const projects_v2 = [
         </figure>
         <figure>
           <img src=\"assets/img/portfolio/maintenance/slide-03.jpg\" alt=\"\" />
-          <figcaption>12-month scope: strategic long-term maintenance planning view</figcaption>
+          <figcaption>12-month scope — strategic long-term maintenance planning view</figcaption>
         </figure>
     </div>
 </section>
@@ -626,26 +644,27 @@ export const projects_v2 = [
 
 <section class=\"row\" id=\"solution-2\">
     <div class=\"span6\">
-        <h5>Problem 2: Density Mismatch → Adaptive Density Controls</h5>
+        <h5>Problem 2: Opaque Forecasting → Transparent Derivation</h5>
         <blockquote class=\"user-quote\">
-            \"The grid is either too compressed or too sparse depending on how many trucks I'm managing.\"
+            \"The forecasting logic isn't clear to me. I see a date but I don't know how the system got there.\"
         </blockquote>
-        <p><strong>This revealed:</strong> Fleet sizes varied dramatically across clients — from 30 vehicles (SMEs) to 500+ (DHL, Amazon). A fixed grid density served neither extreme well.</p>
-        <p><strong>I architected:</strong> A two-mode density system with persistent user preference.</p>
+        <p><strong>This revealed:</strong> Trust in predicted dates collapsed without visible derivation. Users defaulted to manual spreadsheets to recover certainty — undermining the value of the forecast itself.</p>
+        <p><strong>I architected:</strong> A progressive disclosure system that exposed the calculation behind every forecasted date.</p>
         <ul class=\"challenge-list\">
-            <li><strong>Comfortable mode:</strong> 6-month scope with larger tiles optimized for fleets under 100 vehicles — maximizing readability per cell.</li>
-            <li><strong>Compact mode:</strong> 12-month scope with smaller tiles for large-fleet overview — prioritizing pattern recognition over individual cell detail.</li>
-            <li>Density preference persisted per session — users don't re-adjust on every visit.</li>
+            <li>Forecast tooltip explicitly defined the formula: <em>\"All future service dates are forecast using the planned date and the service interval.\"</em></li>
+            <li>Visual differentiation between <strong>actual</strong> dates (rendered fully) and <strong>forecast</strong> dates (rendered with the forecast icon).</li>
+            <li>Boundary indicators communicating one-year access limits — <em>\"You can only access services one year back and forth from the present time\"</em> — surfacing system constraints before users hit them.</li>
         </ul>
+        <p><strong>Why tooltips over modals:</strong> Trust is built through <em>availability on demand</em>, not through onboarding ceremony. Tooltips placed the explanation where the question forms — exactly when the user pauses on the forecast icon.</p>
     </div>
     <div class=\"span6 mt-3\">
         <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-04.jpg\" alt=\"\" />
-          <figcaption>Density toggle: Comfortable (6-month, larger tiles) vs. Compact (12-month, smaller tiles)</figcaption>
+          <img src=\"assets/img/portfolio/maintenance/slide-02.jpg\" alt=\"\" />
+          <figcaption>Forecast tooltip surfaces the derivation formula on hover over the \"i\" icon</figcaption>
         </figure>
         <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-12.jpg\" alt=\"\" />
-          <figcaption>Flexible time-range controls with custom date selectors</figcaption>
+          <img src=\"assets/img/portfolio/maintenance/slide-15.jpg\" alt=\"\" />
+          <figcaption>Boundary indicator with today marker and always-visible color-code legend</figcaption>
         </figure>
     </div>
 </section>
@@ -654,31 +673,27 @@ export const projects_v2 = [
 
 <section class=\"row\" id=\"solution-3\">
     <div class=\"span6\">
-        <h5>Problem 3: Navigation Dead Ends → Transparent Boundary Communication</h5>
+        <h5>Problem 3: Action Barriers → Integrated Service Creation</h5>
         <blockquote class=\"user-quote\">
-            \"The arrows just disappeared — I thought the system was broken.\"
+            \"Creating a repair order means switching to another system entirely — by the time I get there I've lost half the context.\"
         </blockquote>
-        <p><strong>This revealed:</strong> When navigating beyond one-year limits, forward/back arrows disappeared without explanation. Users interpreted this as a bug rather than an intentional data boundary.</p>
-        <p><strong>I architected:</strong> A progressive disclosure system for navigation boundaries.</p>
+        <p><strong>This revealed:</strong> The handoff to external service-creation tools nullified everything users had just learned from the grid. Context was the entire deliverable — and the system was throwing it away at the worst possible moment.</p>
+        <p><strong>I architected:</strong> A details drawer that opens from any tile, preserving grid context while exposing equipment data, service metadata, and a one-click Call4Service launcher.</p>
         <ul class=\"challenge-list\">
-            <li>Out-of-range months rendered with reduced opacity — visually communicating unavailability without removing spatial context.</li>
-            <li>Hovering unavailable months triggers an explanatory tooltip: <em>\"You can only access services one year back and forth from present time.\"</em></li>
-            <li>Added a custom range picker enabling arbitrary date selection for investigations beyond the standard window.</li>
+            <li>Service metadata (type, status, interval, dates), full equipment information with visual reference, and direct link to detailed service reports — all rendered in a single drawer.</li>
+            <li><strong>Call4Service integration:</strong> <em>\"Create repair service\"</em> / <em>\"Create interval service\"</em> buttons prefill service-creation forms using equipment and maintenance context.</li>
+            <li>First-time user guidance surfaced inline: <em>\"If this is your first time using Call4Service, CustomerID and EquipmentID are required to create your account.\"</em></li>
         </ul>
-        <p><strong>Design decision:</strong> Keeping greyed-out months visible rather than hiding them was deliberate — it preserved the user's mental model of the timeline and avoided the \"where did it go?\" confusion that triggered support tickets.</p>
+        <p><strong>Why drawer over modal or full-screen takeover:</strong> The drawer preserved the grid behind it — users could re-anchor visually without losing investigative state. Modals hide context; drawers extend it.</p>
     </div>
     <div class=\"span6 mt-3\">
         <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-13.jpg\" alt=\"\" />
-          <figcaption>Timeline navigation at limit — arrows removed with no explanation (before)</figcaption>
+          <img src=\"assets/img/portfolio/maintenance/slide-08.jpg\" alt=\"\" />
+          <figcaption>Details drawer opens from a tile click — preserves grid context behind the panel</figcaption>
         </figure>
         <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-14.jpg\" alt=\"\" />
-          <figcaption>Disabled months with reduced opacity — preserved spatial context (after)</figcaption>
-        </figure>
-        <figure>
-          <img src=\"assets/img/portfolio/maintenance/slide-15.jpg\" alt=\"\" />
-          <figcaption>Navigation boundary tooltip explaining the one-year constraint</figcaption>
+          <img src=\"assets/img/portfolio/maintenance/slide-09.jpg\" alt=\"\" />
+          <figcaption>Call4Service launcher integrated in the drawer, with color-code legend visible</figcaption>
         </figure>
     </div>
 </section>
@@ -776,22 +791,31 @@ export const projects_v2 = [
     "client": "Jungheinrich Digital Solutions",
     "date": "2023 - 2024",
     "description": "Architecting a multi-module design system governing 8 enterprise products and ~40 engineers.",
-    "thumbnail": "assets/img/portfolio/thumb/01-wordfinder-THMB.jpg",
-    "featuredImage": "assets/img/portfolio/full/01-wordfinder-FULL.jpg",
+    "thumbnail": "assets/img/portfolio/thumb/09-design-system-THMB.jpg",
+    "featuredImage": "assets/img/portfolio/full/09-design-system-FULL.jpg",
     "tags": ["ux_ui", "design"],
     "images": [
       {
-        "name": "01-design-system-FULL.jpg",
+        "name": "09-design-system-FULL.jpg",
         "text": "FMS Design System"
       }
     ],
     "technologies": ["Figma", "Storybook", "Design Tokens", "React"],
     "imagePath": "assets/img/portfolio/full/",
+    "tldr": {
+        "problem": "Jungheinrich's FMS pattern library was a flat Sketch symbol set with no responsive behavior — 18 module teams couldn't tell if a component variant already existed before building a new one.",
+        "solution": "Led the full Sketch-to-Figma migration, rebuilt every component with Auto Layout, and restructured the library into a Utilities → Atoms → Molecules → Organisms taxonomy with a consistent State × Mode × Type variant grammar.",
+        "result": "1,469 symbols under one taxonomy · two-tier token architecture (Raw + semantic Light/Dark) · Storybook parity checks catching implementation gaps before they shipped.",
+        "client": "Jungheinrich Digital Solutions",
+        "role": "Design System Owner",
+        "sector": "Enterprise IoT · B2B SaaS",
+        "year": "2022 – 2024"
+    },
     "content": `<!-- ========== HERO STATEMENT ========== -->
 <section class=\"row\" id=\"hero-statement\">
     <div class=\"span12\">
         <blockquote style=\"border-left: 4px solid #f61067; padding: 20px 25px; background: #f0f0f0; font-size: 1.15rem; line-height: 1.6; margin-bottom: 2rem;\">
-            Architected and governed the unified Design System for Jungheinrich's Enterprise FMS — establishing a single source of truth for ~40 engineers across 8 product modules and reducing time-to-market for new features by 40%.
+            Owner of the unified Design System for Jungheinrich's Enterprise FMS — led the full Sketch-to-Figma migration and governed the single source of truth serving ~40 engineers across 18 product modules.
         </blockquote>
     </div>
 </section>
@@ -807,27 +831,194 @@ export const projects_v2 = [
 <section class=\"row\">
     <div class=\"span6\">
         <h5>Product</h5>
-        <p><strong>FMS Design System</strong> — The foundational UI/UX layer for a multi-product enterprise ecosystem.</p>
+        <p><strong>FMS Design System</strong> — the foundational UI/UX layer for Jungheinrich's Fleet Management System, an Enterprise B2B SaaS for intralogistics and Industrial IoT.</p>
         <h5>Company</h5>
-        <p><strong>Jungheinrich Digital Solutions</strong></p>
+        <p><strong>Jungheinrich Digital Solutions</strong> — global leader in Material Handling Equipment.</p>
         <h5>My Role</h5>
-        <p><strong>Design System Architect & Owner</strong>. Responsible for token strategy, component governance, and engineering alignment.</p>
+        <p><strong>Design System Owner.</strong> Personally owned 3 product modules (Maintenance, SoC, Service Reports) while governing the system serving the full FMS suite.</p>
     </div>
     <div class=\"span6\">
         <h5>Scale</h5>
-        <p>150+ components, 8 modules, ~40 engineers, 2 dedicated DS developers.</p>
+        <p><strong>1,469 symbols</strong> in the FMS_PatternLib Figma file — components and their variants combined. Serving 18 product modules and ~40 engineers.</p>
         <h5>Tech Stack</h5>
-        <p>Figma (Variables/Tokens) · Storybook · React · Jira.</p>
+        <p>Figma (Variables/Tokens, Auto Layout) · Storybook · React · Jira-driven DesignOps.</p>
+        <h5>Timeline</h5>
+        <p>2022 – 2024</p>
     </div>
 </section>
 
 <div class=\"slide-separator\"></div>
 
-<!-- ========== WORK IN PROGRESS ========== -->
-<section class=\"row\" id=\"wip-template\">
-    <div class=\"span12 text-center\" style=\"padding: 100px 0;\">
-        <h2 style=\"font-weight: 300; letter-spacing: 0.2em; text-transform: uppercase; color: #323a45;\">Case Study Under Development</h2>
-        <p style=\"color: #666; max-width: 600px; margin: 20px auto;\">This section is currently being architected to match the narrative depth of the SoC and Maintenance case studies. Stay tuned for the full breakdown of token governance and component orchestration.</p>
+<!-- ========== INHERITANCE & DIAGNOSIS ========== -->
+<section class=\"row\" id=\"inheritance-diagnosis\">
+    <div class=\"span12\">
+        <h4>Inheritance & Diagnosis</h4>
+        <p>I did not build this system from zero — and that's the more senior story. Design systems at this scale are rarely greenfield; the real work is stewardship: diagnosing what a system is missing, then rebuilding it without breaking the 8 product teams depending on it daily.</p>
+        <p><strong>What I inherited:</strong> a Sketch-based component library — flat symbol organization, no responsive or auto-layout behavior, and inconsistent naming that made it hard for module teams to know whether a variant already existed before building a new one.</p>
+        <p>A restructuring pass exists in the Sketch source itself, dated <strong>December 2022</strong> — meaning the diagnosis and reorganization effort began before the migration to Figma, not as a side effect of switching tools. The system was being actively rethought first, migrated second.</p>
+    </div>
+</section>
+
+<div class=\"slide-separator\"></div>
+
+<!-- ========== THE MIGRATION ========== -->
+<section class=\"row\" id=\"the-migration\">
+    <div class=\"span12\">
+        <h4>The Migration — Sketch to Figma</h4>
+        <p>A team review of the Figma migration is dated <strong>May 25, 2023</strong>, anchoring the cutover to a real, citable point in the system's history.</p>
+        <figure>
+          <img src=\"assets/img/portfolio/design-system/migration-01-figma-collaboration.jpg\" alt=\"\" />
+          <figcaption>Migration team review, May 25 2023 — framing Figma as the enablement and collaboration platform for the FMS design system</figcaption>
+        </figure>
+    </div>
+</section>
+<section class=\"row\">
+    <div class=\"span6\">
+        <h5>Full Auto Layout rebuild</h5>
+        <p>Every component was rebuilt — not copy-pasted — to use Figma's Auto Layout. The responsive containers behind the Brush Zoom Tool (Hug widths of 830×80 / 310×80 / 443×80 / 536×80 px) are a direct product of this rebuild, not a Sketch-era carryover.</p>
+        <figure>
+          <img src=\"assets/img/portfolio/design-system/migration-02-autolayout-sync.jpg\" alt=\"\" />
+          <figcaption>Auto Layout rebuilt every component to stay in sync with the front-end implementation</figcaption>
+        </figure>
+    </div>
+    <div class=\"span6\">
+        <h5>Governance stood up alongside the migration</h5>
+        <p>Dedicated Figma files — a <strong>Gap Survey</strong> auditing PatternLib against the live product, and recurring <strong>Team Reviews</strong> — show a formal audit process was established alongside the migration, not bolted on after. The Gap Survey contains a full multi-page audit across modules (User, Inventory, Locations, Operating Hours, Operational Costs, Main Table, Tab Navi, Detail Layer) with screenshots dated September 2023.</p>
+    </div>
+</section>
+
+<div class=\"slide-separator\"></div>
+
+<!-- ========== RESTRUCTURE & TAXONOMY ========== -->
+<section class=\"row\" id=\"restructure-taxonomy\">
+    <div class=\"span12\">
+        <h4>The Restructure — Taxonomy & Variant Grammar</h4>
+        <p>The current PatternLib is organized on atomic-design principles, confirmed directly from the Figma file structure:</p>
+        <pre style=\"background:#0f0f0f; color:#e0e0e0; padding:20px 25px; border-radius:6px; overflow-x:auto; font-size:0.85rem; line-height:1.6;\"><code>00 Utilities   → tokens, dividers, notifications, helper tools, color primitives
+01 Atoms       → icons, logos, graphical atoms, loading indicators, backgrounds
+02 Molecules   → composed UI units: dropdowns, tab bars, state tags, legends,
+                 calendar tiles, the Brush Zoom Tool
+03 Organisms   → full functional sections: header, toolbar, filter panel,
+                 main table, date picker, skeleton loaders</code></pre>
+    </div>
+</section>
+<section class=\"row\">
+    <div class=\"span6\">
+        <h5>Variant grammar</h5>
+        <p>Components follow a consistent State × Mode × Type variant system across the whole library — the same discipline behind IBM Carbon's and Shopify Polaris's component systems.</p>
+        <ul class=\"challenge-list\">
+            <li><strong>State axis:</strong> Default → Hover → Pressed/Selected → Disabled → Focused → Skeleton (loading), applied consistently across unrelated component families.</li>
+            <li><strong>Mode axis:</strong> Bright/Dark theming built into the same component definitions, not maintained as separate duplicate files.</li>
+            <li><strong>Type axis:</strong> where a component represents multiple real-world entities (Location, Equipment, Employee types in list rows), each gets its own Type variant rather than a one-off custom component.</li>
+        </ul>
+    </div>
+    <div class=\"span6\">
+        <h5>Domain logic as system components</h5>
+        <p>A dedicated <strong>Charge component set</strong> spans the full State of Charge range (−10% through 100%) as first-class variants — proof that even highly domain-specific product logic, like battery charge bands, was modeled as reusable system components rather than one-off screen-level hacks.</p>
+    </div>
+</section>
+<section class=\"row\">
+    <div class=\"span6\">
+        <figure>
+          <img src=\"assets/img/portfolio/design-system/taxonomy-01-components-restored.jpg\" alt=\"\" />
+          <figcaption>The restored library — atoms, molecules, and organisms rebuilt under one taxonomy during the migration</figcaption>
+        </figure>
+    </div>
+    <div class=\"span6\">
+        <figure>
+          <img src=\"assets/img/portfolio/design-system/taxonomy-02-variants.jpg\" alt=\"\" />
+          <figcaption>Variant discipline — collapsing button permutations into a single component set: too much is less, less is more</figcaption>
+        </figure>
+    </div>
+</section>
+
+<div class=\"slide-separator\"></div>
+
+<!-- ========== DESIGN TOKENS ========== -->
+<section class=\"row\" id=\"design-tokens\">
+    <div class=\"span12\">
+        <h4>Design Tokens — The Technical Backbone</h4>
+        <p>The system runs on a two-tier token architecture using the Tokens Studio / Figma Variables format — the same architecture recommended by the Design Tokens Community Group (DTCG) standard.</p>
+    </div>
+</section>
+<section class=\"row\">
+    <div class=\"span6\">
+        <h5>Raw</h5>
+        <p>Primitive values — the actual color, spacing, and type values with no semantic meaning attached.</p>
+    </div>
+    <div class=\"span6\">
+        <h5>PatLib Expansion</h5>
+        <p>Semantic tokens — the meaningful layer components actually reference (e.g. \"critical\" rather than a specific hex), with dedicated <strong>Light</strong> and <strong>Dark</strong> modes as a first-class token dimension. Supporting style collections exist for text, effect (shadows/blur), and color, each versioned independently via a manifest tying the system together for Figma's Variables tooling.</p>
+    </div>
+</section>
+
+<div class=\"slide-separator\"></div>
+
+<!-- ========== COMPONENT DEEP-DIVES ========== -->
+<section class=\"row\" id=\"component-deep-dives\">
+    <div class=\"span12\">
+        <h4>Component Deep-Dives</h4>
+        <p>Two components illustrate the range of problems the restructured system was built to solve.</p>
+    </div>
+</section>
+<section class=\"row\">
+    <div class=\"span6\">
+        <h5>Brush Zoom Tool (02 Molecules / 22)</h5>
+        <p>Designed for the SoC battery chart, built as a polyvalent Molecule reusable for any X/Y-axis chart across the FMS suite. Full anatomy in the <strong>Battery Monitoring (SoC)</strong> case study.</p>
+        <figure>
+          <img src=\"assets/img/portfolio/soc/slide-22.jpg\" alt=\"\" />
+          <figcaption>The Brush Zoom Tool — Figma component, reused across the system as a polyvalent Molecule</figcaption>
+        </figure>
+    </div>
+    <div class=\"span6\">
+        <h5>Calendar Tiles (02 Molecules / 21)</h5>
+        <p>Used in the Maintenance Management calendar-grid interface. A second polyvalent Molecule, demonstrating range across two different product problems — time-series investigation vs. scheduling. Full anatomy in the <strong>Maintenance Management</strong> case study.</p>
+    </div>
+</section>
+
+<div class=\"slide-separator\"></div>
+
+<!-- ========== GOVERNANCE & DESIGNOPS ========== -->
+<section class=\"row\" id=\"governance-designops\">
+    <div class=\"span12\">
+        <h4>Governance & DesignOps</h4>
+        <ul class=\"challenge-list\">
+            <li><strong>Approval flow:</strong> new components required Head of Design review before being added to the system.</li>
+            <li><strong>Formal audit cadence:</strong> the Gap Survey file and recurring Team Review sessions kept the pattern library and the live product in sync — a standing governance ritual, not a one-off cleanup.</li>
+            <li><strong>Storybook parity checks:</strong> personally reviewed CSS properties of every Storybook implementation against the Figma source of truth, filing Jira tickets for any mismatch.</li>
+            <li><strong>Engineer self-service:</strong> the Storybook documentation layer, paired with the token architecture, let ~40 engineers consume the system without a designer in every implementation loop.</li>
+        </ul>
+    </div>
+</section>
+<section class=\"row\">
+    <div class=\"span6\">
+        <figure>
+          <img src=\"assets/img/portfolio/design-system/authorship-01-version-history.jpg\" alt=\"\" />
+          <figcaption>Figma version history — components published and governed under a single author of record</figcaption>
+        </figure>
+    </div>
+    <div class=\"span6\">
+        <figure>
+          <img src=\"assets/img/portfolio/design-system/authorship-02-comments.jpg\" alt=\"\" />
+          <figcaption>Team review comment thread — the audit cadence in practice</figcaption>
+        </figure>
+    </div>
+</section>
+
+<div class=\"slide-separator\"></div>
+
+<!-- ========== IMPACT & REFLECTION ========== -->
+<section class=\"row\" id=\"impact-reflection\">
+    <div class=\"span12\">
+        <h4>Impact & Reflection</h4>
+        <ul class=\"challenge-list\">
+            <li>A library of 1,469 symbols organized under a taxonomy that scales to new product areas without restructuring.</li>
+            <li>The Brush Zoom Tool, designed as a polyvalent Molecule, became eligible for reuse across the full FMS module suite — a direct product of the atomic restructure making reuse possible in the first place.</li>
+            <li>Led the full Sketch-to-Figma migration while the system continued serving 18 live product modules.</li>
+        </ul>
+        <blockquote style=\"border-left: 4px solid #f61067; padding: 15px 20px; background: #f0f0f0; margin: 2rem 0;\">
+            Owning a design system used by 40 engineers across many product teams is fundamentally a governance problem before it's a component problem. The most durable decisions in this system weren't individual components — they were the taxonomy and the token architecture that made every future component easier to place correctly.
+        </blockquote>
     </div>
 </section>\n`
   }

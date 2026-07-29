@@ -1,0 +1,243 @@
+/* SlopAudio — Editorial Minimalism Design System */
+
+:root {
+    --slop-base950: #121618;
+    --slop-base900: #171c1f;
+    --slop-base800: #1e2427;
+    --slop-base700: #2a3236;
+    --slop-base600: #3a4448;
+    --slop-base400: #6d787c;
+    --slop-base200: #b6bec0;
+    --slop-base050: #e9eded;
+    --slop-accent: #d6a24e;
+    --slop-radius: 2px;
+}
+
+.slop-app {
+    background-color: var(--slop-base900);
+    color: var(--slop-base050);
+    min-height: 100vh;
+    font-family: 'Archivo', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.slop-surface {
+    background-color: var(--slop-base800);
+    border-radius: var(--slop-radius);
+    position: relative;
+}
+
+.slop-index-tick {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 14px;
+    height: 2px;
+    background-color: var(--slop-accent);
+}
+
+.slop-divider {
+    border: none;
+    border-top: 1px solid var(--slop-base700);
+    margin: 0;
+}
+
+.slop-h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--slop-base050);
+    letter-spacing: -0.02em;
+}
+
+.slop-h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--slop-base050);
+    letter-spacing: -0.01em;
+}
+
+.slop-body {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--slop-base200);
+}
+
+.slop-body-muted {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--slop-base400);
+}
+
+.slop-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--slop-base400);
+}
+
+.slop-mono {
+    font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', monospace;
+    font-size: 0.8rem;
+    background: var(--slop-base950);
+    padding: 2px 6px;
+    border-radius: var(--slop-radius);
+    color: var(--slop-base200);
+}
+
+.slop-accent-text {
+    color: var(--slop-accent);
+    font-weight: 600;
+}
+
+.slop-link {
+    color: var(--slop-accent);
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+
+.slop-link:hover {
+    opacity: 0.8;
+}
+
+.slop-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 3px 8px;
+    border: 1px solid var(--slop-base600);
+    border-radius: var(--slop-radius);
+    color: var(--slop-base200);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+}
+
+.slop-tag:hover {
+    border-color: var(--slop-accent);
+    color: var(--slop-accent);
+}
+
+.slop-tag-active {
+    border-color: var(--slop-accent);
+    color: var(--slop-accent);
+    background-color: rgba(214, 162, 78, 0.08);
+}
+
+/* Status dots */
+.slop-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.slop-status-released { background-color: #4caf50; }
+.slop-status-wip { background-color: var(--slop-accent); }
+.slop-status-needs-review { background-color: #c66; }
+
+/* Severity dots */
+.slop-severity-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.slop-severity-high { background-color: #e8543f; }
+.slop-severity-medium { background-color: var(--slop-accent); }
+.slop-severity-low { background-color: var(--slop-base400); }
+
+/* Encoder bars (decorative) */
+.slop-encoder {
+    width: 6px;
+    height: 48px;
+    background-color: var(--slop-base700);
+    border-radius: var(--slop-radius);
+    position: relative;
+    overflow: hidden;
+}
+
+.slop-encoder-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--slop-accent);
+    border-radius: 0 0 var(--slop-radius) var(--slop-radius);
+}
+
+.slop-encoder-cap {
+    position: absolute;
+    top: 0;
+    left: -1px;
+    width: 8px;
+    height: 2px;
+    background-color: var(--slop-base050);
+    z-index: 1;
+}
+
+/* Fade-in animation */
+.slop-fade-in {
+    animation: slopFadeIn 0.3s ease-out;
+}
+
+@keyframes slopFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Catalog grid & cards --- */
+.slop-grid-catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.slop-plugin-card {
+    display: block;
+    text-decoration: none;
+    background-color: var(--slop-base800);
+    border-radius: var(--slop-radius);
+    padding: 24px;
+    position: relative;
+    transition: background-color 0.15s, transform 0.15s;
+    cursor: pointer;
+}
+
+.slop-plugin-card:hover {
+    background-color: var(--slop-base700);
+    transform: translateY(-2px);
+}
+
+/* --- Category buttons --- */
+.slop-cat-btn {
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 6px 12px;
+    background: var(--slop-base800);
+    color: var(--slop-base200);
+    border: 1px solid var(--slop-base700);
+    border-radius: var(--slop-radius);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.slop-cat-btn:hover {
+    border-color: var(--slop-base600);
+    color: var(--slop-base050);
+}
+
+.slop-cat-btn-active {
+    border-color: var(--slop-accent);
+    color: var(--slop-accent);
+    background-color: rgba(214, 162, 78, 0.08);
+}

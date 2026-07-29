@@ -1,8 +1,11 @@
-import { useParams, Link, useSearchParams } from 'react-router-dom';
-import { projects } from '../data/projects_v2';
+import { useRef, useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { projects_v2 as projects } from '../data/projects_v2';
 import mediumZoom from 'medium-zoom';
 import ProjectNavBar from '../components/ProjectNavBar';
+import CaseSnapshot from '../components/CaseSnapshot';
 import styles from './ProjectDetail.module.css';
+import { sanitizeHtml } from '../utils/sanitize';
 
 const ProjectDetail = () => {
     const { id } = useParams();
@@ -84,6 +87,8 @@ const ProjectDetail = () => {
                         <h1 className={styles.h1}>{project.title}</h1>
                         <p className={styles.subtitle}>{project.description}</p>
 
+                        <CaseSnapshot tldr={project.tldr} />
+
                         {/* COVER IMAGE: Full Width */}
                         {coverImageSrc && (
                             <figure className={styles.figure}>
@@ -107,7 +112,7 @@ const ProjectDetail = () => {
                             {(project.content || project.legacy_content) ? (
                                 <div
                                     className="medium-content-render"
-                                    dangerouslySetInnerHTML={{ __html: (version === 'legacy' && project.legacy_content) ? project.legacy_content : project.content }}
+                                    dangerouslySetInnerHTML={{ __html: sanitizeHtml((version === 'legacy' && project.legacy_content) ? project.legacy_content : project.content) }}
                                     ref={(el) => {
                                         if (el) {
                                             // Ensure all images in content are zoomable and have retina fallback

@@ -1,15 +1,42 @@
+/* ==========================================================================
+   GEOMETRY OF DESIGN — Token System Integration
+   Based on Kimberly Elam's principles
+   ========================================================================== */
+@import './geometry-grid.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
     :root {
+        /* Existing design tokens */
         --font-sans: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
         --font-serif: 'Charter', 'Georgia', serif;
         --foreground: #323a45;
         --muted-foreground: #64748b;
         --background: #f8f8f8;
         --accent: #f61067;
+
+        /* Geometry of Design — Golden Section Integration */
+        --phi: 1.618033988749895;
+        --golden-xs: 6.5px;    /* 4 × φ */
+        --golden-sm: 10.5px;    /* 6.5 × φ */
+        --golden-md: 17px;      /* 10.5 × φ */
+        --golden-lg: 27.5px;    /* 17 × φ */
+        --golden-xl: 44.5px;    /* 27.5 × φ */
+        --golden-2xl: 72px;     /* 44.5 × φ */
+
+        /* Golden type scale (base 10) */
+        --golden-text-xs: 10px;
+        --golden-text-sm: 16px;   /* 10 × φ */
+        --golden-text-base: 26px; /* 16 × φ */
+        --golden-text-lg: 42px;   /* 26 × φ */
+        --golden-text-xl: 68px;   /* 42 × φ */
+        --golden-text-2xl: 110px; /* 68 × φ */
+
+        /* Golden focal point percentage */
+        --golden-focal: 38.2%;    /* (1 - 1/φ) × 100 */
     }
 
     body {

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMWorkflow</key>
+	<dict>
+		<key>actions</key>
+		<array>
+			<dict>
+				<key>action</key>
+				<dict>
+					<key>ActionRuntime</key>
+					<dict>
+						<key>parameters</key>
+						<dict>
+							<key>source</key>
+							<string>/usr/local/bin/resize-image.sh</string>
+						</dict>
+					</dict>
+					<key>ActionParameters</key>
+					<dict>
+						<key>inputMethod</key>
+						<integer>1</integer>
+						<key>inputSource</key>
+						<string>/usr/local/bin/resize-image.sh</string>
+						<key>shell</key>
+						<string>/bin/bash</string>
+						<key>inputField</key>
+						<string>as arguments</string>
+					</dict>
+					<key>BundleIdentifier</key>
+					<string>com.apple.RunShellScript</string>
+					<key>Class</key>
+					<string>RunShellScriptAction</string>
+				</dict>
+			</dict>
+		</array>
+		<key>connectors</key>
+		<dict/>
+		<key>variables</key>
+		<array/>
+	</dict>
+	<key>AMWorkflowHeader</key>
+	<dict>
+		<key>baseColor</key>
+		<data>BAgMAAAAAABABgAAZGlkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</data>
+		<key>localization</key>
+		<string>es</string>
+		<key>name</key>
+		<string>Resize Image</string>
+	</dict>
+	<key>AMWorkflowInput</key>
+	<dict>
+		<key>Filter</key>
+		<dict>
+			<key>acceptsFiles</key>
+			<true/>
+			<key>acceptsFolders</key>
+			<false/>
+			<key>allowedTypes</key>
+			<array>
+				<string>public.image</string>
+			</array>
+		</dict>
+	</dict>
+	<key>AMWorkflowMetaData</key>
+	<dict>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.applicationService</string>
+		<key>serviceInputTypes</key>
+		<array>
+			<string>public.image</string>
+		</array>
+		<key>serviceOutputTypes</key>
+		<array>
+			<string>*</string>
+		</array>
+		<key>serviceProcessesInput</key>
+		<integer>0</integer>
+		<key>serviceReplacesSelectedText</key>
+		<false/>
+	</dict>
+</dict>
+</plist>

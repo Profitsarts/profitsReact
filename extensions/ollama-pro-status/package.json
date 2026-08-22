@@ -1,0 +1,41 @@
+{
+    "name": "ollama-pro-status",
+    "displayName": "Ollama Pro Status",
+    "description": "Show Ollama Cloud Pro consumption in the Antigravity status bar",
+    "version": "1.0.0",
+    "publisher": "local",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "ollamaProStatus.showDetails",
+                "title": "Ollama Pro: Show Usage Details"
+            },
+            {
+                "command": "ollamaProStatus.refresh",
+                "title": "Ollama Pro: Refresh Usage"
+            }
+        ],
+        "configuration": {
+            "title": "Ollama Pro Status",
+            "properties": {
+                "ollamaProStatus.apiKey": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Ollama Pro API key (from https://ollama.com/account)"
+                },
+                "ollamaProStatus.refreshInterval": {
+                    "type": "number",
+                    "default": 60,
+                    "description": "Refresh interval in seconds"
+                }
+            }
+        }
+    }
+}

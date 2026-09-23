@@ -18,21 +18,36 @@
   <!-- Technical Top Header -->
   <header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4 border-b border-white/5 bg-black/80 backdrop-blur-md text-xs font-mono tracking-wider">
     <div class="flex items-center gap-3">
+      <svg class="h-2.5 w-auto" viewBox="-3 -3 746 106" role="img" aria-label="Shylence" fill="none" stroke="url(#shylence-grad)" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter">
+        <defs>
+          <linearGradient id="shylence-grad" x1="0" y1="0" x2="740" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#8a8a8a" />
+            <stop offset="1" stop-color="#4a4a4a" />
+          </linearGradient>
+        </defs>
+        <path d="M66 16C60 8 49 4.5 36 4.5C17 4.5 6 13 6 26C6 40 18 44 36 49C55 54 67 59 67 74C67 88 55 95.5 35 95.5C20 95.5 9 90 3 83" />
+        <path transform="translate(81 0)" d="M4.5 0V100M65.5 0V100M4.5 50H65.5" />
+        <path transform="translate(171 0)" d="M2 0L43.5 62L85 0M43.5 62V100" />
+        <path transform="translate(277 0)" d="M4.5 0V95.5H65" />
+        <path transform="translate(362 0)" d="M0 4.5H64M0 50H64M0 95.5H64" />
+        <path transform="translate(457 0)" d="M4.5 100V4L75.5 96V0" />
+        <path transform="translate(563 0)" d="M83 18C76 9 63 4.5 48 4.5C22 4.5 5 24 5 50C5 76 22 95.5 48 95.5C63 95.5 76 91 83 82" />
+        <path transform="translate(676 0)" d="M0 4.5H64M0 50H64M0 95.5H64" />
+      </svg>
+      <span class="w-px h-3 bg-white/15" aria-hidden="true"></span>
       <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
       <span class="font-bold tracking-widest text-sm font-sans text-white">VIBRAS</span>
-      <span class="text-neutral-500 hidden sm:inline">// ARCHITECTURE LAB 2026</span>
+      <span class="text-neutral-500 hidden xl:inline">// ARCHITECTURE LAB 2026</span>
     </div>
-    <nav class="hidden md:flex items-center gap-8 text-neutral-400">
+    <nav class="hidden md:flex items-center gap-4 lg:gap-8 whitespace-nowrap tracking-normal lg:tracking-wider text-neutral-400">
       <a href="#teardown" class="hover:text-white transition-colors">01. TEARDOWN</a>
-      <a href="#modules" class="hover:text-white transition-colors">02. MODULARITY</a>
-      <a href="#telemetry" class="hover:text-white transition-colors">03. ACOUSTICS</a>
+      <a href="#telemetry" class="hover:text-white transition-colors">02. ACOUSTICS</a>
+      <a href="#modules" class="hover:text-white transition-colors">03. MODULARITY</a>
       <a href="#materials" class="hover:text-white transition-colors">04. MATERIALS</a>
+      <a href="#concept-notice" class="hover:text-white transition-colors">05. SPECS</a>
     </nav>
     <div class="flex items-center gap-4">
-      <span class="text-neutral-500 font-mono text-[11px] hidden sm:inline">CONCEPT ONLY</span>
-      <a href="#concept-notice" class="btn-tactile text-[11px] px-3 py-1.5 rounded-sm bg-white/10 hover:bg-orange-500 hover:text-black transition-all">
-        SPEC SHEET [PDF]
-      </a>
+      <span class="text-neutral-500 font-mono text-[11px] hidden xl:inline">CONCEPT ONLY</span>
     </div>
     <div id="teardown-progress" class="absolute left-0 bottom-0 h-px w-full bg-orange-500 origin-left" style="transform: scaleX(0)"></div>
   </header>
@@ -55,7 +70,7 @@
           <!-- Hero Identity (Fades out early) -->
           <div id="hero-intro" class="absolute top-20 md:top-28 left-6 right-6 md:left-12 md:right-auto max-w-xl z-20 pointer-events-none transition-opacity duration-300">
             <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-neutral-400 mb-3">
-              <span class="text-orange-500">●</span> HARDWARE DISCLOSURE V1.0
+              STATE-OF-THE-ART MODULAR HEADSET
             </div>
             <h1 class="text-4xl md:text-6xl font-sans font-light tracking-tight text-white uppercase">
               Vibras <span class="font-bold">Modular</span>
@@ -375,7 +390,8 @@
             </p>
           </div>
           <div class="flex flex-col md:items-end gap-2 text-[11px]">
-            <div>FRAME A/B: HIGGSFIELD STUDIO ENGINE</div>
+            <div>IMAGERY: GPT IMAGE</div>
+            <div>VIDEO: SEEDANCE 2.5 + VEO</div>
             <div>MOTION: LENIS + GSAP SCROLLTRIGGER</div>
             <div class="text-neutral-400">DESIGN SYSTEM: IMPECCABLE + TASTEMAKER + EMIL-ENG</div>
           </div>

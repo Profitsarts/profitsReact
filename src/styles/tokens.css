@@ -1,0 +1,183 @@
+/* ============================================================================
+   PROFITS 2026 — SCREENPRINT BRUTALIST TOKEN ARCHITECTURE
+   Design Spec: profits-2026-screenprint-brutalist-1.0.0
+
+   Palette is derived from the Mandrilizate MINIFEST poster itself
+   (assets/mandril/poster-master.png): ink ground, bone type, hot-red signal.
+   Structure is bound from the active Brutalism system: zero radius, hard
+   borders, offset solid shadow, extreme typographic scale.
+
+   Every colour, size, step, border, shadow and duration lives here once.
+   Nothing downstream may hard-code a value.
+
+   Font files are resolved relative to the document that imports this file.
+   In the standalone prototype that is the project root (assets/fonts/...).
+   In the React app, copy the fonts under public/assets/css/fonts/ and the
+   paths below already match the legacy repository layout.
+   ========================================================================= */
+
+/* --- Typeface lineage -----------------------------------------------------
+   MOD — Svetoslav Simov, Fontfabric Inc., 2009 (version 2.35).
+   The display face of the Mandrilizate poster. Display sizes only: limited
+   glyph coverage, so it never carries body copy.
+   ------------------------------------------------------------------------ */
+@font-face {
+  font-family: 'MOD';
+  src: url('/assets/css/fonts/MOD.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM';
+  src: local('ITC Avant Garde Gothic LT Medium'),
+       url('/assets/css/fonts/ITCAVANTGARDEGOTHICLTMEDIUM.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* --- Ground pair: ink ------------------------------------------------- */
+  --ink: oklch(0.14 0.008 60);
+  --ink-raised: oklch(0.20 0.010 60);
+  --ink-rule: oklch(0.32 0.010 60);
+  --on-ink: oklch(0.95 0.018 85);
+  --on-ink-dim: oklch(0.76 0.012 85);
+
+  /* --- Ground pair: paper ----------------------------------------------- */
+  --paper: oklch(0.95 0.018 85);
+  --paper-raised: oklch(0.98 0.010 85);
+  --paper-rule: oklch(0.86 0.016 85);
+  --on-paper: oklch(0.14 0.008 60);
+  --on-paper-dim: oklch(0.42 0.008 60);
+
+  /* --- Signal + secondaries ---------------------------------------------
+     --signal clears 3:1 on both grounds, not 4.5:1. It is therefore bound to
+     display type at 18px and above, rules, markers and focus — never to body
+     copy or small labels.
+     -------------------------------------------------------------------- */
+  --signal: oklch(0.58 0.22 27);
+  --signal-deep: oklch(0.50 0.20 27);
+  --mandrill-blue: oklch(0.55 0.13 240);
+  --mandrill-rose: oklch(0.68 0.19 5);
+
+  /* --- Active ground (sections flip these two, nothing else) ------------- */
+  --ground: var(--paper);
+  --ground-raised: var(--paper-raised);
+  --rule-color: var(--paper-rule);
+  --fg: var(--on-paper);
+  --fg-dim: var(--on-paper-dim);
+
+  /* --- Type families ----------------------------------------------------- */
+  --font-display: 'MOD', 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Arial Black', sans-serif;
+  --font-sans: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Avant Garde', 'Century Gothic', sans-serif;
+  --font-serif: 'Charter', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', ui-monospace, monospace;
+
+  /* --- Type scale — extreme by design ------------------------------------ */
+  --t-meta: 12px;
+  --t-sm: 14px;
+  --t-body: 17px;
+  --t-lg: clamp(19px, 1.4vw, 22px);
+  --t-xl: clamp(26px, 2.6vw, 34px);
+  --t-2xl: clamp(36px, 5vw, 56px);
+  --t-3xl: clamp(52px, 8vw, 96px);
+  --t-display: clamp(4.5rem, 16vw, 15rem);
+
+  --lh-display: 0.82;
+  --lh-tight: 1.05;
+  --lh-body: 1.6;
+  --lh-loose: 1.75;
+  --track-meta: 0.16em;
+  --track-display: -0.01em;
+
+  --measure: 68ch;
+  --measure-narrow: 46ch;
+
+  /* --- Spacing rhythm: multiples of 4 ------------------------------------ */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-12: 48px;
+  --s-20: 80px;
+  --s-32: 128px;
+
+  --section-y: var(--s-32);
+  --gutter: 36px;
+  --container-max: 1440px;
+  --grid-cols: 12;
+
+  /* --- Tactile borders: zero radius, hard edges -------------------------- */
+  --radius: 0px;
+  --rule: 1px;
+  --frame: 3px;
+  --frame-heavy: 6px;
+  --offset-shadow: 10px 10px 0 var(--fg);
+  --offset-shadow-sm: 5px 5px 0 var(--fg);
+  --focus-ring: 0 0 0 3px var(--ground), 0 0 0 6px var(--signal);
+
+  /* --- Motion ------------------------------------------------------------ */
+  --m-fast: 140ms;
+  --m-base: 280ms;
+  --m-exit: 180ms;
+  --m-stagger: 40ms;
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-exit: cubic-bezier(0.64, 0, 0.78, 0);
+  --ease-step: steps(2, end);
+
+  /* --- Measured intrinsic media ratios ----------------------------------
+     Read from the files, not guessed. Containers adopt these.
+     -------------------------------------------------------------------- */
+  --ratio-poster: 1600 / 900;
+  --ratio-plate: 1170 / 780;
+  --ratio-thumb: 600 / 399;
+}
+
+/* Sections flip the ground pair; every component reads --ground / --fg and
+   needs no variant of its own. */
+.ground-ink {
+  --ground: var(--ink);
+  --ground-raised: var(--ink-raised);
+  --rule-color: var(--ink-rule);
+  --fg: var(--on-ink);
+  --fg-dim: var(--on-ink-dim);
+}
+
+.ground-paper {
+  --ground: var(--paper);
+  --ground-raised: var(--paper-raised);
+  --rule-color: var(--paper-rule);
+  --fg: var(--on-paper);
+  --fg-dim: var(--on-paper-dim);
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --gutter: 24px;
+    --section-y: var(--s-20);
+    --grid-cols: 8;
+  }
+}
+
+@media (max-width: 639px) {
+  :root {
+    --gutter: 16px;
+    --section-y: var(--s-12);
+    --grid-cols: 4;
+    --offset-shadow: 6px 6px 0 var(--fg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --m-fast: 1ms;
+    --m-base: 1ms;
+    --m-exit: 1ms;
+    --m-stagger: 0ms;
+  }
+}

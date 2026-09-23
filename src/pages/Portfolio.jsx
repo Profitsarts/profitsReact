@@ -1,166 +1,320 @@
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { projects } from '../data/projects_v2';
-import ProjectCard from '../components/ProjectCard';
-import HeroHeader from '../components/HeroHeader';
-import HeroCarousel from '../components/HeroCarousel';
+import FlagshipMandrilizate from '../components/FlagshipMandrilizate';
+import ProjectIndexRow from '../components/ProjectIndexRow';
+
+/**
+ * Portfolio — recomposed landing page.
+ *
+ * Removed from the old page:
+ *   - HeroHeader (the SaaS positioning block with the grey SVG avatar)
+ *   - HeroCarousel (a decorative autoplay fade with no informational role)
+ *   - the Case Studies grid and the See grid, which rendered the same
+ *     ProjectCard twice in the same three-column layout
+ *
+ * In their place: the flagship, one statement, one ruled index.
+ */
+
+const FLAGSHIP_ID = '21';
 
 const FILTERS = [
-    { label: 'All Projects', value: 'all' },
-    { label: 'UX/UI', value: 'ux_ui' },
-    { label: 'Design', value: 'design' },
-    { label: 'Illustration', value: 'illustration' },
-    { label: 'Layout', value: 'layout' },
-    { label: 'Branding', value: 'branding' },
-    { label: 'Web', value: 'web' },
+  { label: 'All', value: 'all' },
+  { label: 'UX / UI', value: 'ux_ui' },
+  { label: 'Design', value: 'design' },
+  { label: 'Illustration', value: 'illustration' },
+  { label: 'Layout', value: 'layout' },
+  { label: 'Branding', value: 'branding' },
+  { label: 'Web', value: 'web' },
 ];
 
-const Portfolio = () => {
-    const [activeFilter, setActiveFilter] = useState('all');
+const DISCIPLINES = [
+  'Art direction',
+  'Illustration',
+  'Editorial layout',
+  'Branding',
+  'UX & UI',
+  'Web',
+  'Design systems',
+  'Generative production',
+];
 
-    const filteredProjects = useMemo(() => {
-        if (activeFilter === 'all') return projects;
-        return projects.filter(project => project.tags.includes(activeFilter));
-    }, [activeFilter]);
-
-    // First 9 projects for Case Studies
-    const caseStudies = projects.slice(0, 9);
-
-    return (
-        <div>
-            {/* Hero Header */}
-            <HeroHeader />
-
-            {/* Hero Carousel */}
-            <HeroCarousel />
-
-            {/* Case Studies Section - SEE anchor */}
-            <div id="see" className="mt-16 container mx-auto px-6">
-                <div className="border-y border-[#323a45] py-4 mb-16">
-                    <h2 className="text-[1.8rem] md:text-[2.6rem] tracking-[0.1em] text-center uppercase">
-                        Case Studies
-                    </h2>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
-                    {caseStudies.map((project) => (
-                        <ProjectCard key={project.id} project={project} />
-                    ))}
-                </div>
-            </div>
-
-            {/* SEE Section - Portfolio Grid */}
-            <div className="my-16 container mx-auto px-6">
-                <div className="border-y border-[#323a45] py-4 mb-12">
-                    <h2 className="text-[1.8rem] md:text-[2.6rem] tracking-[0.1em] text-center uppercase">
-                        See
-                    </h2>
-                </div>
-
-                {/* Filter Bar */}
-                <div className="flex flex-wrap justify-center gap-4 mb-12">
-                    {FILTERS.map((filter) => (
-                        <button
-                            key={filter.value}
-                            onClick={() => setActiveFilter(filter.value)}
-                            className={`
-                relative px-4 py-2 rounded-full text-sm font-medium tracking-wider transition-colors
-                ${activeFilter === filter.value ? 'text-white' : 'text-neutral-600 hover:text-neutral-900'}
-              `}
-                        >
-                            {activeFilter === filter.value && (
-                                <motion.div
-                                    layoutId="activeFilter"
-                                    className="absolute inset-0 bg-[#323a45] rounded-full"
-                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                />
-                            )}
-                            <span className="relative z-10">{filter.label}</span>
-                        </button>
-                    ))}
-                </div>
-
-                {/* Grid */}
-                <motion.div
-                    layout
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-24"
-                >
-                    <AnimatePresence>
-                        {filteredProjects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
-                        ))}
-                    </AnimatePresence>
-                </motion.div>
-            </div>
-
-            {/* TOUCH Section - Contact Form */}
-            <div id="touch" className="mt-20">
-                {/* Header Banner */}
-                <div className="bg-[#323a45] py-12">
-                    <h2 className="text-[1.8rem] md:text-[2.6rem] tracking-[0.1em] text-white text-center uppercase">
-                        Touch
-                    </h2>
-                </div>
-
-                {/* Contact Form Container */}
-                <div className="container mx-auto px-6 py-20">
-                    <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-12">
-                        {/* Contact Details (span3) */}
-                        <div className="md:col-span-3 md:pt-[5rem]">
-                            <div className="contact-details border-y-2 border-[#323a45] py-6 text-center md:text-left">
-                                <h4 className="text-sm font-bold uppercase tracking-wider mb-6">Contact Details</h4>
-                                <h3 className="text-[1.3rem] mb-2">Profits Arts'n'Grafx</h3>
-                                <p className="text-[#3aafb9] mb-1">
-                                    <a href="mailto:profitsarts@gmail.com" className="hover:text-[#f61067]">profitsarts@gmail.com</a>
-                                </p>
-                                <p>+34 656 559 570</p>
-                            </div>
-                        </div>
-
-                        {/* Form (span9) */}
-                        <div className="md:col-span-9">
-                            <h4 className="text-[1.8rem] md:text-[2.8rem] mb-8 font-light">Write me something!</h4>
-                            <form
-                                className="space-y-6"
-                                action="https://formspree.io/f/xrgprokr"
-                                method="POST"
-                            >
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        required
-                                        placeholder="Full Name"
-                                        className="w-full px-4 py-3 border border-neutral-300 rounded focus:outline-none focus:border-[#f61067] bg-[#f8f8f8] text-[#323a45]"
-                                    />
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        required
-                                        placeholder="Email Address"
-                                        className="w-full px-4 py-3 border border-neutral-300 rounded focus:outline-none focus:border-[#f61067] bg-[#f8f8f8] text-[#323a45]"
-                                    />
-                                </div>
-                                <textarea
-                                    name="message"
-                                    required
-                                    placeholder="Your Message"
-                                    rows={8}
-                                    className="w-full px-4 py-3 border border-neutral-300 rounded focus:outline-none focus:border-[#f61067] bg-[#f8f8f8] text-[#323a45] resize-none"
-                                />
-                                <button
-                                    type="submit"
-                                    className="bg-[#323a45] hover:bg-[#f61067] text-[#f8f8f8] font-medium px-10 py-4 rounded transition-colors uppercase tracking-widest text-sm"
-                                >
-                                    Send Your Email
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+/**
+ * Fobos carries a category string rather than filter tags. Normalising it to
+ * ux_ui + design keeps it reachable from the filters; its own category string
+ * is still what the row displays.
+ */
+const TAG_OVERRIDES = {
+  '02': ['ux_ui', 'design'],
 };
+
+function filterTags(project) {
+  return TAG_OVERRIDES[project.id] || project.tags || [];
+}
+
+const Portfolio = () => {
+  const [activeFilter, setActiveFilter] = useState('all');
+
+  const shown = useMemo(() => {
+    if (activeFilter === 'all') return projects;
+    return projects.filter((p) => filterTags(p).includes(activeFilter));
+  }, [activeFilter]);
+
+  const activeLabel = FILTERS.find((f) => f.value === activeFilter)?.label;
+
+  return (
+    <>
+      <FlagshipMandrilizate />
+
+      {/* ---------------------------------------------------------------- */}
+      <section className="ground-paper pad-y" aria-labelledby="statement-title">
+        <div className="wrap">
+          <div className="marker">
+            <span className="marker-n">01</span>
+            <h2 className="marker-t" id="statement-title">Practice</h2>
+            <span className="marker-c">Luis Sierra</span>
+          </div>
+
+          <div className="statement-grid">
+            <div>
+              <p className="statement-title">
+                Art direction that <em>survives</em> the pipeline
+              </p>
+
+              <p className="body">
+                I direct and produce visual work end to end: the poster, the identity, the
+                interface, and the system that keeps them consistent once other people start
+                using them. Two decades of that work sits in the index below — screenprint,
+                editorial layout, illustration, branding, and a long run of product interfaces.
+              </p>
+              <p className="body">
+                The newer half of the practice is production with generative tools. I build
+                pipelines that turn design decisions into machine-readable assets — tokens,
+                component contracts, prompt scaffolds — so a direction can be extended without
+                being diluted. The output is a running prototype, not a deck: the thing you can
+                open, click through, and hand to an engineer.
+              </p>
+              <p className="body">
+                This page is an example of the method. Its palette is measured off the
+                Mandrilizate poster, its display face is the one that set that poster in 2009,
+                and every colour, step and duration resolves from a single token block.
+              </p>
+
+              <div className="contact-inline">
+                <Link className="btn btn-solid" to="/" state={{ scrollTo: 'touch' }}>Start a project</Link>
+                <Link className="btn" to="/" state={{ scrollTo: 'see' }}>See the index</Link>
+              </div>
+            </div>
+
+            <div>
+              <p className="label statement-aside-label">Disciplines in the archive</p>
+              <ul className="disciplines">
+                {DISCIPLINES.map((d, i) => (
+                  <li key={d}>
+                    <span className="n">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="d">{d}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      <section className="index-sec ground-paper pad-y" id="see" aria-labelledby="index-title">
+        <div className="ruler" aria-hidden="true">
+          {Array.from({ length: 12 }, (_, i) => <span key={i} />)}
+        </div>
+
+        <div className="wrap index-inner">
+          <div className="marker">
+            <span className="marker-n">02</span>
+            <h2 className="marker-t" id="index-title">Index</h2>
+            <span className="marker-c">{projects.length} entries</span>
+          </div>
+
+          <div className="ticks" aria-hidden="true">
+            {Array.from({ length: 12 }, (_, i) => (
+              <span key={i}>{String(i + 1).padStart(2, '0')}</span>
+            ))}
+          </div>
+
+          <div className="filters od-rail" role="group" aria-label="Filter the index by discipline">
+            {FILTERS.map((f) => (
+              <button
+                key={f.value}
+                type="button"
+                onClick={() => setActiveFilter(f.value)}
+                aria-pressed={activeFilter === f.value}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          <p className="index-count" role="status">
+            {activeFilter === 'all'
+              ? `Showing all ${shown.length} entries`
+              : `Showing ${shown.length} of ${projects.length} entries — ${activeLabel}`}
+          </p>
+
+          <div className="index-list">
+            {shown.length === 0 ? (
+              <div className="index-empty">
+                <p className="h-md">Nothing filed under that discipline</p>
+                <p>Clear the filter to see all {projects.length} entries.</p>
+              </div>
+            ) : (
+              shown.map((project) => (
+                <ProjectIndexRow
+                  key={project.id}
+                  project={project}
+                  flagship={project.id === FLAGSHIP_ID}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      <section className="ground-ink pad-y" id="touch" aria-labelledby="touch-title">
+        <div className="wrap">
+          <div className="marker">
+            <span className="marker-n">03</span>
+            <h2 className="marker-t" id="touch-title">Touch</h2>
+            <span className="marker-c">Aviles · Spain</span>
+          </div>
+
+          <div className="contact-grid">
+            <div className="contact-card">
+              <span className="label">Direct</span>
+              <span className="h-md">Profits Arts&rsquo;n&rsquo;Grafx</span>
+              <span><a href="mailto:profitsarts@gmail.com">profitsarts@gmail.com</a></span>
+              <span><a href="tel:+34656559570">+34 656 559 570</a></span>
+              <span>
+                <a href="https://soundcloud.com/condres" target="_blank" rel="noopener noreferrer">
+                  soundcloud.com/condres
+                </a>
+              </span>
+            </div>
+
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+/* Contact form — labels always visible, validation on blur            */
+/* ------------------------------------------------------------------ */
+
+const RULES = {
+  name: {
+    test: (v) => v.trim().length > 1,
+    msg: 'Enter your name so I know who is writing.',
+  },
+  email: {
+    test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+    msg: 'That address is missing an @ or a domain. Example: name@studio.com',
+  },
+  message: {
+    test: (v) => v.trim().length > 9,
+    msg: 'Tell me a little more — at least a sentence.',
+  },
+};
+
+function ContactForm() {
+  const [values, setValues] = useState({ name: '', email: '', message: '' });
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState(null);
+  const [sending, setSending] = useState(false);
+
+  const change = (key) => (event) => {
+    const next = event.target.value;
+    setValues((v) => ({ ...v, [key]: next }));
+    if (errors[key]) {
+      setErrors((e) => ({ ...e, [key]: RULES[key].test(next) ? undefined : RULES[key].msg }));
+    }
+  };
+
+  const blur = (key) => () => {
+    setErrors((e) => ({ ...e, [key]: RULES[key].test(values[key]) ? undefined : RULES[key].msg }));
+  };
+
+  const submit = (event) => {
+    const next = {};
+    Object.keys(RULES).forEach((key) => {
+      if (!RULES[key].test(values[key])) next[key] = RULES[key].msg;
+    });
+
+    if (Object.keys(next).length > 0) {
+      event.preventDefault();
+      setErrors(next);
+      setStatus(`${Object.keys(next).length} field(s) need fixing before this can send.`);
+      document.getElementById(`in-${Object.keys(next)[0]}`)?.focus();
+      return;
+    }
+
+    setSending(true);
+    setStatus('Sending your message…');
+  };
+
+  const field = (key, label, type) => (
+    <div className="field" data-invalid={errors[key] ? 'true' : 'false'}>
+      <label htmlFor={`in-${key}`}>
+        {label} <span className="req" aria-hidden="true">*</span>
+        <span className="od-nowrap"> (required)</span>
+      </label>
+      {type === 'textarea' ? (
+        <textarea
+          id={`in-${key}`}
+          name={key}
+          value={values[key]}
+          onChange={change(key)}
+          onBlur={blur(key)}
+          aria-invalid={errors[key] ? 'true' : undefined}
+          aria-describedby={errors[key] ? `err-${key}` : undefined}
+        />
+      ) : (
+        <input
+          id={`in-${key}`}
+          name={key}
+          type={type}
+          value={values[key]}
+          onChange={change(key)}
+          onBlur={blur(key)}
+          autoComplete={key === 'email' ? 'email' : 'name'}
+          aria-invalid={errors[key] ? 'true' : undefined}
+          aria-describedby={errors[key] ? `err-${key}` : undefined}
+        />
+      )}
+      {errors[key] && <span className="err" id={`err-${key}`}>{errors[key]}</span>}
+    </div>
+  );
+
+  return (
+    <form action="https://formspree.io/f/xrgprokr" method="POST" onSubmit={submit} noValidate>
+      <p className="h-lg">Write me something.</p>
+
+      <div className="f-row">
+        {field('name', 'Full name', 'text')}
+        {field('email', 'Email', 'email')}
+      </div>
+
+      {field('message', 'Message', 'textarea')}
+
+      <div className="od-cluster form-actions">
+        <button className="btn btn-solid" type="submit" disabled={sending}>
+          <span>{sending ? 'Sending…' : 'Send'}</span>
+        </button>
+        {status && <span className="form-status" role="status">{status}</span>}
+      </div>
+    </form>
+  );
+}
 
 export default Portfolio;

@@ -209,6 +209,12 @@ async function initStage() {
 
 initStage();
 
+if (!reduceMotion) {
+  const reveal = { trigger: '#front', start: 'top 75%' };
+  gsap.from('#front-figure', { opacity: 0, y: 48, scale: 0.96, duration: 1.2, ease: 'power3.out', scrollTrigger: reveal });
+  gsap.from('#front-copy', { opacity: 0, y: 24, duration: 1, delay: 0.15, ease: 'power3.out', scrollTrigger: reveal });
+}
+
 // 5. Interactive Finish Selector
 const finishButtons = document.querySelectorAll('.finish-btn');
 const finishImages = document.querySelectorAll('[data-finish-img]');

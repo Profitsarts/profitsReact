@@ -56,3 +56,19 @@ Model: `marketing_studio_image`, 4:5, 2k. Feeds the Materials section.
 ```
 Macro studio photograph, extreme close-up of the edge of a bead-blasted silver aluminium headphone ear cup. In focus: a cylindrical diamond-knurled aluminium control wheel with crisp pyramidal knurling, and next to it a small 3-position slide switch marked "0 I II" in tiny black laser-etched characters, with a safety-orange knob, the only saturated colour. A fine laser-etched label "MOD-03" and precise tick marks on the chamfered edge. Pure black background, one hard key light from the upper left raking across the knurling, shallow depth of field, razor sharp at the knurl. Photorealistic industrial product photography. No other text, no logos.
 ```
+
+## Front view — eye level (reference: Frame A)
+
+Tool: ChatGPT image generation (user's OpenAI subscription, no Higgsfield spend). Attach `assets/source/frame-a-padded.png`, landscape 3:2 (1536×1024 max). Save result as `assets/source/front-view.png`. Feeds a lower-page section.
+
+```
+Use the attached image as the exact product reference. Generate a new studio photograph of the SAME VIBRAS headphones: identical shapes, proportions, materials, colours, perforation grid, orange switch, knurled wheel and laser-etched labels. Change only the camera.
+
+Camera: straight-on front elevation at eye level, lens axis perfectly horizontal on the product's centre line, zero tilt, zero roll, 100mm lens, minimal perspective distortion. The headphones stand upright and perfectly symmetrical: headband arc centred at the top, both ear cups hanging vertically left and right, each cup turned about 20 degrees toward the camera so its perforated aluminium grille is partly visible.
+
+Framing: landscape, product centred, occupying about 60 percent of the frame height, generous empty black space on both sides for text.
+
+Background and light: pure black seamless background (#000000), no floor, no reflection. One large soft key light from the upper left, a thin cool rim light from behind tracing both cup silhouettes and the headband, soft falloff into black. Same lighting mood as the reference.
+
+Photorealistic, razor sharp, catalogue precision. No other text, no logos, no exterior screws, no people.
+```

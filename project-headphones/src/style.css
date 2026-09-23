@@ -38,14 +38,81 @@ body {
   pointer-events: none;
 }
 
-/* Mobile: product sits mid-screen, so callouts move to the band the intro vacates */
+/* Scroll chapters */
+.chapter {
+  position: absolute;
+  max-width: 25rem;
+  opacity: 0;
+  isolation: isolate;
+}
+.chapter::before {
+  content: '';
+  position: absolute;
+  inset: -5rem -7rem;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.85) 50%, rgba(0, 0, 0, 0.45) 75%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+}
+.chapter-left {
+  left: 6%;
+  top: 30%;
+}
+.chapter-right {
+  right: 6%;
+  top: 30%;
+}
+.chapter-bottom {
+  left: 0;
+  right: 0;
+  bottom: 9%;
+  max-width: none;
+  text-align: center;
+}
+.chapter-index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--color-accent-orange);
+  margin-bottom: 0.75rem;
+}
+.chapter-title {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: clamp(1.75rem, 2.6vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.chapter-body {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  color: #a3a3a3;
+}
+.chapter-metric {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border-subtle);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #d4d4d4;
+}
+
+/* Mobile: product sits mid-screen, so chapters take the band the intro vacates */
 @media (max-width: 767px) {
-  #callout-stage .callout-card {
-    top: 5rem;
-    bottom: auto;
-    left: 1rem;
-    right: 1rem;
+  .chapter-left,
+  .chapter-right {
+    top: 5.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
     max-width: none;
+  }
+  .chapter-bottom {
+    bottom: 11rem;
+  }
+  .chapter-title {
+    font-size: 1.6rem;
   }
 }
 
@@ -63,23 +130,6 @@ body {
 
 .btn-tactile:active {
   transform: scale(0.97);
-}
-
-/* Phased Callout Cards Styling */
-.callout-card {
-  background: rgba(10, 10, 10, 0.85);
-  border: 1px solid var(--color-border-subtle);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 1.25rem;
-  border-radius: 4px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(16px);
-  transition: border-color 0.2s ease;
-}
-
-.callout-card:hover {
-  border-color: var(--color-border-focus);
 }
 
 /* Custom Scrollbar */
@@ -105,9 +155,8 @@ body {
   .sticky {
     position: relative !important;
   }
-  .callout-card {
-    opacity: 1 !important;
-    transform: none !important;
+  .chapter {
+    display: none;
   }
   .scroll-hint {
     display: none;

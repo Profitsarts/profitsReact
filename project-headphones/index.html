@@ -34,13 +34,14 @@
         SPEC SHEET [PDF]
       </a>
     </div>
+    <div id="teardown-progress" class="absolute left-0 bottom-0 h-px w-full bg-orange-500 origin-left" style="transform: scaleX(0)"></div>
   </header>
 
   <main id="smooth-wrapper">
     <div id="smooth-content">
 
-      <!-- SECTION 1: Pinned Teardown Hero (350vh) -->
-      <section id="teardown" class="relative w-full h-[350vh] bg-black">
+      <!-- SECTION 1: Pinned Teardown Hero (500vh) -->
+      <section id="teardown" class="relative w-full h-[500vh] bg-black">
 
         <!-- Pinned Stage Viewport -->
         <div class="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center">
@@ -67,43 +68,33 @@
             </div>
           </div>
 
-          <!-- Phased Callout Overlays (Synchronized with scrub progress) -->
-          <div id="callout-stage" class="absolute inset-0 pointer-events-none z-30">
+          <!-- Scroll chapters: product slides away from whichever side holds the copy -->
+          <div id="chapter-stage" class="absolute inset-0 pointer-events-none z-30">
 
-            <!-- Callout 1: Driver & Acoustic Chamber (0.15 - 0.40) -->
-            <div id="callout-1" class="callout-card absolute top-[35%] left-[8%] md:left-[15%] max-w-xs opacity-0">
-              <div class="text-[10px] font-mono text-orange-400 mb-1">[01] BAYONET SYSTEM</div>
-              <h3 class="text-lg font-sans font-semibold text-white">MOD-01 Acoustic Chamber</h3>
-              <p class="text-xs text-neutral-400 font-mono mt-1 leading-relaxed">
-                Bayonet twist-and-lock coupling with index notches. Solid CNC 6061 bead-blasted aluminum shell. Swapped in under 4 seconds without tools.
-              </p>
-              <div class="callout-metric mt-2 text-[11px] font-mono text-neutral-300 border-t border-white/10 pt-1">
-                TOLERANCE: ±0.02MM // 40MM BERYLLIUM
-              </div>
+            <div id="chapter-1" class="chapter chapter-left">
+              <div class="chapter-index">[01] BAYONET SYSTEM</div>
+              <h3 class="chapter-title">Aluminium outside.<br>Nothing glued inside.</h3>
+              <p class="chapter-body">MOD-01 acoustic chamber. Bayonet twist-and-lock coupling, solid CNC 6061 bead-blasted shell. Off in under 4 seconds, no tools.</p>
+              <div class="chapter-metric">TOLERANCE ±0.02 MM // 40 MM DRIVER</div>
             </div>
 
-            <!-- Callout 2: Swappable Battery Cartridge (0.45 - 0.70) -->
-            <div id="callout-2" class="callout-card absolute bottom-[25%] right-[8%] md:right-[15%] max-w-xs opacity-0">
-              <div class="text-[10px] font-mono text-orange-400 mb-1">[02] POWER CORE</div>
-              <h3 class="text-lg font-sans font-semibold text-white">MOD-02 Li-Ion Cartridge</h3>
-              <p class="text-xs text-neutral-400 font-mono mt-1 leading-relaxed">
-                Quick-release pull-tab with spring-loaded gold pogo-pin bus. Instant hot-swap capability. 42-hour continuous ANC playback.
-              </p>
-              <div class="callout-metric mt-2 text-[11px] font-mono text-neutral-300 border-t border-white/10 pt-1">
-                CAPACITY: 850MAH // 5V BUS // 0 TOOLS
-              </div>
+            <div id="chapter-2" class="chapter chapter-right">
+              <div class="chapter-index">[02] POWER CORE</div>
+              <h3 class="chapter-title">A battery you pull out,<br>not throw away.</h3>
+              <p class="chapter-body">MOD-02 Li-ion cartridge. Quick-release pull-tab on a spring-loaded pogo-pin bus. Hot-swap without stopping the music.</p>
+              <div class="chapter-metric">850 MAH // 5 V BUS // 0 TOOLS</div>
             </div>
 
-            <!-- Callout 3: Ergonomics & Tactile Controls (0.75 - 1.00) -->
-            <div id="callout-3" class="callout-card absolute top-[28%] right-[10%] md:right-[18%] max-w-xs opacity-0">
-              <div class="text-[10px] font-mono text-orange-400 mb-1">[03] TACTILE INTERFACE</div>
-              <h3 class="text-lg font-sans font-semibold text-white">MOD-04 Control Yoke</h3>
-              <p class="text-xs text-neutral-400 font-mono mt-1 leading-relaxed">
-                Diamond-knurled volume dial, woven stainless steel-mesh headband, and 3-position mechanical ANC slider: [0] Off, [I] Transparency, [II] Active ANC.
-              </p>
-              <div class="callout-metric mt-2 text-[11px] font-mono text-neutral-300 border-t border-white/10 pt-1">
-                SWITCH: SAFETY ORANGE // TORX ACCENTS
-              </div>
+            <div id="chapter-3" class="chapter chapter-left">
+              <div class="chapter-index">[03] TACTILE INTERFACE</div>
+              <h3 class="chapter-title">Controls you can<br>feel in the dark.</h3>
+              <p class="chapter-body">MOD-04 control yoke. Diamond-knurled volume dial and a 3-position ANC slider in safety orange: Off, Transparency, Active.</p>
+              <div class="chapter-metric">SWITCH: SAFETY ORANGE // TORX ACCENTS</div>
+            </div>
+
+            <div id="chapter-4" class="chapter chapter-bottom">
+              <div class="chapter-index">[04] FULL DISCLOSURE</div>
+              <h3 class="chapter-title">Four modules. Zero tools.</h3>
             </div>
 
           </div>
@@ -291,6 +282,10 @@
           </div>
 
           <div class="w-full lg:w-1/2 p-8 rounded border border-white/10 bg-neutral-950 font-mono text-xs space-y-4">
+            <figure class="relative aspect-video -mx-8 -mt-8 mb-6 overflow-hidden rounded-t bg-black border-b border-white/10">
+              <img src="./assets/frame-a.webp" alt="Vibras headphones in natural bead-blasted aluminium" data-finish-img="natural" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-500" loading="lazy" decoding="async">
+              <img src="./assets/colour-graphite.webp" alt="Vibras headphones in stealth anodized graphite" data-finish-img="stealth" class="absolute inset-0 w-full h-full object-contain scale-[0.83] opacity-0 transition-opacity duration-500" loading="lazy" decoding="async">
+            </figure>
             <div class="flex justify-between border-b border-white/10 pb-2 text-neutral-400">
               <span>SUBSTRATE SPECIFICATION</span>
               <span class="text-white font-bold">AL6061-T6</span>

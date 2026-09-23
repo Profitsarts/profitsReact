@@ -5,8 +5,9 @@ import Lenis from 'lenis';
 gsap.registerPlugin(ScrollTrigger);
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isMobile = window.matchMedia('(max-width: 767px)').matches;
 
-// 1. Initialize Lenis Smooth Scroll (skipped under reduced motion)
+// 1. Lenis smooth scroll (skipped under reduced motion)
 const lenis = reduceMotion ? null : new Lenis({
   duration: 1.2,
   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -32,160 +33,196 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   });
 });
 
-// 2. High-DPI Canvas Teardown Engine
+// 2. Image-sequence engine (frames extracted from the teardown video)
+const SEQ = isMobile
+  ? { dir: './seq/mobile', count: 48 }
+  : { dir: './seq/desktop', count: 97 };
+
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
+const frames = new Array(SEQ.count);
 
-const imgA = new Image();
-const imgB = new Image();
+// Stage state driven by the scroll timeline: frame progress, horizontal offset, scale
+const stage = { f: 0, x: isMobile ? 0 : 0.22, s: isMobile ? 1 : 0.86 };
 
-imgA.src = './assets/frame-a.webp';
-imgB.src = './assets/frame-b.webp';
+const frameSrc = (i) => `${SEQ.dir}/${String(i + 1).padStart(3, '0')}.webp`;
 
-let imagesLoaded = 0;
-const onImageLoad = () => {
-  imagesLoaded++;
-  if (imagesLoaded === 2) {
-    resizeCanvas();
-    if (reduceMotion) {
-      renderStage(1);
-      telemetryMm.textContent = '48.0 MM';
-      telemetryPct.textContent = '100%';
-      telemetryBar.style.width = '100%';
-      telemetryStatus.textContent = 'EXPLODED (100%)';
-      telemetryStatus.className = 'text-emerald-400 font-bold';
-      return;
-    }
-    renderStage(0);
-    initScrollTimeline();
+function loadFrame(i) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      frames[i] = img;
+      resolve();
+    };
+    img.onerror = resolve;
+    img.src = frameSrc(i);
+  });
+}
+
+// Nearest already-decoded frame, so scrubbing never blanks while the set streams in
+function nearestFrame(i) {
+  for (let d = 0; d < SEQ.count; d++) {
+    if (frames[i - d]) return frames[i - d];
+    if (frames[i + d]) return frames[i + d];
   }
-};
-
-imgA.onload = onImageLoad;
-imgB.onload = onImageLoad;
+  return null;
+}
 
 function resizeCanvas() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.imageSmoothingQuality = 'high';
+}
+
+function render() {
   const width = window.innerWidth;
   const height = window.innerHeight;
+  ctx.clearRect(0, 0, width, height);
 
-  canvas.width = width * dpr;
-  canvas.height = height * dpr;
-  ctx.scale(dpr, dpr);
+  const img = nearestFrame(Math.round(stage.f * (SEQ.count - 1)));
+  if (!img) return;
+
+  const imgAspect = img.naturalWidth / img.naturalHeight;
+  let w = width;
+  let h = width / imgAspect;
+  if (h > height) {
+    h = height;
+    w = height * imgAspect;
+  }
+  w *= stage.s;
+  h *= stage.s;
+
+  const x = (width - w) / 2 + stage.x * width;
+  const y = (height - h) / 2;
+  ctx.drawImage(img, x, y, w, h);
 }
 
 window.addEventListener('resize', () => {
   resizeCanvas();
-  renderStage(currentProgress);
+  render();
 });
 
-// State tracker
-let currentProgress = 0;
-
-// Render Canvas Stage: Blends Frame A (closed) to Frame B (exploded)
-function renderStage(progress) {
-  currentProgress = progress;
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-  ctx.clearRect(0, 0, width, height);
-
-  if (imagesLoaded < 2) return;
-
-  // Preserve Aspect Ratio (Contain mode)
-  const imgWidth = imgA.naturalWidth;
-  const imgHeight = imgA.naturalHeight;
-  const imgAspect = imgWidth / imgHeight;
-  const screenAspect = width / height;
-
-  let renderW, renderH, renderX, renderY;
-
-  if (screenAspect > imgAspect) {
-    renderH = height;
-    renderW = height * imgAspect;
-  } else {
-    renderW = width;
-    renderH = width / imgAspect;
-  }
-
-  renderX = (width - renderW) / 2;
-  renderY = (height - renderH) / 2;
-
-  // Base Layer: Frame A
-  ctx.globalAlpha = 1.0;
-  ctx.drawImage(imgA, renderX, renderY, renderW, renderH);
-
-  // Overlay Layer: Frame B (Exploded)
-  if (progress > 0) {
-    ctx.globalAlpha = Math.min(1, Math.max(0, progress));
-    ctx.drawImage(imgB, renderX, renderY, renderW, renderH);
-  }
-
-  ctx.globalAlpha = 1.0;
-}
-
-// 3. Telemetry HUD Elements
+// 3. Telemetry HUD
 const telemetryMm = document.getElementById('telemetry-mm');
 const telemetryPct = document.getElementById('telemetry-pct');
 const telemetryBar = document.getElementById('telemetry-bar');
 const telemetryStatus = document.getElementById('telemetry-status');
+const progressLine = document.getElementById('teardown-progress');
 
-// 4. GSAP ScrollTrigger Master Timeline
+function updateTelemetry(p) {
+  const mm = (p * 48.0).toFixed(1);
+  telemetryMm.textContent = `${mm.padStart(4, '0')} MM`;
+  telemetryPct.textContent = `${Math.round(p * 100).toString().padStart(3, '0')}%`;
+  telemetryBar.style.width = `${p * 100}%`;
+
+  if (p === 0) {
+    telemetryStatus.textContent = 'ASSEMBLED';
+    telemetryStatus.className = 'text-neutral-400';
+  } else if (p < 1) {
+    telemetryStatus.textContent = 'SEPARATING';
+    telemetryStatus.className = 'text-orange-500 font-bold';
+  } else {
+    telemetryStatus.textContent = 'EXPLODED (100%)';
+    telemetryStatus.className = 'text-emerald-400 font-bold';
+  }
+}
+
+// 4. Scroll timeline. Positions are fractions of the pinned scroll (0..1).
+function chapterIn(tl, id, at) {
+  tl.fromTo(id, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.05, ease: 'power2.out' }, at);
+}
+function chapterOut(tl, id, at) {
+  tl.to(id, { opacity: 0, y: -24, duration: 0.04, ease: 'power2.in' }, at);
+}
+// Product glides away from the side that holds the copy
+function shift(tl, x, s, at, duration = 0.08) {
+  if (isMobile) return;
+  tl.to(stage, { x, s, duration, ease: 'power2.inOut' }, at);
+}
+
 function initScrollTimeline() {
-  const stageTimeline = gsap.timeline({
+  const tl = gsap.timeline({
+    defaults: { immediateRender: false },
+    onUpdate: render,
     scrollTrigger: {
       trigger: '#teardown',
       start: 'top top',
       end: 'bottom bottom',
-      scrub: 0.5,
+      scrub: 0.6,
       onUpdate: (self) => {
-        const p = self.progress;
-        renderStage(p);
-
-        // Update Live Telemetry
-        const mm = (p * 48.0).toFixed(1);
-        const pct = Math.round(p * 100).toString().padStart(3, '0');
-        telemetryMm.textContent = `${mm.padStart(4, '0')} MM`;
-        telemetryPct.textContent = `${pct}%`;
-        telemetryBar.style.width = `${p * 100}%`;
-
-        if (p === 0) {
-          telemetryStatus.textContent = 'ASSEMBLED';
-          telemetryStatus.className = 'text-neutral-400';
-        } else if (p < 1) {
-          telemetryStatus.textContent = 'SCRUBBING';
-          telemetryStatus.className = 'text-orange-500 font-bold';
-        } else {
-          telemetryStatus.textContent = 'EXPLODED (100%)';
-          telemetryStatus.className = 'text-emerald-400 font-bold';
-        }
-      }
-    }
+        const p = gsap.utils.clamp(0, 1, (self.progress - 0.08) / 0.84);
+        updateTelemetry(p);
+        progressLine.style.transform = `scaleX(${self.progress})`;
+      },
+    },
   });
 
-  // Intro fadeout
-  stageTimeline.to('#hero-intro', { opacity: 0, y: -20, ease: 'power1.out', duration: 0.15 }, 0);
+  // Intro leaves while the product travels from the right edge to centre stage
+  tl.to('#hero-intro', { opacity: 0, y: -24, duration: 0.1, ease: 'power1.out' }, 0);
+  shift(tl, 0, 0.94, 0, 0.14);
 
-  // Callout 1: MOD-01 (enters at 0.15, exits at 0.40)
-  stageTimeline.to('#callout-1', { opacity: 1, y: 0, duration: 0.1, ease: 'power2.out' }, 0.15);
-  stageTimeline.to('#callout-1', { opacity: 0, y: -16, duration: 0.08, ease: 'power2.in' }, 0.38);
+  // Parts separate across the middle of the scroll, then hold
+  tl.to(stage, { f: 1, duration: 0.84, ease: 'none' }, 0.08);
 
-  // Callout 2: MOD-02 (enters at 0.45, exits at 0.70)
-  stageTimeline.to('#callout-2', { opacity: 1, y: 0, duration: 0.1, ease: 'power2.out' }, 0.45);
-  stageTimeline.to('#callout-2', { opacity: 0, y: -16, duration: 0.08, ease: 'power2.in' }, 0.68);
+  shift(tl, 0.17, 0.8, 0.14);
+  chapterIn(tl, '#chapter-1', 0.18);
+  chapterOut(tl, '#chapter-1', 0.36);
 
-  // Callout 3: MOD-04 (enters at 0.75, stays till end)
-  stageTimeline.to('#callout-3', { opacity: 1, y: 0, duration: 0.1, ease: 'power2.out' }, 0.75);
+  shift(tl, -0.17, 0.8, 0.38);
+  chapterIn(tl, '#chapter-2', 0.42);
+  chapterOut(tl, '#chapter-2', 0.58);
+
+  shift(tl, 0.17, 0.8, 0.6);
+  chapterIn(tl, '#chapter-3', 0.64);
+  chapterOut(tl, '#chapter-3', 0.8);
+
+  shift(tl, 0, 0.92, 0.82);
+  chapterIn(tl, '#chapter-4', 0.88);
+
+  // Pad the timeline to exactly 1 so positions map 1:1 to scroll progress
+  tl.set({}, {}, 1);
 }
+
+async function initStage() {
+  resizeCanvas();
+  const first = reduceMotion ? SEQ.count - 1 : 0;
+  await loadFrame(first);
+
+  if (reduceMotion) {
+    Object.assign(stage, { f: 1, x: 0, s: 0.94 });
+    render();
+    updateTelemetry(1);
+    return;
+  }
+
+  render();
+  initScrollTimeline();
+
+  // Stream the rest in order so early scroll positions resolve first
+  for (let i = 1; i < SEQ.count; i++) {
+    await loadFrame(i);
+    if (Math.abs(i - stage.f * (SEQ.count - 1)) < 2) render();
+  }
+}
+
+initStage();
 
 // 5. Interactive Finish Selector
 const finishButtons = document.querySelectorAll('.finish-btn');
+const finishImages = document.querySelectorAll('[data-finish-img]');
 finishButtons.forEach((btn) => {
+  btn.setAttribute('aria-pressed', String(btn.classList.contains('active')));
   btn.addEventListener('click', () => {
+    finishImages.forEach((img) => {
+      img.classList.toggle('opacity-0', img.dataset.finishImg !== btn.dataset.finish);
+    });
+    finishButtons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
     finishButtons.forEach((b) => {
       b.classList.remove('active', 'border-orange-500', 'bg-white/5', 'text-white');
       b.classList.add('border-white/10', 'bg-black', 'text-neutral-400');
-      const badge = b.querySelector('span:last-child');
+      const badge = b.querySelector(':scope > span:last-child');
       if (badge) {
         badge.textContent = 'SELECT';
         badge.className = 'text-neutral-600';
@@ -194,7 +231,7 @@ finishButtons.forEach((btn) => {
 
     btn.classList.add('active', 'border-orange-500', 'bg-white/5', 'text-white');
     btn.classList.remove('border-white/10', 'bg-black', 'text-neutral-400');
-    const badge = btn.querySelector('span:last-child');
+    const badge = btn.querySelector(':scope > span:last-child');
     if (badge) {
       badge.textContent = 'ACTIVE';
       badge.className = 'text-orange-500 font-bold';

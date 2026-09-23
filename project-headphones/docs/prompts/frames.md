@@ -72,3 +72,33 @@ Background and light: pure black seamless background (#000000), no floor, no ref
 
 Photorealistic, razor sharp, catalogue precision. No other text, no logos, no exterior screws, no people.
 ```
+
+## Lifestyle anchor still — model wearing VIBRAS (Stage 1)
+
+Tool: ChatGPT image generation (user's OpenAI subscription). Attach, in this order: `assets/generated/vibras-left-three-quarter-v2.png` (primary product reference), `assets/generated/vibras-front-elevation-big.png` (secondary). Landscape 3:2. Save as `assets/generated/lifestyle-anchor.png`. Feeds Stage 2 (image-to-video).
+
+```
+Use the attached images as the exact product reference for the headphones: identical rounded-square bead-blasted aluminium cups, circular perforation grid, braided grey steel-mesh headband, charcoal knit cushions, the safety-orange 3-position switch on the LEFT cup and the knurled wheel on the RIGHT cup. Do not redesign the headphones.
+
+Cinematic low-key portrait photograph for a full-bleed website banner. An adult model in their late twenties wears the headphones properly over both ears. Head in three-quarter profile, turned toward the right edge of the frame, so the LEFT ear cup faces the camera and its orange switch is clearly visible. Eyes closed, calm, absorbed in the sound. Short or tied-back hair that never covers the ear cups or the headband. Plain dark charcoal knit sweater, no logos.
+
+Composition: landscape, model placed on the left third, head and shoulders only, the headphones sharp and prominent. The right half of the frame is empty near-black space for text.
+
+Light: pure black background falling off to #000000. One soft key light from the front left sculpting the face and the aluminium cup, a thin cool rim light from behind tracing the head, headband and cup edge. The orange switch is the only saturated colour in the image.
+
+Photorealistic, 85mm lens, shallow depth of field focused on the ear cup, fine skin texture, no text, no watermark, no other brands.
+```
+
+## Lifestyle motion — ArtCraft, Seedance 2.0 image-to-video (Stage 2)
+
+Input: `assets/generated/lifestyle-anchor.png`. 16:9, highest resolution offered (1080p if available), 5 s, audio off.
+
+Prompt:
+```
+The model slowly opens their eyes and turns the head about ten degrees toward the camera, then holds a calm, distant gaze. Gentle breathing, a very slow camera push-in, subtle movement in a few strands of hair. The headphones stay rigidly attached to the head and keep their exact shape, materials, perforation grid and orange switch in every frame. Pure black background, same lighting throughout. Smooth, cinematic, realistic motion.
+```
+
+Negative prompt (if the tool has the field):
+```
+headphone deformation, melting or morphing parts, changing colours, extra headphones, text, logos, watermark, flicker, camera shake, fast motion, background change
+```

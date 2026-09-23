@@ -42,8 +42,10 @@ const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 const frames = new Array(SEQ.count);
 
-// Stage state driven by the scroll timeline: frame progress, horizontal offset, scale
-const stage = { f: 0, x: isMobile ? 0 : 0.22, s: isMobile ? 1 : 0.86 };
+// Stage state driven by the scroll timeline: frame progress, horizontal offset, scale.
+// x/s only apply on wide screens; below 768 px the product stays centred (checked per frame, so resizes follow).
+const stage = { f: 0, x: 0.22, s: 0.86 };
+const wideStage = window.matchMedia('(min-width: 768px)');
 
 const frameSrc = (i) => `${SEQ.dir}/${String(i + 1).padStart(3, '0')}.webp`;
 
@@ -91,10 +93,12 @@ function render() {
     h = height;
     w = height * imgAspect;
   }
-  w *= stage.s;
-  h *= stage.s;
+  const wide = wideStage.matches;
+  const s = wide ? stage.s : 1;
+  w *= s;
+  h *= s;
 
-  const x = (width - w) / 2 + stage.x * width;
+  const x = (width - w) / 2 + (wide ? stage.x * width : 0);
   const y = (height - h) / 2;
   ctx.drawImage(img, x, y, w, h);
 }
@@ -138,7 +142,6 @@ function chapterOut(tl, id, at) {
 }
 // Product glides away from the side that holds the copy
 function shift(tl, x, s, at, duration = 0.08) {
-  if (isMobile) return;
   tl.to(stage, { x, s, duration, ease: 'power2.inOut' }, at);
 }
 
@@ -214,6 +217,32 @@ if (!reduceMotion) {
   gsap.from('#front-figure', { opacity: 0, y: 48, scale: 0.96, duration: 1.2, ease: 'power3.out', scrollTrigger: reveal });
   gsap.from('#front-copy', { opacity: 0, y: 24, duration: 1, delay: 0.15, ease: 'power3.out', scrollTrigger: reveal });
 }
+
+// Lifestyle loop: plays only while on screen; WCAG 2.2.2 needs a pause control for motion over 5 s
+const lifestyleVideo = document.getElementById('lifestyle-video');
+const lifestyleToggle = document.getElementById('lifestyle-toggle');
+let lifestylePaused = reduceMotion;
+let lifestyleVisible = false;
+
+function syncLifestyle() {
+  if (!lifestylePaused && lifestyleVisible) lifestyleVideo.play().catch(() => {});
+  else lifestyleVideo.pause();
+  lifestyleToggle.textContent = lifestylePaused ? 'PLAY' : 'PAUSE';
+  lifestyleToggle.setAttribute('aria-pressed', String(lifestylePaused));
+  lifestyleToggle.setAttribute('aria-label', lifestylePaused ? 'Play background video' : 'Pause background video');
+}
+
+lifestyleToggle.addEventListener('click', () => {
+  lifestylePaused = !lifestylePaused;
+  syncLifestyle();
+});
+
+new IntersectionObserver(([entry]) => {
+  lifestyleVisible = entry.isIntersecting;
+  syncLifestyle();
+}, { threshold: 0.25 }).observe(lifestyleVideo);
+
+syncLifestyle();
 
 // 5. Interactive Finish Selector
 const finishButtons = document.querySelectorAll('.finish-btn');

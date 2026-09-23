@@ -257,8 +257,8 @@
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           <figure id="front-figure" class="w-full lg:w-3/5">
             <img
-              src="./assets/front-view-836.webp"
-              srcset="./assets/front-view-836.webp 836w, ./assets/front-view-1672.webp 1672w"
+              src="./assets/generated/front-view-836.webp"
+              srcset="./assets/generated/front-view-836.webp 836w, ./assets/generated/front-view-1672.webp 1672w"
               sizes="(min-width: 1024px) 60vw, 100vw"
               width="1672" height="941"
               alt="Vibras headphones, front elevation at eye level, aluminium cups with orange ANC switch and knurled control wheel"
@@ -276,6 +276,31 @@
               <li class="flex justify-between py-3 text-neutral-400"><span>RIGHT CUP</span><span class="text-white">CONTROL WHEEL // USB-C</span></li>
               <li class="flex justify-between py-3 text-neutral-400"><span>BASE</span><span class="text-white">BATTERY CARTRIDGE // MOD-02</span></li>
             </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3c: Full-bleed lifestyle loop -->
+      <section id="lifestyle" class="relative w-full bg-black border-t border-white/10 overflow-hidden">
+        <div class="relative">
+          <div class="relative w-full aspect-[4/5] sm:aspect-video">
+            <video id="lifestyle-video" class="absolute inset-0 w-full h-full object-cover object-[8%_center] sm:object-center" muted loop playsinline preload="metadata" poster="./assets/generated/lifestyle-poster.webp" aria-hidden="true">
+              <source src="./assets/generated/lifestyle-loop.webm" type="video/webm">
+              <source src="./assets/generated/lifestyle-loop.mp4" type="video/mp4">
+            </video>
+            <button id="lifestyle-toggle" type="button" aria-pressed="false" aria-label="Pause background video" class="btn-tactile absolute bottom-4 right-4 md:bottom-8 md:right-8 z-10 font-mono text-[11px] tracking-wider px-3 py-2 rounded-sm bg-black/60 text-neutral-300 hover:text-white">
+              PAUSE
+            </button>
+          </div>
+          <div class="px-6 py-12 lg:p-0 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 lg:flex lg:items-center">
+            <div class="max-w-md lg:pr-16">
+              <span class="text-xs font-mono text-orange-500 uppercase tracking-widest">// IN USE</span>
+              <h2 class="text-3xl md:text-5xl font-sans font-light text-white mt-2">Everything else<br>goes quiet.</h2>
+              <p class="text-neutral-400 text-sm mt-4 font-sans leading-relaxed">
+                Slide the orange switch to II and the room drops away. Magnetic knit cushions seal without pressure, made to be worn all day and repaired, not replaced.
+              </p>
+              <div class="mt-6 pt-3 border-t border-white/10 font-mono text-[11px] text-neutral-300">ANC MODE II // 42 H PLAYBACK</div>
+            </div>
           </div>
         </div>
       </section>
@@ -311,8 +336,8 @@
 
           <div class="w-full lg:w-1/2 p-8 rounded border border-white/10 bg-neutral-950 font-mono text-xs space-y-4">
             <figure class="relative aspect-video -mx-8 -mt-8 mb-6 overflow-hidden rounded-t bg-black border-b border-white/10">
-              <img src="./assets/frame-a.webp" alt="Vibras headphones in natural bead-blasted aluminium" data-finish-img="natural" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-500" loading="lazy" decoding="async">
-              <img src="./assets/colour-graphite.webp" alt="Vibras headphones in stealth anodized graphite" data-finish-img="stealth" class="absolute inset-0 w-full h-full object-contain scale-[0.83] opacity-0 transition-opacity duration-500" loading="lazy" decoding="async">
+              <img src="./assets/generated/frame-a.webp" alt="Vibras headphones in natural bead-blasted aluminium" data-finish-img="natural" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-500" loading="lazy" decoding="async">
+              <img src="./assets/generated/colour-graphite.webp" alt="Vibras headphones in stealth anodized graphite" data-finish-img="stealth" class="absolute inset-0 w-full h-full object-contain scale-[0.83] opacity-0 transition-opacity duration-500" loading="lazy" decoding="async">
             </figure>
             <div class="flex justify-between border-b border-white/10 pb-2 text-neutral-400">
               <span>SUBSTRATE SPECIFICATION</span>

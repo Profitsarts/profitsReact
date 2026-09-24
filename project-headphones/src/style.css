@@ -166,3 +166,11 @@ body {
     animation: none;
   }
 }
+
+/* Photo cropped hard on its top and left edges: fade those edges into the black stage */
+.edge-fade-tl {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 20%), linear-gradient(to bottom, transparent 0, #000 14%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 20%), linear-gradient(to bottom, transparent 0, #000 14%);
+  mask-composite: intersect;
+}

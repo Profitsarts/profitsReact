@@ -113,7 +113,7 @@ Seven official Teenage Engineering hardware reference images are stored in `docs
 * **Generation Models & Plan Compatibility**:
   * **Primary Target (User-Specified)**: **Marketing Studio Image 2.5 Sunburst** (`gpt_image_2_5 --variant sunburst`).
     * *Technical Note*: On Free plans, the Higgsfield backend enforces `job_minimum_basic_plan_required`. If running without the Basic Plan ($20/mo subscription), the verified fallback is:
-  * **Verified Fallback Model**: **`z_image`** (Tongyi-MAI engine). Fully operational on Free plan, tested in 24 seconds, generated [docs/test-zimage.png](file:///Users/condres/Dev/Projects/Profits_portfolio-legacy/web/project-headphones/docs/test-zimage.png) at ~0.25 credits.
+  * **Verified Fallback Model**: **`z_image`** (Tongyi-MAI engine). Fully operational on Free plan, tested in 24 seconds, generated [assets/source/alternates/test-zimage.png](file:///Users/condres/Dev/Projects/Profits_portfolio-legacy/web/project-headphones/assets/source/alternates/test-zimage.png) at ~0.25 credits.
   * **Video Generation Model**: **Seedance 2.5** (`seedance_2_5` / `bytedance/seedance-2.5/image-to-video`). Verified and operational via Python SDK and `HF_KEY` credentials in `.env`.
 * **Master Generation Prompts Ready**:
   * Pre-compiled master prompts for **Frame A** (assembled) and **Frame B** (exploded) are stored in [docs/prompts/frames.md](file:///Users/condres/Dev/Projects/Profits_portfolio-legacy/web/project-headphones/docs/prompts/frames.md).

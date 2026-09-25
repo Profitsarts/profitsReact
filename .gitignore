@@ -137,3 +137,18 @@ dist
 
 # Old Jekyll project (don't include in React repo)
 profits_jekyll/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+# Agent and IDE local configs
+.claude/
+.cursor/
+.gemini/
+.kiro/
+.mcp.json
+opencode.json
+.DS_Store
+
+# Heavy motion exports (keep code, exclude raw MP4)
+project-headphones/motion/*.mp4

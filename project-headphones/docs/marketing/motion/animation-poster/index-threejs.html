@@ -82,6 +82,10 @@ function polyRibbon(pts, radius) {
   return segs.filter(Boolean);
 }
 const circleRibbon = (cx, cy, r, a0 = -Math.PI / 2) => [arc(cx, cy, r, a0, TAU)];
+// round headband: short legs rising from the cups into one semicircular arch (centre 0, cy)
+const archRibbon = (r, cy, legY) => [seg(-r, legY, -r, cy), arc(0, cy, r, Math.PI, Math.PI), seg(r, cy, r, legY)].filter(Boolean);
+// concentric pad: arc only, trimmed by `trim` radians at each end
+const padRibbon = (r, cy, trim) => [arc(0, cy, r, Math.PI + trim, Math.PI - 2 * trim)];
 
 /* ---------- 3D ribbon: a 2D ribbon living on a plane (O, U, V) ----------
    mode 'fan'  → slats lie in the plane (radial fans at tight arcs)
@@ -98,6 +102,7 @@ class Ribbon3 {
     this.mode = o.mode || 'fan'; this.dep = o.dep ?? 5;
     this.seed = o.seed ?? Math.random() * TAU;
     this.baseSp = o.sp ?? Math.min(10, Math.max(4.4, W * 0.12));
+    this.fill = o.fill || null;   // t → 0..1 share of the length drawn (preload bar)
     this.O = plane.O; this.U = plane.U; this.V = plane.V;
     this.N = new THREE.Vector3().crossVectors(plane.U, plane.V);
   }
@@ -128,18 +133,23 @@ class Ribbon3 {
 
 /* ---------- SCENE (design units; root group scaled 0.01) ---------- */
 const HP = [];
-const band = [[-310, -5], [-310, -380], [310, -380], [310, -5]];
-HP.push(new Ribbon3(polyRibbon(band, 36), 72, PLANE_XY, { delay: 0, seed: 0.3 }));                         // MOD-01 headband
-HP.push(new Ribbon3(polyRibbon(band, 36), 44, PLANE_XY, { delay: 0.15, tone: 1, mode: 'axis', sp: 9, seed: 0.9 })); // headband depth strap
-HP.push(new Ribbon3(polyRibbon([[-235, -40], [-235, -305], [235, -305], [235, -40]], 17), 34, PLANE_XY, { delay: 0.25, tone: 1, seed: 1.7 }));
+const band = () => archRibbon(310, -70, -5);
+HP.push(new Ribbon3(band(), 72, PLANE_XY, { delay: 0, seed: 0.3 }));                         // MOD-01 headband
+HP.push(new Ribbon3(band(), 44, PLANE_XY, { delay: 0.15, tone: 1, mode: 'axis', sp: 9, seed: 0.9 })); // headband depth strap
+HP.push(new Ribbon3(padRibbon(245, -70, 0.2), 34, PLANE_XY, { delay: 0.25, tone: 1, seed: 1.7 }));
 for (const sx of [-1, 1]) {
   HP.push(new Ribbon3(circleRibbon(0, 0, 150), 80, planeYZ(300 * sx), { closed: true, mode: 'axis', delay: 0.35, seed: 2 + sx }));        // cup drum
   HP.push(new Ribbon3(circleRibbon(0, 0, 180), 56, planeYZ(255 * sx), { closed: true, tone: 1, delay: 0.45, seed: 2.6 + sx }));          // cushion
   HP.push(new Ribbon3(circleRibbon(0, 0, 70), 140, planeYZ(345 * sx), { closed: true, delay: 0.6, sp: 5.2, seed: 3.1 + sx }));          // driver sunburst
 }
 HP.push(new Ribbon3(circleRibbon(432, 322, 20), 40, PLANE_XY, { closed: true, tone: 1, delay: 0.85, seed: 4.4 }));                     // volume dial
-HP.push(new Ribbon3(polyRibbon([[-360, 440], [360, 440]], 0), 54, PLANE_XY, { delay: 0.95, seed: 5.2 }));                               // MOD-04 battery base
-HP.push(new Ribbon3(polyRibbon([[-360, 440], [360, 440]], 0), 120, PLANE_XY, { delay: 1.05, tone: 1, mode: 'axis', sp: 8, seed: 5.9 })); // base plate depth
+// preload bar: fills left → right from 10 % at t = 0 to 100 % at T_HOLD, then holds until the loop fade
+const preload = t => lerp(0.1, 1, clamp01(t / T_HOLD));
+HP.push(new Ribbon3(polyRibbon([[-360, 440], [360, 440]], 0), 54, PLANE_XY, { delay: 0.95, seed: 5.2, fill: preload }));                               // preload bar
+HP.push(new Ribbon3(polyRibbon([[-360, 440], [360, 440]], 0), 120, PLANE_XY, { delay: 1.05, tone: 1, mode: 'axis', sp: 8, seed: 5.9, fill: preload })); // preload bar depth
+// MOD-02 power cell: one slim cartridge (≈1:2), single bay in the RIGHT cup, slid straight down out of it
+HP.push(new Ribbon3(polyRibbon([[300, 322], [300, 406]], 0), 44, PLANE_XY, { delay: 0.9, sp: 5, seed: 6.4 }));                                      // cartridge face
+HP.push(new Ribbon3(polyRibbon([[300, 322], [300, 406]], 0), 36, PLANE_XY, { delay: 1.0, tone: 1, mode: 'axis', sp: 5, seed: 6.8 }));               // cartridge depth
 
 const GLYPHS = {
   V: [[[0, 0], [0, 1.6], [1, 3], [2, 1.6], [2, 0]]],
@@ -164,10 +174,11 @@ const BRAND = [];
 const TELEMETRY = 'VIBRAS // PRISTINE DSP LABS';
 const SUBHEAD = 'MODULAR';
 const LABELS = [
-  { text: 'MOD-01 / HEADBAND', at: V3(0, 250, 0) },
-  { text: 'MOD-02 / L-DRIVER', at: V3(-360, -392, 0) },
-  { text: 'MOD-03 / R-DRIVER + DIAL', at: V3(360, -392, 0) },
-  { text: 'MOD-04 / BATTERY BASE', at: V3(0, -505, 0) },
+  { text: 'MOD-04 / HEADBAND CORE', at: V3(0, 250, 0) },
+  { text: 'MOD-01 / ACOUSTIC CHAMBER', at: V3(-360, -392, 0) },
+  { text: 'MOD-03 / KNIT CUSHION', at: V3(-610, -60, 0) },
+  { text: 'MOD-02 / POWER CELL', at: V3(530, -410, 0) },
+  { text: '', at: V3(0, -505, 0), preload: true, fade: [0.3, 1.0] },
   { text: SUBHEAD, at: V3(0, 458, 0), el: subheadEl, fade: [18.6, 19.4] },
 ].map(l => {
   if (l.el) { l.el.textContent = l.text; return l; }
@@ -220,7 +231,7 @@ function addSlats(r, t, p, col) {
   if (r.closed) sp = r.L / Math.max(8, Math.round(r.L / sp));
   const n = Math.max(1, Math.round(r.L / (p.waves * sp)));
   const lam = r.L / n, A = 0.8 * (lam / TAU) * p.warp, phi = r.seed + p.phase;
-  const off = ((t * p.flow) % sp + sp) % sp, Lmax = r.L * p.reveal;
+  const off = ((t * p.flow) % sp + sp) % sp, Lmax = r.L * p.reveal * (r.fill ? r.fill(t) : 1);
   const startU = r.closed ? off : off - sp - A, endU = r.closed ? off + r.L - sp * 0.5 : r.L + A;
   const hw = r.W * 0.5 * (1 - p.breathe * (0.5 + 0.5 * Math.sin(t * 2.6 + r.seed)));
   const m = slatMesh.instanceMatrix.array, c = slatMesh.instanceColor.array;
@@ -280,11 +291,12 @@ points.frustumCulled = false;
 root.add(points);
 
 function seedParticles() {
-  const weights = HP.map(r => r.L * r.W), sum = weights.reduce((a, b) => a + b, 0);
+  const share = r => r.fill ? r.fill(T_IGNITE) : 1;
+  const weights = HP.map(r => r.L * r.W * share(r)), sum = weights.reduce((a, b) => a + b, 0);
   for (let i = 0; i < NP; i++) {
     let pick = Math.random() * sum, k = 0;
     while (pick > weights[k]) pick -= weights[k++];
-    const r = HP[k], { P, D } = r.frame(Math.random() * r.L, fr), off = (Math.random() - 0.5) * r.W * 0.96;
+    const r = HP[k], { P, D } = r.frame(Math.random() * r.L * share(r), fr), off = (Math.random() - 0.5) * r.W * 0.96;
     pTgt[i * 3] = P.x + D.x * off; pTgt[i * 3 + 1] = P.y + D.y * off; pTgt[i * 3 + 2] = P.z + D.z * off;
     pPos[i * 3] = (Math.random() * 2 - 1) * 950; pPos[i * 3 + 1] = (Math.random() * 2 - 1) * 750; pPos[i * 3 + 2] = (Math.random() * 2 - 1) * 600;
     for (let j = 0; j < 3; j++) pVel[i * 3 + j] = (Math.random() * 2 - 1) * 140;
@@ -405,6 +417,11 @@ function render(t) {
   const la = t >= T_LOCKUP ? smooth(18.2, 19.2, t) * (1 - fade) : 0;
   root.updateMatrixWorld();
   for (const l of LABELS) {
+    if (l.preload) {
+      const f = preload(t);
+      l.at.x = -360 + 720 * f;
+      l.el.textContent = `PRELOAD ${String(Math.round(f * 100)).padStart(3, '0')}%`;
+    }
     proj.copy(l.at).applyMatrix4(root.matrixWorld).project(camera);
     l.el.style.left = `${(proj.x * 0.5 + 0.5) * window.innerWidth}px`;
     l.el.style.top = `${(-proj.y * 0.5 + 0.5) * window.innerHeight}px`;

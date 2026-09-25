@@ -390,6 +390,48 @@
         </div>
       </section>
 
+      <!-- SECTION 4b: Promotional Poster (light / dark variants) -->
+      <section id="poster" class="relative w-full py-32 px-6 md:px-16 border-t border-white/10 bg-black">
+        <div class="max-w-7xl mx-auto">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+            <div>
+              <span class="text-xs font-mono text-orange-500 uppercase tracking-widest">// PROMOTIONAL POSTER</span>
+              <h2 class="text-3xl md:text-5xl font-sans font-light text-white mt-2">The exploded view is the argument.</h2>
+            </div>
+            <div class="inline-flex self-start sm:self-auto shrink-0 p-1 gap-1 rounded-full border border-white/10 font-mono text-xs" role="group" aria-label="Poster variant">
+              <button class="poster-btn px-4 py-2 rounded-full text-neutral-400 aria-[pressed=false]:hover:text-white aria-pressed:bg-white aria-pressed:text-black aria-pressed:font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500" data-poster="light" aria-pressed="false">LIGHT</button>
+              <button class="poster-btn px-4 py-2 rounded-full text-neutral-400 aria-[pressed=false]:hover:text-white aria-pressed:bg-white aria-pressed:text-black aria-pressed:font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500" data-poster="dark" aria-pressed="true">DARK</button>
+            </div>
+          </div>
+          <figure class="relative aspect-[3/4] overflow-hidden rounded border border-white/10 bg-black">
+            <img src="./assets/generated/promo-poster-dark-1440.webp" srcset="./assets/generated/promo-poster-dark-1440.webp 1440w, ./assets/generated/promo-poster-dark-2880.webp 2880w" sizes="(min-width: 1408px) 1280px, (min-width: 768px) calc(100vw - 8rem), calc(100vw - 3rem)" width="1440" height="1920" alt="Vibras promotional poster, dark variant: exploded front elevation of the four modules above metrology and surface tables" data-poster-img="dark" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-500" loading="lazy" decoding="async">
+            <img src="./assets/generated/promo-poster-light-1440.webp" srcset="./assets/generated/promo-poster-light-1440.webp 1440w, ./assets/generated/promo-poster-light-2880.webp 2880w" sizes="(min-width: 1408px) 1280px, (min-width: 768px) calc(100vw - 8rem), calc(100vw - 3rem)" width="1440" height="1920" alt="Vibras promotional poster, light variant: exploded front elevation of the four modules above metrology and surface tables" aria-hidden="true" data-poster-img="light" class="absolute inset-0 w-full h-full object-contain opacity-0 transition-opacity duration-500" loading="lazy" decoding="async">
+          </figure>
+
+          <!-- Motion study: recorded loop of the Three.js poster + link to the live, pointer-driven build -->
+          <div class="mt-20">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-6">
+              <div>
+                <span class="text-xs font-mono text-orange-500 uppercase tracking-widest">// MOTION STUDY</span>
+                <p class="text-neutral-400 text-sm mt-2 font-sans leading-relaxed max-w-md">
+                  Particles, fanned ribbons, then the full assembly: a 24-second loop rendered in real time with Three.js and WebGL. The live version orbits with your pointer.
+                </p>
+              </div>
+              <a href="./docs/marketing/motion/animation-poster/index-threejs.html" target="_blank" rel="noopener" class="shrink-0 self-start sm:self-auto font-mono text-xs px-4 py-2 rounded-full border border-white/10 text-neutral-300 hover:text-white hover:border-white/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">LAUNCH INTERACTIVE ↗</a>
+            </div>
+            <div class="relative aspect-video overflow-hidden rounded border border-white/10 bg-black">
+              <video id="motion-video" class="absolute inset-0 w-full h-full object-cover" muted loop playsinline preload="none" poster="./assets/generated/motion-poster-still.webp" aria-hidden="true">
+                <source src="./assets/generated/motion-poster-loop.mp4" type="video/mp4">
+                <source src="./assets/generated/motion-poster-loop.webm" type="video/webm">
+              </video>
+              <button id="motion-toggle" type="button" aria-pressed="false" aria-label="Pause motion study video" class="btn-tactile absolute bottom-4 right-4 z-10 font-mono text-[11px] tracking-wider px-3 py-2 rounded-sm bg-black/60 text-neutral-300 hover:text-white">
+                PAUSE
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- SECTION 5: Concept Framing & Portfolio Footer -->
       <footer id="concept-notice" class="relative w-full py-20 px-6 md:px-16 border-t border-white/10 bg-black text-xs font-mono text-neutral-500">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">

@@ -222,31 +222,34 @@ if (!reduceMotion) {
   gsap.from('#power-copy', { opacity: 0, y: 24, duration: 1, delay: 0.15, ease: 'power3.out', scrollTrigger: powerReveal });
 }
 
-// Lifestyle loop: plays only while on screen; WCAG 2.2.2 needs a pause control for motion over 5 s
-const lifestyleVideo = document.getElementById('lifestyle-video');
-const lifestyleToggle = document.getElementById('lifestyle-toggle');
-let lifestylePaused = reduceMotion;
-let lifestyleVisible = false;
+// Looping videos (lifestyle, motion study): play only while on screen; WCAG 2.2.2 needs a pause control for motion over 5 s
+function loopVideo(video, toggle, label) {
+  let paused = reduceMotion;
+  let visible = false;
 
-function syncLifestyle() {
-  if (!lifestylePaused && lifestyleVisible) lifestyleVideo.play().catch(() => {});
-  else lifestyleVideo.pause();
-  lifestyleToggle.textContent = lifestylePaused ? 'PLAY' : 'PAUSE';
-  lifestyleToggle.setAttribute('aria-pressed', String(lifestylePaused));
-  lifestyleToggle.setAttribute('aria-label', lifestylePaused ? 'Play background video' : 'Pause background video');
+  function sync() {
+    if (!paused && visible) video.play().catch(() => {});
+    else video.pause();
+    toggle.textContent = paused ? 'PLAY' : 'PAUSE';
+    toggle.setAttribute('aria-pressed', String(paused));
+    toggle.setAttribute('aria-label', `${paused ? 'Play' : 'Pause'} ${label}`);
+  }
+
+  toggle.addEventListener('click', () => {
+    paused = !paused;
+    sync();
+  });
+
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    sync();
+  }, { threshold: 0.25 }).observe(video);
+
+  sync();
 }
 
-lifestyleToggle.addEventListener('click', () => {
-  lifestylePaused = !lifestylePaused;
-  syncLifestyle();
-});
-
-new IntersectionObserver(([entry]) => {
-  lifestyleVisible = entry.isIntersecting;
-  syncLifestyle();
-}, { threshold: 0.25 }).observe(lifestyleVideo);
-
-syncLifestyle();
+loopVideo(document.getElementById('lifestyle-video'), document.getElementById('lifestyle-toggle'), 'background video');
+loopVideo(document.getElementById('motion-video'), document.getElementById('motion-toggle'), 'motion study video');
 
 // 5. Interactive Finish Selector
 const finishButtons = document.querySelectorAll('.finish-btn');
@@ -275,5 +278,20 @@ finishButtons.forEach((btn) => {
       badge.textContent = 'ACTIVE';
       badge.className = 'text-orange-500 font-bold';
     }
+  });
+});
+
+// 6. Promotional Poster Variant Switch (dark by default)
+const posterButtons = document.querySelectorAll('.poster-btn');
+const posterImages = document.querySelectorAll('[data-poster-img]');
+posterButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    posterImages.forEach((img) => {
+      const hidden = img.dataset.posterImg !== btn.dataset.poster;
+      img.classList.toggle('opacity-0', hidden);
+      img.setAttribute('aria-hidden', String(hidden));
+    });
+    // active styling is driven by aria-pressed variants in the markup
+    posterButtons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
   });
 });

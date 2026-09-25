@@ -10,6 +10,13 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        // live, pointer-driven Three.js poster linked from the #poster section
+        motion: 'docs/marketing/motion/animation-poster/index-threejs.html'
+      }
+    }
   }
 });

@@ -151,4 +151,4 @@ opencode.json
 .DS_Store
 
 # Heavy motion exports (keep code, exclude raw MP4)
-project-headphones/motion/*.mp4
+project-headphones/docs/marketing/motion/*.mp4

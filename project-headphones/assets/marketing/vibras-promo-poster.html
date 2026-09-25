@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vibras Promo Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=block" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EFEAE2;
+    --ink: #163A3A;
+    --pink: #E9AFBC;
+    --mustard: #D9A43A;
+    --orange: #FF5722;
+    --label: #6E6A63;
+    --hair: rgba(22, 58, 58, 0.28);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1440px; height: 1920px; background: var(--paper); }
+  body { position: relative; overflow: hidden; color: var(--ink); font-family: "Space Grotesk", sans-serif; }
+  .mono { font-family: "JetBrains Mono", monospace; font-variant-numeric: tabular-nums; }
+  .abs { position: absolute; }
+  svg.stage { position: absolute; inset: 0; }
+
+  /* header */
+  .hdr { left: 96px; right: 96px; top: 58px; display: flex; justify-content: space-between; align-items: baseline; }
+  .logo { font-weight: 700; font-size: 27px; letter-spacing: 0.2em; }
+  .div { color: var(--label); margin: 0 14px; font-weight: 400; }
+  .hdr .mono { font-size: 13px; letter-spacing: 0.04em; }
+  .status { color: var(--orange); font-weight: 700; }
+  .hdr2 { left: 96px; right: 96px; top: 102px; display: flex; justify-content: space-between; font-size: 11.5px; color: var(--label); letter-spacing: 0.05em; }
+
+  /* module callouts */
+  .mods { left: 96px; top: 1058px; width: 1248px; display: grid; grid-template-columns: repeat(4, 294px); column-gap: 24px; }
+  .mod h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 10px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .badge { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; background: var(--orange); color: var(--paper); padding: 2px 6px 1px; letter-spacing: 0.04em; }
+  .mod h3 small { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--label); font-weight: 400; }
+  .mod dl { display: grid; grid-template-columns: 78px 1fr; row-gap: 4px; font-family: "JetBrains Mono", monospace; font-size: 11.5px; line-height: 1.35; }
+  .mod dt { color: var(--label); font-size: 10px; letter-spacing: 0.06em; padding-top: 1px; }
+  .mod dd { color: var(--ink); }
+  .mod dd.hot { color: var(--orange); font-weight: 700; }
+
+  /* headline */
+  .headline { left: 96px; top: 1306px; width: 848px; font-weight: 700; font-size: 100px; line-height: 0.9; letter-spacing: -0.035em; }
+  .headline span { color: var(--orange); }
+  .pos { left: 944px; top: 1312px; width: 400px; }
+  .pos .sub { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; color: var(--orange); letter-spacing: 0.04em; margin-bottom: 14px; }
+  .pos p { font-size: 17px; line-height: 1.38; }
+  .pos p b { font-weight: 700; }
+
+  /* tables */
+  .blk-title { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--label); letter-spacing: 0.08em; padding-bottom: 8px; border-bottom: 1.5px solid var(--ink); display: flex; justify-content: space-between; }
+  .blk-title b { color: var(--ink); }
+  .tblB { left: 96px; top: 1508px; width: 824px; }
+  table { width: 100%; border-collapse: collapse; font-family: "JetBrains Mono", monospace; font-variant-numeric: tabular-nums; font-size: 12px; }
+  th { text-align: left; font-weight: 400; font-size: 10px; color: var(--label); letter-spacing: 0.07em; padding: 8px 0 6px; border-bottom: 1px solid var(--hair); }
+  td { padding: 6px 0 5px; border-bottom: 1px solid var(--hair); vertical-align: baseline; }
+  td.idx { color: var(--orange); width: 58px; }
+  td.par { width: 250px; }
+  td.val { width: 170px; font-weight: 700; }
+  td.cond { color: var(--label); }
+  .tblC { left: 944px; top: 1508px; width: 400px; }
+  .tblC dl { display: grid; grid-template-columns: 138px 1fr; font-family: "JetBrains Mono", monospace; font-size: 11.5px; line-height: 1.35; }
+  .tblC dt, .tblC dd { padding: 6px 0 5px; border-bottom: 1px solid var(--hair); }
+  .tblC dt { color: var(--label); font-size: 10px; letter-spacing: 0.06em; padding-top: 7px; }
+  .fin { display: flex; gap: 18px; margin-top: 10px; font-family: "JetBrains Mono", monospace; font-size: 11px; }
+  .fin div { display: flex; align-items: center; gap: 8px; }
+  .sw { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--hair); }
+
+  /* footer */
+  .foot { left: 96px; right: 96px; top: 1800px; display: grid; grid-template-columns: 1fr 1fr auto 1fr 1fr; column-gap: 24px; align-items: start; }
+  .foot b { display: block; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; }
+  .foot .mono { font-size: 10.5px; letter-spacing: 0.05em; line-height: 1.5; }
+  .foot .r { text-align: right; }
+  .foot .mark { display: flex; justify-content: center; }
+  .colo { left: 96px; right: 96px; top: 1864px; display: flex; justify-content: space-between; gap: 40px; font-size: 9.5px; color: var(--label); letter-spacing: 0.04em; line-height: 1.45; }
+  .colo p:first-child { max-width: 700px; }
+  .colo p:last-child { text-align: right; }
+</style>
+</head>
+<body>
+
+<svg class="stage" width="1440" height="1920" viewBox="0 0 1440 1920" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="gMinor" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M8 0H0V8" fill="none" stroke="rgba(22,58,58,0.045)" stroke-width="1"/>
+    </pattern>
+    <pattern id="gMajor" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" fill="url(#gMinor)"/>
+      <path d="M40 0H0V40" fill="none" stroke="rgba(22,58,58,0.08)" stroke-width="1"/>
+    </pattern>
+    <pattern id="dots" width="9" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="4.5" cy="4.5" r="1.7" fill="#163A3A"/>
+    </pattern>
+    <clipPath id="cushL"><circle cx="590" cy="820" r="100"/></clipPath>
+    <clipPath id="cushR"><circle cx="850" cy="820" r="100"/></clipPath>
+    <clipPath id="batL"><circle cx="168" cy="820" r="72"/></clipPath>
+    <clipPath id="batR"><circle cx="1272" cy="820" r="72"/></clipPath>
+    <!-- knit stripes, 7px pitch -->
+    <g id="stripes">
+      <path d="M0 720H1440M0 727H1440M0 734H1440M0 741H1440M0 748H1440M0 755H1440M0 762H1440M0 769H1440M0 776H1440M0 783H1440M0 790H1440M0 797H1440M0 804H1440M0 811H1440M0 818H1440M0 825H1440M0 832H1440M0 839H1440M0 846H1440M0 853H1440M0 860H1440M0 867H1440M0 874H1440M0 881H1440M0 888H1440M0 895H1440M0 902H1440M0 909H1440M0 916H1440" stroke="#163A3A" stroke-width="1.3"/>
+    </g>
+    <g id="star"><path d="M0 -26 Q3 -3 26 0 Q3 3 0 26 Q-3 3 -26 0 Q-3 -3 0 -26Z" fill="#163A3A"/></g>
+  </defs>
+
+  <rect width="1440" height="1920" fill="url(#gMajor)"/>
+
+  <!-- crop marks -->
+  <g stroke="#FF5722" stroke-width="1.5">
+    <path d="M24 44H60M44 24V60"/><path d="M1416 44H1380M1396 24V60"/>
+    <path d="M24 1876H60M44 1896V1860"/><path d="M1416 1876H1380M1396 1896V1860"/>
+  </g>
+  <path d="M96 136H1344" stroke="#163A3A" stroke-width="1.5"/>
+
+  <!-- ===== HERO: exploded front elevation ===== -->
+  <!-- assembly axes -->
+  <g stroke="#FF5722" stroke-width="1.2" stroke-dasharray="2 6" fill="none">
+    <path d="M60 820H1380"/>
+    <path d="M720 160V1000"/>
+  </g>
+  <g stroke="#163A3A" stroke-width="1" stroke-dasharray="1 5" fill="none" opacity="0.7">
+    <path d="M365 600V650M1075 600V650"/>
+    <path d="M168 700V748M1272 700V748"/>
+  </g>
+
+  <!-- MOD-04 headband arch -->
+  <path d="M320 600A400 400 0 0 1 1120 600L1030 600A310 310 0 0 0 410 600Z" fill="#163A3A"/>
+  <!-- braided mesh sleeve: line bundle, left quarter -->
+  <g fill="none" stroke="#163A3A" stroke-width="1.4">
+    <path d="M420 600A300 300 0 0 1 720 300"/><path d="M426 600A294 294 0 0 1 720 306"/>
+    <path d="M432 600A288 288 0 0 1 720 312"/><path d="M438 600A282 282 0 0 1 720 318"/>
+    <path d="M444 600A276 276 0 0 1 720 324"/><path d="M450 600A270 270 0 0 1 720 330"/>
+    <path d="M456 600A264 264 0 0 1 720 336"/><path d="M462 600A258 258 0 0 1 720 342"/>
+    <path d="M468 600A252 252 0 0 1 720 348"/><path d="M474 600A246 246 0 0 1 720 354"/>
+    <path d="M480 600A240 240 0 0 1 720 360"/><path d="M486 600A234 234 0 0 1 720 366"/>
+    <path d="M492 600A228 228 0 0 1 720 372"/>
+  </g>
+  <!-- dot-matrix zone, right quarter -->
+  <path d="M720 300A300 300 0 0 1 1020 600L948 600A228 228 0 0 0 720 372Z" fill="url(#dots)" opacity="0.85"/>
+  <use href="#star" transform="translate(720 210) scale(0.9)"/>
+
+  <!-- MOD-04 interface: dial + ANC slide -->
+  <g transform="translate(0 -30)"><circle cx="720" cy="668" r="38" fill="#163A3A"/>
+  <g stroke="#EFEAE2" stroke-width="2" id="knurl">
+    <path d="M720 634V644M720 692V702M686 668H696M744 668H754"/>
+    <path d="M696 644L703 651M737 685L744 692M744 644L737 651M703 685L696 692"/>
+  </g>
+  <circle cx="720" cy="668" r="14" fill="none" stroke="#EFEAE2" stroke-width="1.5"/></g><g transform="translate(0 -55)">
+  <rect x="672" y="752" width="96" height="30" rx="15" fill="#163A3A"/>
+  <circle cx="753" cy="767" r="12" fill="#FF5722"/>
+  <g font-family="JetBrains Mono, monospace" font-size="10" fill="#163A3A" text-anchor="middle" font-weight="700">
+    <text x="687" y="745">0</text><text x="720" y="745">I</text><text x="753" y="745" fill="#FF5722">II</text>
+  </g></g>
+
+  <!-- MOD-01 acoustic chambers -->
+  <g>
+    <rect x="275" y="650" width="180" height="340" rx="90" fill="#163A3A"/>
+    <rect x="985" y="650" width="180" height="340" rx="90" fill="#163A3A"/>
+    <!-- bayonet index notches -->
+    <g fill="#EFEAE2"><rect x="359" y="650" width="12" height="16"/><rect x="359" y="974" width="12" height="16"/>
+      <rect x="1069" y="650" width="12" height="16"/><rect x="1069" y="974" width="12" height="16"/></g>
+    <!-- 40 mm beryllium dome -->
+    <circle cx="365" cy="820" r="54" fill="#EFEAE2"/><circle cx="1075" cy="820" r="54" fill="#EFEAE2"/>
+    <g fill="none" stroke="#163A3A" stroke-width="1.2">
+      <circle cx="365" cy="820" r="42"/><circle cx="365" cy="820" r="30"/><circle cx="365" cy="820" r="18"/>
+      <circle cx="1075" cy="820" r="42"/><circle cx="1075" cy="820" r="30"/><circle cx="1075" cy="820" r="18"/>
+    </g>
+    <circle cx="365" cy="820" r="54" fill="none" stroke="#FF5722" stroke-width="3"/>
+    <circle cx="1075" cy="820" r="54" fill="none" stroke="#FF5722" stroke-width="3"/>
+  </g>
+
+  <!-- MOD-03 knit cushions -->
+  <circle cx="590" cy="820" r="100" fill="#E9AFBC"/>
+  <circle cx="850" cy="820" r="100" fill="#E9AFBC"/>
+  <g clip-path="url(#cushL)"><use href="#stripes" clip-path="url(#halfL)"/></g>
+  <clipPath id="halfL"><rect x="590" y="700" width="110" height="240"/></clipPath>
+  <clipPath id="halfR"><rect x="740" y="700" width="110" height="240"/></clipPath>
+  <g clip-path="url(#cushR)"><use href="#stripes" clip-path="url(#halfR)"/></g>
+  <!-- 8 perimeter magnets -->
+  <g fill="#163A3A">
+    <circle cx="590" cy="728" r="4"/><circle cx="655" cy="755" r="4"/><circle cx="682" cy="820" r="4"/><circle cx="655" cy="885" r="4"/>
+    <circle cx="590" cy="912" r="4"/><circle cx="525" cy="885" r="4"/><circle cx="498" cy="820" r="4"/><circle cx="525" cy="755" r="4"/>
+  </g>
+
+  <!-- MOD-02 power cells -->
+  <circle cx="168" cy="820" r="72" fill="#D9A43A"/>
+  <circle cx="1272" cy="820" r="72" fill="#D9A43A"/>
+  <g clip-path="url(#batL)"><path d="M96 792H240M96 800H240M96 808H240M96 816H240M96 824H240M96 832H240M96 840H240M96 848H240" stroke="#163A3A" stroke-width="1.3"/></g>
+  <g clip-path="url(#batR)"><path d="M1200 792H1344M1200 800H1344M1200 808H1344M1200 816H1344M1200 824H1344M1200 832H1344M1200 840H1344M1200 848H1344" stroke="#163A3A" stroke-width="1.3"/></g>
+  <!-- orange pull-tabs -->
+  <rect x="156" y="740" width="24" height="16" fill="#FF5722"/>
+  <rect x="1260" y="740" width="24" height="16" fill="#FF5722"/>
+  <!-- pogo pins -->
+  <g fill="#163A3A"><circle cx="232" cy="808" r="3"/><circle cx="232" cy="820" r="3"/><circle cx="232" cy="832" r="3"/>
+    <circle cx="1208" cy="808" r="3"/><circle cx="1208" cy="820" r="3"/><circle cx="1208" cy="832" r="3"/></g>
+
+  <!-- dimension: chamber height + tolerance -->
+  <g stroke="#FF5722" stroke-width="1.2" fill="#FF5722">
+    <path d="M262 650V990"/><path d="M254 650H270M254 990H270"/>
+    <path d="M262 650L258 662H266Z"/><path d="M262 990L258 978H266Z"/>
+  </g>
+  <text x="252" y="700" transform="rotate(-90 252 700)" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#FF5722" font-weight="700" text-anchor="end">±0.02 MM</text>
+  <!-- dimension: driver diameter -->
+  <g stroke="#FF5722" stroke-width="1.2"><path d="M1033 900H1117"/><path d="M1033 894V906M1117 894V906"/></g>
+  <text x="1075" y="922" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#EFEAE2" font-weight="700" text-anchor="middle">Ø 40.0</text>
+
+  <!-- module tags in the drawing -->
+  <g font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" letter-spacing="0.5">
+    <rect x="130" y="885" width="76" height="17" fill="#163A3A"/><text x="168" y="897.5" fill="#EFEAE2" text-anchor="middle">MOD-02</text>
+    <rect x="552" y="938" width="76" height="17" fill="#163A3A"/><text x="590" y="950.5" fill="#EFEAE2" text-anchor="middle">MOD-03</text>
+    <rect x="1122" y="628" width="76" height="17" fill="#FF5722"/><text x="1160" y="640.5" fill="#EFEAE2" text-anchor="middle">MOD-01</text>
+    <rect x="776" y="622" width="76" height="17" fill="#163A3A"/><text x="814" y="634.5" fill="#EFEAE2" text-anchor="middle">MOD-04</text>
+  </g>
+  <text x="1344" y="176" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#6E6A63" text-anchor="end" letter-spacing="0.6">FIG. 01 — EXPLODED FRONT ELEVATION // NOT TO SCALE</text>
+  <text x="96" y="176" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#6E6A63" letter-spacing="0.6">ASSEMBLY AXIS X–X / Y–Y</text>
+
+  
+  <!-- registration crosshairs -->
+  <g stroke="#163A3A" stroke-width="1" fill="none">
+    <circle cx="1320" cy="220" r="10"/><path d="M1304 220H1336M1320 204V236"/>
+    <circle cx="120" cy="220" r="10"/><path d="M104 220H136M120 204V236"/>
+  </g>
+
+  <!-- leader lines to callout rail -->
+  <path d="M96 1040H1344" stroke="#163A3A" stroke-width="1.5"/>
+  <g stroke="#163A3A" stroke-width="1" fill="none">
+    <path d="M365 990V1040"/>
+    <path d="M590 955V1040"/>
+    <path d="M720 727V1020H745V1040"/>
+    <path d="M1272 892V1040"/>
+  </g>
+  <g fill="#FF5722">
+    <circle cx="365" cy="1040" r="4.5"/><circle cx="590" cy="1040" r="4.5"/>
+    <circle cx="745" cy="1040" r="4.5"/><circle cx="1272" cy="1040" r="4.5"/>
+  </g>
+
+  <!-- footer rule + mark -->
+  <path d="M96 1784H1344" stroke="#163A3A" stroke-width="1.5"/>
+</svg>
+
+<!-- header -->
+<div class="abs hdr">
+  <div><span class="logo">SHYLENCE</span><span class="div">|</span><span class="mono">VIBRAS // ARCHITECTURE LAB 2026</span></div>
+  <div class="mono status">● ACTIVE SPECIFICATION</div>
+</div>
+<div class="abs hdr2 mono">
+  <span>SYS.DOC: VIB-PR-2026-A1 // REVISION 04.2</span>
+  <span>OVER-EAR REFERENCE MONITOR // 100% TOOL-FREE FIELD DISASSEMBLY</span>
+</div>
+
+<!-- Block A -->
+<div class="abs mods">
+  <div class="mod">
+    <h3><span class="badge">MOD-01</span>Acoustic Chamber <small>BAYONET-LOK</small></h3>
+    <dl>
+      <dt>MATERIAL</dt><dd>6061-T6 CNC billet, bead-blasted</dd>
+      <dt>COUPLING</dt><dd>90° bayonet twist-click, dual index notches</dd>
+      <dt>DRIVER</dt><dd>40 mm pure beryllium dome</dd>
+      <dt>MOTOR</dt><dd>NdFeB grade N52 circuit</dd>
+      <dt>TOLERANCE</dt><dd>±0.02 mm</dd>
+      <dt>SWAP</dt><dd class="hot">3 s — tool-free</dd>
+    </dl>
+  </div>
+  <div class="mod">
+    <h3><span class="badge">MOD-03</span>Knit Cushion Stack <small>MAG-CENTRAL</small></h3>
+    <dl>
+      <dt>FOAM CORE</dt><dd>High-density acoustic memory foam, optimised seal</dd>
+      <dt>CASING</dt><dd>Breathable charcoal knit, anti-fatigue</dd>
+      <dt>MOUNT</dt><dd>8 × NdFeB perimeter auto-centring magnets</dd>
+      <dt>END OF LIFE</dt><dd>100% field-replaceable, recyclable</dd>
+      <dt>SWAP</dt><dd class="hot">1 s</dd>
+    </dl>
+  </div>
+  <div class="mod">
+    <h3><span class="badge">MOD-04</span>Headband Core <small>TACTILE YOKE</small></h3>
+    <dl>
+      <dt>CORE</dt><dd>High-tensile spring-steel arch</dd>
+      <dt>SHEATH</dt><dd>Braided stainless-steel mesh sleeve</dd>
+      <dt>DSP</dt><dd>Dual high-speed signal processors</dd>
+      <dt>VOLUME</dt><dd>Aluminium dial, DIN 82 diamond knurl RAA 0.6</dd>
+      <dt>ANC</dt><dd>3-pos slide, 1.8 N detent<br>[0] Off [I] Transp. [II] ANC</dd>
+      <dt>SWAP</dt><dd class="hot">6 s</dd>
+    </dl>
+  </div>
+  <div class="mod">
+    <h3><span class="badge">MOD-02</span>Power Cell <small>HOT-SWAP CORE</small></h3>
+    <dl>
+      <dt>CELL</dt><dd>850 mAh high-density Li-ion cartridge</dd>
+      <dt>BUS</dt><dd>Gold pogo-pin bus, 5 V</dd>
+      <dt>LATCH</dt><dd>Flush hinged door, orange pull-tab</dd>
+      <dt>AUTONOMY</dt><dd>42 h continuous, ANC Mode II</dd>
+      <dt>LIFECYCLE</dt><dd>1,200 recharge cycles</dd>
+      <dt>SWAP</dt><dd class="hot">2 s — hot, no playback cut</dd>
+    </dl>
+  </div>
+</div>
+
+<!-- headline -->
+<div class="abs headline">Four modules.<br>Zero tools<span>.</span></div>
+<div class="abs pos">
+  <div class="sub">THE EXPLODED VIEW IS THE ARGUMENT.</div>
+  <p>Ultra-precision over-ear monitor engineered from CNC bead-blasted aluminium. Zero proprietary screws. Infinite lifecycle repairability. <b>The battery is a part. Quiet is a position.</b></p>
+</div>
+
+<!-- Block B -->
+<div class="abs tblB">
+  <div class="blk-title"><span><b>B</b> // LABORATORY ACOUSTIC &amp; OPERATIONAL METRICS</span><span>7 PARAMETERS</span></div>
+  <table>
+    <thead><tr><th>REF</th><th>METROLOGY PARAMETER</th><th>BENCHMARK VALUE</th><th>TEST PROTOCOL &amp; CONDITIONS</th></tr></thead>
+    <tbody>
+      <tr><td class="idx">B.01</td><td class="par">Transducer Geometry</td><td class="val">40.0 mm</td><td class="cond">Pure beryllium dome, NdFeB N52 motor</td></tr>
+      <tr><td class="idx">B.02</td><td class="par">Total Harmonic Distortion</td><td class="val">&lt; 0.02 %</td><td class="cond">Measured at 1 kHz, 100 dB SPL</td></tr>
+      <tr><td class="idx">B.03</td><td class="par">Frequency Response</td><td class="val">4 Hz – 44 kHz</td><td class="cond">Exceeds Hi-Res Audio studio standards</td></tr>
+      <tr><td class="idx">B.04</td><td class="par">Nominal Impedance</td><td class="val">32 Ω</td><td class="cond">Reference studio monitor calibration</td></tr>
+      <tr><td class="idx">B.05</td><td class="par">Total Disassembly Time</td><td class="val">12.0 s</td><td class="cond">Full field teardown — 0 tools, 0 adhesives</td></tr>
+      <tr><td class="idx">B.06</td><td class="par">Continuous Playback</td><td class="val">42 h</td><td class="cond">Mode II ANC active, 50 % volume</td></tr>
+      <tr><td class="idx">B.07</td><td class="par">Hot-Swap Interrupt</td><td class="val">0.0 ms</td><td class="cond">Uninterrupted buffer circuit</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Block C -->
+<div class="abs tblC">
+  <div class="blk-title"><span><b>C</b> // SURFACE METALLURGY</span><span>TOLERANCES</span></div>
+  <dl>
+    <dt>SUBSTRATE</dt><dd>AL6061-T6, 5-axis CNC milled</dd>
+    <dt>ROUGHNESS Ra</dt><dd>0.8 µm glass-bead blasted</dd>
+    <dt>ANODISATION</dt><dd>MIL-A-8625 Type III, 15 µm</dd>
+    <dt>DIAL KNURL</dt><dd>DIN 82 diamond RAA 0.6</dd>
+    <dt>SWITCH DETENT</dt><dd>1.8 N actuation force</dd>
+  </dl>
+  <div class="fin">
+    <div><span class="sw" style="background:#C9C7C2"></span>01 NATURAL BEAD-BLAST</div>
+    <div><span class="sw" style="background:#3A3B3D"></span>02 STEALTH GRAPHITE</div>
+  </div>
+</div>
+
+<!-- footer -->
+<div class="abs foot">
+  <div><b>SHYLENCE VIBRAS</b><div class="mono">INDUSTRIAL AUDIO | 2026 SERIES</div></div>
+  <div><b>04.2</b><div class="mono">VIB-PR-2026-A1 // ARCH. LAB</div></div>
+  <div class="mark">
+    <svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#163A3A"/><path d="M27 13A7 7 0 1 0 20 20A7 7 0 1 1 13 27" fill="none" stroke="#EFEAE2" stroke-width="4.5"/><circle cx="31" cy="9" r="3" fill="#FF5722"/></svg>
+  </div>
+  <div class="r"><div class="mono" style="font-size:11px">DESIGNED BY <b style="display:inline;font-size:11px;font-family:'JetBrains Mono'">LUIS SIERRA</b><br>SHYLENCE INDUSTRIAL AUDIO</div></div>
+  <div class="r"><div class="mono" style="font-size:11px"><b style="display:inline;font-size:11px;font-family:'JetBrains Mono'">SPACE GROTESK + JETBRAINS MONO</b><br>GRID: 12-COLUMN MODULAR</div></div>
+</div>
+<div class="abs colo mono">
+  <p>Concept project engineered as an international portfolio flagship piece. All industrial geometry, mechanical coupling patents, and acoustic metrology configured for modular lifecycle demonstration.</p>
+  <p>PRINT: 4-COLOR CMYK + PANTONE 021C (SAFETY ORANGE)</p>
+</div>
+
+</body>
+</html>

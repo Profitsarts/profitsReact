@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibras Explainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --stage:#000; --ink:#ededed; --dim:#6a6a6a; --accent:#ff5722; }
+  html, body { margin:0; background:var(--stage); color:var(--ink); font-family:'JetBrains Mono', monospace; }
+  canvas { display:block; width:100%; max-width:1920px; aspect-ratio:16/9; margin:0 auto; background:#000; }
+  .ui { display:flex; gap:12px; align-items:center; max-width:1920px; margin:0 auto; padding:10px 16px; font-size:12px; color:var(--dim); box-sizing:border-box; }
+  .ui button { background:none; border:1px solid rgba(255,255,255,.2); color:var(--ink); font:inherit; padding:4px 10px; cursor:pointer; }
+  .ui input { flex:1; accent-color:var(--accent); }
+  body.capture .ui { display:none; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div class="ui"><button id="play">Pause</button><input id="scrub" type="range" min="0" max="10" step="0.001" value="0"><span id="tc">00:00:00</span></div>
+<script>
+// ---------- constants ----------
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const W = 1920, H = 1080, DUR = 10, FPS = 60, CELL = 5, OW = W / CELL, OH = H / CELL;
+const COL = { ink:'#ededed', g1:'#8a8a8a', g2:'#4a4a4a', dim:'#6a6a6a', orange:'#ff5722',
+  hair:'rgba(255,255,255,0.08)', hairHi:'rgba(255,255,255,0.20)' };
+const SANS = '"Space Grotesk", sans-serif', MONO = '"JetBrains Mono", monospace';
+
+// ---------- math ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, x) => a + (b - a) * x;
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const eback = x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+function rng(seed) { return () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hash3(x, y, z) { let h = Math.imul(x | 0, 374761393) ^ Math.imul(y | 0, 668265263) ^ Math.imul(z | 0, 1440662683); h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+const BAYER = [[0,32,8,40,2,34,10,42],[48,16,56,24,50,18,58,26],[12,44,4,36,14,46,6,38],[60,28,52,20,62,30,54,22],[3,35,11,43,1,33,9,41],[51,19,59,27,49,17,57,25],[15,47,7,39,13,45,5,37],[63,31,55,23,61,29,53,21]].map(r => r.map(v => (v + .5) / 64));
+
+// ---------- precomputed texture ----------
+const bg = document.createElement('canvas'); bg.width = W; bg.height = H;
+(() => {
+  const r = rng(7), s = document.createElement('canvas'); s.width = 96; s.height = 54;
+  const sc = s.getContext('2d'), d = sc.createImageData(96, 54);
+  for (let i = 0; i < d.data.length; i += 4) { const v = 4 + r() * 16; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  sc.putImageData(d, 0, 0);
+  const b = bg.getContext('2d');
+  b.filter = 'blur(22px)'; b.drawImage(s, -60, -60, W + 120, H + 120); b.filter = 'none';
+  // brushed / bead-blasted diagonal streaks (ref 03.14.36)
+  b.strokeStyle = '#fff';
+  for (let i = 0; i < 900; i++) {
+    const x = r() * W, y = r() * H, l = 30 + r() * 160;
+    b.globalAlpha = .012 + r() * .03; b.lineWidth = .4 + r() * 1.1;
+    b.beginPath(); b.moveTo(x, y); b.lineTo(x + l * .82, y - l * .57); b.stroke();
+  }
+  b.globalAlpha = 1;
+})();
+const grains = [0, 1, 2, 3, 4, 5].map(k => {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d'), d = g.createImageData(256, 256), r = rng(100 + k);
+  for (let i = 0; i < d.data.length; i += 4) { const v = (r() + r() + r()) / 3 * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  g.putImageData(d, 0, 0); return ctx.createPattern(c, 'repeat');
+});
+// photoreal end frame: headphone bbox in photo px (440,70)-(1220,824), dither bbox in local units (-420,-348)-(420,330)
+const PHOTO = { img: new Image(), cx: 830, cy: 447, k: Math.sqrt((840 / 780) * (678 / 754)), ly: -9 };
+const photoLoaded = new Promise(res => {
+  PHOTO.img.onload = () => { // key out the photo's black ground once, so the product hides what sits behind it
+    try {
+      const c = document.createElement('canvas'); c.width = PHOTO.img.naturalWidth; c.height = PHOTO.img.naturalHeight;
+      const g = c.getContext('2d'); g.drawImage(PHOTO.img, 0, 0);
+      const d = g.getImageData(0, 0, c.width, c.height);
+      for (let i = 0; i < d.data.length; i += 4) {
+        const l = (d.data[i] * .3 + d.data[i + 1] * .59 + d.data[i + 2] * .11), a = clamp((l - 6) / 24);
+        d.data[i + 3] = a * a * (3 - 2 * a) * 255;
+      }
+      g.putImageData(d, 0, 0); PHOTO.cut = c;
+    } catch (e) { PHOTO.cut = null; } // file:// preview without the capture flag: fall back to a lighten blend
+    res();
+  };
+  PHOTO.img.onerror = () => { PHOTO.img.onerror = res; PHOTO.img.src = '../assets/generated/front-view-1672.webp'; };
+  PHOTO.img.src = './headphone-real.png';
+});
+function drawPhoto(st, a) { // follows the dither's centre and scale, so the dissolve stays registered while it moves
+  if (a <= 0 || !PHOTO.img.naturalWidth) return;
+  const k = PHOTO.k * st.s;
+  ctx.save(); ctx.globalAlpha = a; if (!PHOTO.cut) ctx.globalCompositeOperation = 'lighten';
+  ctx.drawImage(PHOTO.cut || PHOTO.img, st.cx - PHOTO.cx * k, st.cy + PHOTO.ly * st.s - PHOTO.cy * k, PHOTO.img.naturalWidth * k, PHOTO.img.naturalHeight * k);
+  ctx.restore();
+}
+const off = document.createElement('canvas'); off.width = OW; off.height = OH;
+const oc = off.getContext('2d', { willReadFrequently: true });
+
+// ---------- SHYLENCE geometry (from index.html), one entry per stroke ----------
+const LOGO = [
+  [0, 'M66 16C60 8 49 4.5 36 4.5C17 4.5 6 13 6 26C6 40 18 44 36 49C55 54 67 59 67 74C67 88 55 95.5 35 95.5C20 95.5 9 90 3 83'],
+  [81, 'M4.5 0V100'], [81, 'M65.5 0V100'], [81, 'M4.5 50H65.5'],
+  [171, 'M2 0L43.5 62L85 0'], [171, 'M43.5 62V100'],
+  [277, 'M4.5 0V95.5H65'],
+  [362, 'M0 4.5H64'], [362, 'M0 50H64'], [362, 'M0 95.5H64'],
+  [457, 'M4.5 100V4L75.5 96V0'],
+  [563, 'M83 18C76 9 63 4.5 48 4.5C22 4.5 5 24 5 50C5 76 22 95.5 48 95.5C63 95.5 76 91 83 82'],
+  [676, 'M0 4.5H64'], [676, 'M0 50H64'], [676, 'M0 95.5H64'],
+].map(([tx, d]) => {
+  const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', d);
+  return { tx, path: new Path2D(d), len: p.getTotalLength() };
+});
+
+// ---------- timeline ----------
+const MODS = [0, 1, 2, 3].map(k => ({ a: 3.45 + k * 1.1, b: 3.45 + (k + 1) * 1.1 }));
+const PHASES = [
+  { a: 0, b: 2.2, l: 'SIGNAL' }, { a: 2.1, b: 3.45, l: 'FORM' },
+  { a: 3.45, b: 4.55, l: 'MOD-01', m: 1 }, { a: 4.55, b: 5.65, l: 'MOD-02', m: 1 },
+  { a: 5.65, b: 6.75, l: 'MOD-03', m: 1 }, { a: 6.75, b: 7.85, l: 'MOD-04', m: 1 },
+  { a: 7.85, b: 8.9, l: 'LOCK' }, { a: 8.9, b: 10, l: 'END' },
+];
+const CAPS = [
+  { a: 2.35, b: 3.3, tag: 'FIG.01 · VIBRAS MODULAR', name: 'Four subsystems.', desc: 'Decoupled. Zero proprietary screws.', spec: '' },
+  { a: 3.5, b: 4.45, tag: 'MOD-01 · BAYONET-LOK', name: 'Acoustic chamber', desc: 'Twists off in 90°. Driver inside.', spec: 'TOOL: NONE      SWAP: 3S' },
+  { a: 4.6, b: 5.55, tag: 'MOD-02 · HOT-SWAP', name: 'Power cell', desc: 'Pull the tab. ANC keeps running.', spec: 'LIFECYCLE: 1200 CYC      SWAP: 2S' },
+  { a: 5.7, b: 6.65, tag: 'MOD-03 · MAG-CENTRAL', name: 'Cushion stack', desc: 'Eight neodymium magnets centre it.', spec: 'HYGIENIC · RECYCLABLE      SWAP: 1S' },
+  { a: 6.8, b: 7.75, tag: 'MOD-04 · INTEGRATED', name: 'Headband & ANC', desc: 'Spring-steel yoke, orange 3-position toggle.', spec: 'DUAL DSP      ANC: 0 · I · II' },
+  { a: 7.9, b: 8.8, tag: 'ASSEMBLY · 0 SCREWS', name: 'Reassembled.', desc: 'Every part back in by hand.', spec: '' },
+];
+
+// ---------- hand-made helpers ----------
+let BOIL = 0; // 12 fps step, set per frame
+const jit = (k, a = .7) => (hash3(BOIL, k, 91) - .5) * 2 * a;
+function wline(pts, k) { // hand-drawn polyline, re-drawn at 12 fps
+  ctx.beginPath();
+  pts.forEach(([x, y], i) => { const X = x + jit(k * 31 + i * 2), Y = y + jit(k * 31 + i * 2 + 1); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
+  ctx.stroke();
+}
+function bracket(x0, y0, x1, y1, k, a = 1) {
+  const L = 16; ctx.save(); ctx.strokeStyle = COL.orange; ctx.globalAlpha = a; ctx.lineWidth = 1.6;
+  wline([[x0, y0 + L], [x0, y0], [x0 + L, y0]], k); wline([[x1 - L, y0], [x1, y0], [x1, y0 + L]], k + 1);
+  wline([[x1, y1 - L], [x1, y1], [x1 - L, y1]], k + 2); wline([[x0 + L, y1], [x0, y1], [x0, y1 - L]], k + 3);
+  ctx.restore();
+}
+function arrow(x0, y0, x1, y1, k) {
+  const a = Math.atan2(y1 - y0, x1 - x0), h = 9;
+  wline([[x0, y0], [x1, y1]], k);
+  wline([[x1 - h * Math.cos(a - .5), y1 - h * Math.sin(a - .5)], [x1, y1], [x1 - h * Math.cos(a + .5), y1 - h * Math.sin(a + .5)]], k + 1);
+}
+function text(str, x, y, font, color, align = 'left', ls = '0px') {
+  ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.letterSpacing = ls; ctx.fillText(str, x, y); ctx.letterSpacing = '0px';
+}
+function maskLine(str, x, y, size, font, color, pin, pout, ls) { // kinetic type (ref 13.33.25)
+  if (pin <= 0 || pout >= 1 || !str) return;
+  const h = size * 1.35, oy = (1 - eo(pin)) * h - eio(pout) * h;
+  ctx.save(); ctx.beginPath(); ctx.rect(x - 6, y - size * 1.02, 1500, h); ctx.clip();
+  text(str, x, y + oy, font, color, 'left', ls); ctx.restore();
+}
+
+// ---------- layers ----------
+function drawGrid(t) {
+  const p = 1;
+  ctx.lineWidth = 1;
+  for (let k = 0; k <= 12; k++) {
+    const x = 120 + k * 140, len = H * clamp(p * 1.4 - k * .03);
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.beginPath(); ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, len); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    for (const y of [240, 540, 840]) if (len > y) { ctx.beginPath(); ctx.moveTo(x - 4, y + .5); ctx.lineTo(x + 5, y + .5); ctx.moveTo(x + .5, y - 4); ctx.lineTo(x + .5, y + 5); ctx.stroke(); }
+  }
+}
+
+function waveY(x, y0, amp, ph) { const k = 2.4; return y0 - amp * Math.tanh(k * Math.sin(x / 150 + ph)) / Math.tanh(k); }
+function drawWave(y0, amp, ph, xMax, alpha, pillT, orangeU) { // ref 03.18.22
+  if (alpha <= 0 || xMax <= 0) return;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = '#d9d9d9'; ctx.lineWidth = 1.3; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); for (let x = 0; x <= xMax; x += 3) { const y = waveY(x, y0, amp, ph); x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
+  ctx.setLineDash([]);
+  for (let i = 0; i < 7; i++) {
+    const x = ((i / 7 + pillT * (.05 + i * .006)) % 1) * W; if (x > xMax) continue;
+    const y = waveY(x, y0, amp, ph);
+    ctx.fillStyle = i % 3 ? 'rgba(200,200,200,.55)' : 'rgba(170,170,190,.8)';
+    ctx.fillRect(x - 13, y - 4, 26, 7);
+  }
+  if (orangeU >= 0) {
+    const x = orangeU * W; if (x <= xMax) {
+      const y = waveY(x, y0, amp, ph);
+      ctx.shadowColor = COL.orange; ctx.shadowBlur = 40; ctx.fillStyle = '#ffd2c2'; ctx.fillRect(x - 16, y - 5, 32, 10);
+      ctx.shadowBlur = 90; ctx.fillStyle = COL.orange; ctx.fillRect(x - 16, y - 5, 32, 10);
+    }
+  }
+  ctx.restore();
+}
+
+function drawLogo(t, x, y, s, bright) {
+  const cA = `rgb(${lerp(0x8a, 0xf0, bright) | 0},${lerp(0x8a, 0xf0, bright) | 0},${lerp(0x8a, 0xf0, bright) | 0})`;
+  const cB = `rgb(${lerp(0x4a, 0x8a, bright) | 0},${lerp(0x4a, 0x8a, bright) | 0},${lerp(0x4a, 0x8a, bright) | 0})`;
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.lineWidth = 9; ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
+  LOGO.forEach((st, i) => {
+    const p = eio(seg(t, .12 + i * .06, .12 + i * .06 + .55)); if (p <= 0) return;
+    const g = ctx.createLinearGradient(-st.tx, 0, 740 - st.tx, 0); g.addColorStop(0, cA); g.addColorStop(1, cB);
+    ctx.save(); ctx.translate(st.tx, 0); ctx.strokeStyle = g;
+    ctx.setLineDash([st.len + 1, st.len + 1]); ctx.lineDashOffset = (st.len + 1) * (1 - p);
+    ctx.stroke(st.path); ctx.restore();
+  });
+  ctx.restore();
+}
+
+// headphone state: centre, scale and the four explode amounts
+function hp(t) {
+  const pe = eio(seg(t, 8.9, 9.6));
+  const r = seg(t, 7.85, 8.3), snap = 1 - r * r * r;
+  const m = MODS.map(M => eback(seg(t, M.a, M.a + .45)) * snap);
+  let sh = 0; if (t > 8.3 && t < 8.62) { const k = (t - 8.3) / .32; sh = Math.sin(k * 42) * (1 - k) * 4; }
+  const active = t < 7.85 ? MODS.findIndex(M => t >= M.a && t < M.b) + 1 : 0;
+  return { cx: lerp(1100, 1270, pe) + sh, cy: 540, s: lerp(.85, .76, pe), m, active };
+}
+const S = (st, x, y) => [st.cx + x * st.s, st.cy + y * st.s];
+
+// the product, drawn in local units into the low-res buffer; G channel = part id
+function drawParts(o, st) {
+  const P = (id, v) => `rgb(${Math.round(clamp(v) * 255)},${id * 40},0)`;
+  const G = (x0, y0, x1, y1, id, v0, v1) => { const g = o.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, P(id, v0)); g.addColorStop(1, P(id, v1)); return g; };
+  const [m1, m2, m3, m4] = st.m, sx = m1 * 150, bdy = m2 * 110, cdx = m3 * 110, hdy = -m4 * 90;
+  // MOD-04 headband, yokes, dial, toggle
+  o.save(); o.translate(0, hdy);
+  o.lineWidth = 36; o.strokeStyle = G(-330, -360, 330, 0, 4, .95, .5); o.beginPath(); o.arc(0, 0, 330, Math.PI, 2 * Math.PI); o.stroke();
+  o.lineWidth = 8; o.strokeStyle = P(4, .22); o.beginPath(); o.arc(0, 0, 312, Math.PI * 1.03, Math.PI * 1.97); o.stroke();
+  for (const d of [-1, 1]) { o.fillStyle = G(d * 346, 0, d * 314, 0, 4, .9, .55); o.fillRect(d > 0 ? 314 : -346, -6, 32, 78); }
+  for (let k = 0; k < 6; k++) { o.fillStyle = P(4, k % 2 ? .45 : .98); o.fillRect(-374, 6 + k * 8, 26, 8); }
+  o.fillStyle = P(5, 1); o.beginPath(); o.roundRect(348, 10, 18, 38, 5); o.fill();
+  o.restore();
+  // MOD-01 shells (+ MOD-02 bay and cartridge riding the right shell)
+  for (const d of [-1, 1]) {
+    const x0 = d < 0 ? -420 - sx : 300 + sx;
+    o.fillStyle = G(d < 0 ? x0 : x0 + 120, 60, d < 0 ? x0 + 120 : x0, 330, 1, .98, .42);
+    o.beginPath(); o.roundRect(x0, 60, 120, 270, 50); o.fill();
+    o.fillStyle = P(1, .2); o.fillRect(d < 0 ? x0 + 84 : x0 + 30, 72, 6, 246);
+  }
+  o.fillStyle = P(1, .06); o.fillRect(338 + sx, 246, 56, 68);
+  o.fillStyle = G(0, 244 + bdy, 0, 314 + bdy, 2, 1, .75); o.beginPath(); o.roundRect(338 + sx, 244 + bdy, 56, 70, 8); o.fill();
+  o.fillStyle = P(2, .55); o.fillRect(360 + sx, 314 + bdy, 12, 26);
+  // MOD-03 cushions
+  o.fillStyle = G(0, 84, 0, 306, 3, .62, .38); o.beginPath(); o.roundRect(-300 + cdx, 84, 58, 222, 26); o.fill();
+  o.beginPath(); o.roundRect(242 - cdx, 84, 58, 222, 26); o.fill();
+}
+function bboxes(st) { // local-space boxes per module, for brackets
+  const [m1, m2, m3, m4] = st.m, sx = m1 * 150, bdy = m2 * 110, cdx = m3 * 110, hdy = -m4 * 90;
+  return [
+    [[-420 - sx, 60, -300 - sx, 330], [300 + sx, 60, 420 + sx, 330]],
+    [[338 + sx, 244 + bdy, 394 + sx, 340 + bdy]],
+    [[-300 + cdx, 84, -242 + cdx, 306], [242 - cdx, 84, 300 - cdx, 306]],
+    [[-376, -348 + hdy, 376, 72 + hdy]],
+  ];
+}
+
+const TONES = { n1: '#7a7a7a', n2: '#e4e4e4', a1: '#a6a6a6', a2: '#ffffff', d1: '#3e3e3e', d2: '#7c7c7c', o: COL.orange };
+function drawDither(t, st, reveal) { // ref 03.14.03
+  oc.setTransform(1, 0, 0, 1, 0, 0); oc.clearRect(0, 0, OW, OH);
+  oc.setTransform(st.s / CELL, 0, 0, st.s / CELL, st.cx / CELL, st.cy / CELL);
+  drawParts(oc, st);
+  const d = oc.getImageData(0, 0, OW, OH).data, B = {};
+  for (const k in TONES) B[k] = [];
+  for (let y = 0; y < OH; y++) for (let x = 0; x < OW; x++) {
+    const i = (y * OW + x) * 4, a = d[i + 3]; if (a < 10) continue;
+    if (reveal < 1 && hash3(x, y, 7) > reveal) continue;
+    const id = Math.round(d[i + 1] / 40); let v = d[i] / 255 * a / 255;
+    if (id === 3) v *= y % 2 ? .72 : 1;            // knit
+    if (id === 4 && (x + y) % 4 === 0) v *= .7;     // braided mesh
+    const th = BAYER[y & 7][x & 7] + (hash3(x, y, BOIL) - .5) * .08, l = v * 2;
+    let tone = 0; if (l > 1) tone = (l - 1) > th ? 2 : 1; else if (l > th) tone = 1;
+    if (!tone) continue;
+    const mod = id === 5 ? 4 : id;
+    const key = id === 5 ? 'o' : (!st.active ? 'n' : mod === st.active ? 'a' : 'd') + tone;
+    B[key].push(x, y);
+  }
+  for (const k in B) {
+    const arr = B[k]; if (!arr.length) continue;
+    ctx.fillStyle = TONES[k]; ctx.beginPath();
+    for (let j = 0; j < arr.length; j += 2) ctx.rect(arr[j] * CELL, arr[j + 1] * CELL, CELL - 1, CELL - 1);
+    ctx.fill();
+  }
+}
+
+function drawCallout(t, st) {
+  if (!st.active) return;
+  const k = st.active - 1, M = MODS[k], a = seg(t, M.a + .15, M.a + .3) * (1 - seg(t, M.b - .12, M.b));
+  if (a <= 0) return;
+  const boxes = bboxes(st)[k].map(([x0, y0, x1, y1]) => [...S(st, x0, y0), ...S(st, x1, y1)]);
+  boxes.forEach(([x0, y0, x1, y1], j) => bracket(x0 - 12, y0 - 12, x1 + 12, y1 + 12, 10 + j * 5 + k * 20, a));
+  const [bx, by] = boxes[0];
+  ctx.save(); ctx.globalAlpha = a;
+  if (k === 1) { ctx.fillStyle = COL.orange; ctx.fillRect(bx - 26, by - 4, 7, 7); text(`MOD-0${k + 1}`, bx - 34, by + 4, `500 13px ${MONO}`, COL.orange, 'right', '1.5px'); }
+  else { ctx.fillStyle = COL.orange; ctx.fillRect(bx - 12, by - 34, 7, 7); text(`MOD-0${k + 1}`, bx, by - 26, `500 13px ${MONO}`, COL.orange, 'left', '1.5px'); }
+  ctx.strokeStyle = COL.orange; ctx.lineWidth = 1.5; ctx.fillStyle = COL.orange;
+  const f = `500 12px ${MONO}`;
+  if (k === 0) { // twist
+    const [x0, y0, x1] = boxes[1], cx = x1 + 44, cy = y0 + 46;
+    ctx.beginPath(); ctx.arc(cx, cy, 22, -Math.PI * .5, 0); ctx.stroke();
+    arrow(cx + 22, cy - 4, cx + 22, cy + 2, 60);
+    text('90°', cx - 6, cy + 36, f, COL.orange, 'left', '1px');
+  }
+  if (k === 1) { const [x0, , x1, y1] = boxes[0], cx = (x0 + x1) / 2; arrow(cx + 50, y1 - 70, cx + 50, y1 - 10, 70); text('PULL', cx + 60, y1 - 38, f, COL.orange, 'left', '1px'); }
+  if (k === 2) for (const [x0, y0, x1, y1] of boxes) for (let j = 0; j < 4; j++) { const xm = x0 < st.cx ? x1 : x0; ctx.fillRect(xm - 3, lerp(y0 + 24, y1 - 24, j / 3) - 3, 6, 6); }
+  if (k === 3) { const [x0, y0, x1] = boxes[0], cx = (x0 + x1) / 2; arrow(cx, y0 - 6, cx, y0 - 34, 80); text('LIFT', cx + 12, y0 - 16, f, COL.orange, 'left', '1px'); }
+  ctx.restore();
+}
+
+function drawImpact(t, st) {
+  const p = seg(t, 8.3, 8.75); if (p <= 0 || p >= 1) return;
+  ctx.save(); ctx.strokeStyle = '#fff'; ctx.globalAlpha = 1 - p; ctx.lineWidth = 1.5;
+  for (const [x, y] of [[-360, 60], [360, 60], [-270, 195], [270, 195], [0, -330]]) {
+    const [X, Y] = S(st, x, y); ctx.beginPath(); ctx.arc(X, Y, 8 + eo(p) * 70, 0, Math.PI * 2); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawCaptions(t) {
+  const X = 120;
+  for (const c of CAPS) {
+    if (t < c.a || t > c.b + .5) continue;
+    const L = [[c.tag, 400, 14, `500 14px ${MONO}`, COL.orange, '2px'], [c.name, 478, 64, `300 64px ${SANS}`, COL.ink, '-1px'],
+      [c.desc, 530, 24, `400 24px ${SANS}`, '#a3a3a3', '0px'], [c.spec, 574, 14, `400 14px ${MONO}`, COL.g1, '1px']];
+    L.forEach(([s, y, size, font, col, ls], i) =>
+      maskLine(s, X, y, size, font, col, seg(t, c.a + i * .06, c.a + i * .06 + .4), seg(t, c.b + i * .035, c.b + i * .035 + .25), ls));
+  }
+  // end card
+  const a = 8.95;
+  [['SHYLENCE · VIBRAS', 382, 14, `500 14px ${MONO}`, COL.orange, '2px'], ['The headphone', 470, 84, `300 84px ${SANS}`, COL.ink, '-1.5px'],
+    ['that comes apart.', 562, 84, `300 84px ${SANS}`, COL.ink, '-1.5px'], ['4 MODULES  ·  0 SCREWS  ·  TOOL: NONE', 624, 15, `400 15px ${MONO}`, COL.g1, '1.5px']]
+    .forEach(([s, y, size, font, col, ls], i) => maskLine(s, X, y, size, font, col, seg(t, a + i * .07, a + i * .07 + .45), 0, ls));
+}
+
+function drawHeader(t) {
+  const p = seg(t, 2.25, 2.7); if (p <= 0) return;
+  ctx.save(); ctx.globalAlpha = p;
+  ctx.fillStyle = COL.hair; ctx.fillRect(120, 96, 1680 * eo(p), 1);
+  ctx.fillStyle = 'rgba(255,255,255,.15)'; ctx.fillRect(284, 48, 1, 20);
+  ctx.globalAlpha = p * (.55 + .45 * Math.abs(Math.sin(t * 3))); ctx.fillStyle = COL.orange; ctx.beginPath(); ctx.arc(302, 58, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = p;
+  text('VIBRAS', 318, 64, `700 15px ${SANS}`, '#fff', 'left', '3px');
+  text('// ARCHITECTURE LAB 2026', 408, 63, `400 13px ${MONO}`, COL.dim, 'left', '1px');
+  const f = Math.floor(t * FPS), tc = `00:${String(Math.floor(t)).padStart(2, '0')}:${String(f % FPS).padStart(2, '0')}`;
+  text('FIG.01 — MODULAR TEARDOWN', 1640, 63, `400 13px ${MONO}`, COL.dim, 'right', '1px');
+  text(tc, 1800, 63, `500 13px ${MONO}`, COL.ink, 'right', '1px');
+  ctx.restore();
+}
+
+function drawHUD(t, st) {
+  const p = seg(t, 2.45, 3.0); if (p <= 0) return;
+  const done = MODS.filter(M => t >= M.a + .45).length, swap = [3, 2, 1, 0].slice(0, done).reduce((a, b) => a + b, 0);
+  const rows = [['SUBSYSTEMS', `0${done} / 04`], ['SCREWS', '00'], ['TOOLS', 'NONE'], ['SWAP Σ', `${String(swap).padStart(2, '0')}.0 S`]];
+  rows.forEach(([k, v], i) => {
+    const y = 150 + i * 24, n = Math.floor(clamp(p * 1.6 - i * .15) * 20);
+    text(k.slice(0, n), 1560, y, `400 13px ${MONO}`, COL.dim, 'left', '1px');
+    const fresh = i === 0 && done && t < MODS[done - 1].a + .75;
+    text(v.slice(0, Math.max(0, n - 8)), 1800, y, `500 13px ${MONO}`, fresh ? COL.orange : COL.ink, 'right', '1px');
+  });
+  // DSP meter (ref 03.14.36 blocks)
+  for (let i = 0; i < 30; i++) {
+    const v = .25 + .75 * Math.abs(Math.sin(i * .7 + t * 5.3) * Math.cos(i * .23 - t * 2.1)), h = 4 + v * 26 * p;
+    ctx.fillStyle = i === Math.floor((t * 7) % 30) ? COL.orange : 'rgba(255,255,255,.28)';
+    ctx.fillRect(1560 + i * 8, 272 - h, 5, h);
+  }
+  ctx.fillStyle = COL.hair; ctx.fillRect(1560, 276, 240 * p, 1);
+}
+
+function drawRail(t) { // ref 03.14.36 + 13.29.41
+  const X0 = 120, X1 = 1800, Y = 986, px = x => X0 + (x / DUR) * (X1 - X0), ph = px(t), p = 1;
+  ctx.fillStyle = COL.hairHi; ctx.fillRect(X0, Y, (X1 - X0) * p, 1);
+  for (let s = 0; s <= 10; s++) {
+    const x = px(s); if (x > X0 + (X1 - X0) * p) break;
+    ctx.fillRect(x, Y, 1, 6); text(String(s).padStart(2, '0'), x, Y + 24, `400 11px ${MONO}`, '#4f4f4f', s ? 'center' : 'left');
+  }
+  PHASES.forEach((q, i) => {
+    if (t < q.a) return;
+    const x0 = px(q.a), x1 = Math.min(px(q.b) + (i < 7 ? 14 : 0), ph), y = i % 2 ? 950 : 958, on = t < q.b;
+    ctx.fillStyle = on ? 'rgba(255,255,255,.17)' : 'rgba(255,255,255,.07)'; ctx.fillRect(x0, y, Math.max(0, x1 - x0), 16);
+    text(q.l, x0 + 6, y - 7, `500 11px ${MONO}`, on ? COL.ink : '#555', 'left', '1px');
+    if (q.m) { ctx.save(); ctx.translate(x0, Y); ctx.rotate(Math.PI / 4); ctx.fillStyle = on ? COL.orange : '#777'; ctx.fillRect(-4, -4, 8, 8); ctx.restore(); }
+  });
+  ctx.fillStyle = COL.orange; ctx.fillRect(ph, 936, 1.5, 58); ctx.fillRect(ph - 3, 932, 7.5, 7);
+}
+
+function drawFilm(t) {
+  const g24 = Math.floor(t * 24), R = rng(g24 * 7 + 3);
+  ctx.save();
+  ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .16;
+  ctx.fillStyle = grains[g24 % 6]; ctx.translate(-R() * 256, -R() * 256); ctx.fillRect(0, 0, W + 256, H + 256);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = .045;
+  ctx.fillStyle = grains[(g24 + 3) % 6]; ctx.translate(-R() * 256, -R() * 256); ctx.fillRect(0, 0, W + 256, H + 256);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalCompositeOperation = 'source-over';
+  const D = rng(BOIL * 13 + 1), n = Math.floor(D() * 4); // dust + hair at 12 fps
+  for (let i = 0; i < n; i++) { ctx.globalAlpha = .12 + D() * .25; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(D() * W, D() * H, .6 + D() * 1.8, .5 + D() * 1.2, D() * 3, 0, Math.PI * 2); ctx.fill(); }
+  if (D() < .22) {
+    const x = D() * W, y = D() * H; ctx.globalAlpha = .18; ctx.strokeStyle = '#ddd'; ctx.lineWidth = .8;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.bezierCurveTo(x + 20 + D() * 30, y - 10, x + D() * 40, y + 30 + D() * 20, x + 30, y + 50); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  const v = ctx.createRadialGradient(W / 2, H / 2, H * .35, W / 2, H / 2, H * 1.05);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.6)'); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+  ctx.restore();
+}
+
+// ---------- the one render(t) ----------
+function render(t) {
+  t = clamp(t, 0, DUR); BOIL = Math.floor(t * 12);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+  ctx.drawImage(bg, 0, 0);
+  ctx.save(); ctx.translate(jit(1, .6), jit(2, .6)); // gate weave
+  ctx.textBaseline = 'alphabetic';
+  drawGrid(t);
+  // intro signal
+  drawWave(540, 160 * (1 - eio(seg(t, 1.85, 2.4))), t * 1.6, W * eo(seg(t, -0.25, 1.3)), .5 * (1 - seg(t, 2.15, 2.5)), t, (t * .32 + .12) % 1);
+  // signal restored
+  drawWave(540, 70, t * 1.6, W * eo(seg(t, 8.35, 9.05)), .45 * seg(t, 8.35, 8.55) * (1 - .6 * seg(t, 9.0, 9.6)), t, eio(seg(t, 8.45, 9.7)) * .98);
+  const st = hp(t), photo = eio(seg(t, 8.85, 9.40)), reveal = seg(t, 2.25, 3.2) * (1 - photo);
+  if (reveal > 0) drawDither(t, st, reveal);
+  drawPhoto(st, photo);
+  drawImpact(t, st);
+  drawCallout(t, st);
+  // SHYLENCE: centre stage → header slot
+  const lp = eio(seg(t, 1.9, 2.5));
+  drawLogo(t, lerp(442, 120, lp), lerp(470, 48, lp), lerp(1.4, .2, lp), 1 - lp);
+  drawHeader(t);
+  drawHUD(t, st);
+  drawCaptions(t);
+  drawRail(t);
+  ctx.restore();
+  drawFilm(t);
+}
+
+// ---------- playback / capture ----------
+window.render = render; window.DUR = DUR; window.FPS = FPS;
+window.ready = Promise.all([
+  document.fonts.load(`300 64px ${SANS}`), document.fonts.load(`400 24px ${SANS}`), document.fonts.load(`700 15px ${SANS}`),
+  document.fonts.load(`400 13px ${MONO}`), document.fonts.load(`500 13px ${MONO}`),
+photoLoaded]).then(() => document.fonts.ready);
+const q = new URLSearchParams(location.search);
+if (q.has('capture')) { document.body.classList.add('capture'); window.ready.then(() => render(+q.get('t') || 0)); }
+else window.ready.then(() => {
+  let playing = true, t0 = performance.now(), tNow = 0;
+  const scrub = document.getElementById('scrub'), tc = document.getElementById('tc'), btn = document.getElementById('play');
+  btn.onclick = () => { playing = !playing; btn.textContent = playing ? 'Pause' : 'Play'; t0 = performance.now() - tNow * 1000; };
+  scrub.oninput = () => { tNow = +scrub.value; t0 = performance.now() - tNow * 1000; render(tNow); };
+  (function loop(now) {
+    if (playing) { tNow = ((now - t0) / 1000) % DUR; scrub.value = tNow; }
+    tc.textContent = tNow.toFixed(2) + ' s'; if (playing) render(tNow);
+    requestAnimationFrame(loop);
+  })(performance.now());
+});
+</script>
+</body>
+</html>

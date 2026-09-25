@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHYLENCE VIBRAS — Canvas 2D</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0A0508; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; cursor: pointer; }
+  #hud {
+    position: fixed; left: 16px; top: 14px; pointer-events: none;
+    font: 500 11px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    letter-spacing: .12em; color: #fff; mix-blend-mode: difference; opacity: .6;
+  }
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="SHYLENCE VIBRAS modular headphones — generative animation"></canvas>
+<div id="hud"></div>
+<script>
+'use strict';
+/* =====================================================================
+   SHYLENCE VIBRAS — Fanned Ribbon Engine (Vanilla Canvas 2D)
+   Timeline: 0–5s particles · 5–15s fanned ribbons · 15–20s lockup · loop
+   Click / Space: restart.   ?t=12 : start at 12 s.
+   ===================================================================== */
+const TAU = Math.PI * 2;
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const hud = document.getElementById('hud');
+
+// ---------- palette ----------
+const PHASE1_BG = '#0A0508';
+const STATES = [
+  { bg: '#FF5722', a: '#FFB6C1', b: '#FFFFFF' }, // Safety Orange
+  { bg: '#0018F0', a: '#FFFFFF', b: '#FFFFFF' }, // Electric Cobalt
+  { bg: '#1C0818', a: '#FF9ED2', b: '#FF9ED2' }, // Velvet Eggplant
+];
+const SPARK = ['#FF5722', '#FF80BF', '#00E5FF', '#FFFFFF'];
+// density "takes" — rotated independently of colour so each snap differs
+const TAKES = [
+  { sp: 1.00, th: 0.55, waves: 9 },
+  { sp: 0.78, th: 0.62, waves: 6 },
+  { sp: 1.30, th: 0.50, waves: 13 },
+  { sp: 0.92, th: 0.58, waves: 7 },
+];
+
+// ---------- timeline (seconds) ----------
+const T_IGNITE = 5, T_LOCKUP = 15, T_HOLD = 20, T_LOOP = 24, SNAP = 1.25;
+
+// ---------- math ----------
+const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
+const smooth = (a, b, v) => { const x = clamp01((v - a) / (b - a)); return x * x * (3 - 2 * x); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const easeOut = x => 1 - Math.pow(1 - clamp01(x), 3);
+
+/* ---------------------------------------------------------------------
+   Ribbon geometry: centreline = straight segments + circular arcs.
+   A slat is drawn along the normal at each sample. When an arc's radius
+   equals half the ribbon width, every slat's inner end lands on the arc
+   centre → the radial "fan" of the reference.
+   --------------------------------------------------------------------- */
+function seg(x0, y0, x1, y1) {
+  const dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy);
+  return len < 1e-6 ? null : { k: 0, x0, y0, dx: dx / len, dy: dy / len, len };
+}
+function arc(cx, cy, r, a0, turn) { return { k: 1, cx, cy, r, a0, turn, len: r * Math.abs(turn) }; }
+
+// polyline with filleted corners; radius = number or per-corner array
+function polyRibbon(pts, radius) {
+  const segs = [];
+  let cx = pts[0][0], cy = pts[0][1];
+  for (let i = 1; i < pts.length; i++) {
+    const [px, py] = pts[i];
+    if (i === pts.length - 1) { segs.push(seg(cx, cy, px, py)); break; }
+    const [nx, ny] = pts[i + 1];
+    let d0x = px - cx, d0y = py - cy; const l0 = Math.hypot(d0x, d0y); d0x /= l0; d0y /= l0;
+    let d1x = nx - px, d1y = ny - py; const l1 = Math.hypot(d1x, d1y); d1x /= l1; d1y /= l1;
+    const turn = Math.atan2(d0x * d1y - d0y * d1x, d0x * d1x + d0y * d1y);
+    const r = Array.isArray(radius) ? radius[i - 1] : radius;
+    const t = r * Math.tan(Math.abs(turn) / 2);
+    const ax = px - d0x * t, ay = py - d0y * t;
+    segs.push(seg(cx, cy, ax, ay));
+    const sg = Math.sign(turn), ccx = ax - d0y * r * sg, ccy = ay + d0x * r * sg;
+    segs.push(arc(ccx, ccy, r, Math.atan2(ay - ccy, ax - ccx), turn));
+    cx = px + d1x * t; cy = py + d1y * t;
+  }
+  return segs.filter(Boolean);
+}
+const circleRibbon = (cx, cy, r, a0 = -Math.PI / 2) => [arc(cx, cy, r, a0, TAU)];
+
+class Ribbon {
+  constructor(segs, W, o = {}) {
+    this.segs = segs; this.W = W;
+    this.L = segs.reduce((a, g) => a + g.len, 0);
+    this.closed = !!o.closed;
+    this.tone = o.tone || 0;
+    this.delay = o.delay || 0;
+    this.seed = o.seed ?? Math.random() * TAU;
+    this.baseSp = o.sp ?? Math.min(10, Math.max(4.4, W * 0.12));
+    this.path = this.buildPath();
+  }
+  eval(s, o) {
+    const g0 = this.segs; let i = 0;
+    if (s < 0) s = 0;
+    while (i < g0.length - 1 && s > g0[i].len) { s -= g0[i].len; i++; }
+    const g = g0[i];
+    if (g.k === 0) { o.x = g.x0 + g.dx * s; o.y = g.y0 + g.dy * s; o.tx = g.dx; o.ty = g.dy; }
+    else {
+      const sg = Math.sign(g.turn), a = g.a0 + sg * s / g.r, c = Math.cos(a), sn = Math.sin(a);
+      o.x = g.cx + g.r * c; o.y = g.cy + g.r * sn; o.tx = -sn * sg; o.ty = c * sg;
+    }
+    return o;
+  }
+  buildPath() {
+    const p = new Path2D(); let first = true;
+    for (const g of this.segs) {
+      if (g.k === 0) {
+        if (first) p.moveTo(g.x0, g.y0);
+        p.lineTo(g.x0 + g.dx * g.len, g.y0 + g.dy * g.len);
+      } else {
+        if (first) p.moveTo(g.cx + g.r * Math.cos(g.a0), g.cy + g.r * Math.sin(g.a0));
+        p.arc(g.cx, g.cy, g.r, g.a0, g.a0 + g.turn, g.turn < 0);
+      }
+      first = false;
+    }
+    if (this.closed) p.closePath();
+    return p;
+  }
+}
+
+/* ---------- SCENE (design units, y down, origin centre) ---------- */
+const SCENE_W = 1000, SCENE_H = 1240;
+
+// headphones
+const HP = [];
+HP.push(new Ribbon(polyRibbon([[-310, -50], [-310, -380], [310, -380], [310, -50]], 36), 72, { delay: 0, seed: 0.3 }));     // headband  (MOD-01)
+HP.push(new Ribbon(polyRibbon([[-235, -40], [-235, -305], [235, -305], [235, -40]], 17), 34, { delay: 0.25, tone: 1, seed: 1.7 })); // inner pad
+for (const sx of [-1, 1]) {
+  HP.push(new Ribbon(circleRibbon(300 * sx, 150, 180), 56, { closed: true, delay: 0.45, tone: 1, seed: 2.2 + sx })); // cushion ring
+  HP.push(new Ribbon(circleRibbon(300 * sx, 150, 70, sx > 0 ? -Math.PI / 2 : Math.PI / 2), 140, { closed: true, sp: 5.2, delay: 0.6, seed: 3.1 + sx })); // driver sunburst
+}
+HP.push(new Ribbon(circleRibbon(432, 322, 20), 40, { closed: true, delay: 0.85, tone: 1, seed: 4.4 }));      // volume dial
+HP.push(new Ribbon(polyRibbon([[-360, 440], [360, 440]], 0), 54, { delay: 0.95, seed: 5.2 }));              // battery base (MOD-04)
+
+// brandmark SHYLENCE — stroke glyphs on a 2×3 grid, corners filleted at r = W/2
+const GLYPHS = {
+  S: [[[2, 0], [0, 0], [0, 1.5], [2, 1.5], [2, 3], [0, 3]]],
+  H: [[[0, 0], [0, 3]], [[2, 0], [2, 3]], [[0, 1.5], [2, 1.5]]],
+  Y: [[[0, 0], [0, 1.5], [2, 1.5], [2, 0]], [[1, 1.5], [1, 3]]],
+  L: [[[0, 0], [0, 3], [2, 3]]],
+  E: [[[2, 0], [0, 0], [0, 3], [2, 3]], [[0, 1.5], [1.7, 1.5]]],
+  N: [[[0, 3], [0, 0], [2, 0], [2, 3]]],
+  C: [[[2, 0], [0, 0], [0, 3], [2, 3]]],
+};
+const BRAND = [];
+{
+  const u = 30, W = u * 0.72, gap = u * 0.95, word = 'SHYLENCE';
+  const total = word.length * 2 * u + (word.length - 1) * gap;
+  word.split('').forEach((ch, li) => {
+    const ox = -total / 2 + li * (2 * u + gap), oy = -565;
+    for (const stroke of GLYPHS[ch]) {
+      const pts = stroke.map(([x, y]) => [ox + x * u, oy + y * u]);
+      BRAND.push(new Ribbon(polyRibbon(pts, W / 2), W, { delay: li * 0.12, sp: 4.6, seed: li }));
+    }
+  });
+}
+
+const LABELS = [
+  { text: 'MOD-01 / HEADBAND', x: 0, y: -250 },
+  { text: 'MOD-02 / L-DRIVER', x: -300, y: 392 },
+  { text: 'MOD-03 / R-DRIVER + DIAL', x: 300, y: 392 },
+  { text: 'MOD-04 / BATTERY BASE', x: 0, y: 500 },
+];
+const TELEMETRY = 'SHYLENCE // VIBRAS MODULAR // ARCHITECTURE LAB 2026';
+
+/* ---------- viewport ---------- */
+let dpr = 1, vw = 0, vh = 0, scale = 1;
+function resize() {
+  dpr = Math.min(window.devicePixelRatio || 1, 3);
+  vw = window.innerWidth; vh = window.innerHeight;
+  canvas.width = Math.round(vw * dpr); canvas.height = Math.round(vh * dpr);
+  scale = Math.min(vw / SCENE_W, vh / SCENE_H);
+}
+const toDesign = () => ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * vw / 2, dpr * vh / 2);
+window.addEventListener('resize', resize);
+resize();
+
+/* ---------- particle pool (3,000) ---------- */
+const N = 3000;
+const px = new Float32Array(N), py = new Float32Array(N), vx = new Float32Array(N), vy = new Float32Array(N);
+const tx = new Float32Array(N), ty = new Float32Array(N), ph = new Float32Array(N), sz = new Float32Array(N);
+const colStart = [0, 900, 1500, 2100, N]; // blocks per SPARK colour → one fillStyle per block
+const tmp = { x: 0, y: 0, tx: 0, ty: 0 };
+
+function seedParticles() {
+  const weights = HP.map(r => r.L * r.W), sum = weights.reduce((a, b) => a + b, 0);
+  const hw = vw / scale / 2 + 60, hh = vh / scale / 2 + 60;
+  for (let i = 0; i < N; i++) {
+    let pick = Math.random() * sum, k = 0;
+    while (pick > weights[k]) pick -= weights[k++];
+    const r = HP[k];
+    r.eval(Math.random() * r.L, tmp);
+    const off = (Math.random() - 0.5) * r.W * 0.96;
+    tx[i] = tmp.x - tmp.ty * off; ty[i] = tmp.y + tmp.tx * off;
+    px[i] = (Math.random() * 2 - 1) * hw; py[i] = (Math.random() * 2 - 1) * hh;
+    const a = Math.random() * TAU, v = 40 + Math.random() * 160;
+    vx[i] = Math.cos(a) * v; vy[i] = Math.sin(a) * v;
+    ph[i] = Math.random(); sz[i] = 1 + Math.random() * 1.9;
+  }
+}
+
+function stepParticles(t, dt) {
+  const k = 22 * smooth(0.3, 3.4, t);                       // magnetic pull
+  const drag = Math.exp(-dt * (0.8 + 5 * smooth(2.4, 4.6, t)));
+  const swirl = 1 - smooth(1.2, 3.8, t);
+  for (let i = 0; i < N; i++) {
+    const dx = tx[i] - px[i], dy = ty[i] - py[i];
+    let ax = dx * k - dy * 1.4 * swirl, ay = dy * k + dx * 1.4 * swirl;   // spiral in
+    ax += Math.sin(py[i] * 0.011 + t * 1.3 + ph[i] * 9) * 120 * swirl;
+    ay += Math.cos(px[i] * 0.011 + t * 1.1 + ph[i] * 7) * 120 * swirl;
+    vx[i] = (vx[i] + ax * dt) * drag; vy[i] = (vy[i] + ay * dt) * drag;
+    px[i] += vx[i] * dt; py[i] += vy[i] * dt;
+  }
+}
+
+function drawParticles(t, alpha) {
+  if (alpha <= 0) return;
+  ctx.globalCompositeOperation = 'lighter';
+  const lock = smooth(3.8, 5, t);
+  for (let c = 0; c < 4; c++) {
+    ctx.fillStyle = SPARK[c];
+    for (let i = colStart[c]; i < colStart[c + 1]; i++) {
+      const f = 0.5 + 0.5 * Math.sin(t * (5 + ph[i] * 6) + ph[i] * 40);
+      const flick = f * f * f;
+      ctx.globalAlpha = alpha * (0.25 + 0.75 * flick);
+      const s = sz[i] * (0.7 + 0.8 * flick) / scale;
+      const jx = Math.sin(t * 9 + ph[i] * 30) * 1.2 * lock, jy = Math.cos(t * 8 + ph[i] * 20) * 1.2 * lock;
+      ctx.fillRect(px[i] + jx - s / 2, py[i] + jy - s / 2, s, s);
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+/* ---------- fanned slats ----------
+   Samples run on an even grid u, then a travelling sine warp
+   s = u + A·sin(2πu/λ + φ) bunches them into barcode gradients.
+   A < λ/2π keeps the warp monotonic, so slats never swap order.   */
+const o = { x: 0, y: 0, tx: 0, ty: 0 };
+function addSlats(r, t, p) {
+  const reveal = p.reveal;
+  if (reveal <= 0) return;
+  let sp = r.baseSp * p.sp;
+  if (r.closed) sp = r.L / Math.max(8, Math.round(r.L / sp));
+  const n = Math.max(1, Math.round(r.L / (p.waves * sp)));
+  const lam = r.L / n, A = 0.8 * (lam / TAU) * p.warp;
+  const phi = r.seed + p.phase;
+  const off = ((t * p.flow) % sp + sp) % sp;
+  const Lmax = r.L * reveal;
+  const startU = r.closed ? off : off - sp - A;
+  const endU = r.closed ? off + r.L - sp * 0.5 : r.L + A;
+  for (let u = startU; u < endU; u += sp) {
+    let s = u + A * Math.sin(TAU * u / lam + phi);
+    if (r.closed) { s = ((s % r.L) + r.L) % r.L; if (s > Lmax) continue; }
+    else if (s < 0 || s > Lmax) continue;
+    r.eval(s, o);
+    const nx = -o.ty, ny = o.tx;
+    const hw = r.W * 0.5 * (1 - p.breathe * (0.5 + 0.5 * Math.sin(t * 2.6 + r.seed)));
+    const th = sp * p.th * (0.65 + 0.35 * Math.cos(TAU * u / lam * 0.5 + phi * 0.7)) * 0.5;
+    const ax = o.x - nx * hw, ay = o.y - ny * hw, bx = o.x + nx * hw, by = o.y + ny * hw;
+    const qx = o.tx * th, qy = o.ty * th;
+    ctx.moveTo(ax - qx, ay - qy); ctx.lineTo(bx - qx, by - qy);
+    ctx.lineTo(bx + qx, by + qy); ctx.lineTo(ax + qx, ay + qy); ctx.closePath();
+  }
+}
+
+function drawRibbonSet(set, t, colors, paramsFor) {
+  for (let tone = 0; tone < 2; tone++) {
+    ctx.beginPath();
+    for (const r of set) if (r.tone === tone) addSlats(r, t, paramsFor(r));
+    ctx.fillStyle = colors[tone];
+    ctx.fill();
+  }
+}
+
+function drawSolid(set, colors, alpha) {
+  if (alpha <= 0) return;
+  ctx.globalAlpha = alpha; ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
+  for (const r of set) { ctx.strokeStyle = colors[r.tone]; ctx.lineWidth = r.W; ctx.stroke(r.path); }
+  ctx.globalAlpha = 1;
+}
+
+function monoText(str, x, y, size, color, alpha, align = 'center', spacing = 0.18) {
+  if (alpha <= 0 || !str) return;
+  ctx.font = `600 ${size}px ui-monospace, "SF Mono", Menlo, Consolas, monospace`;
+  if ('letterSpacing' in ctx) ctx.letterSpacing = `${size * spacing}px`;
+  ctx.textAlign = align; ctx.textBaseline = 'middle';
+  ctx.globalAlpha = alpha; ctx.fillStyle = color;
+  ctx.fillText(str, x, y);
+  ctx.globalAlpha = 1;
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+}
+
+/* ---------- render ---------- */
+function render(t) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  let label;
+
+  if (t < T_IGNITE) {
+    // PHASE 1 — ingestion & convergence
+    ctx.fillStyle = PHASE1_BG; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    toDesign();
+    const hint = smooth(3.2, 4.9, t) * 0.22;
+    if (hint > 0) {
+      ctx.globalAlpha = hint; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1 / scale;
+      for (const r of HP) ctx.stroke(r.path);
+      ctx.globalAlpha = 1;
+    }
+    drawParticles(t, 1);
+    label = 'PHASE 1 // PARTICLE INGESTION';
+  } else if (t < T_LOCKUP) {
+    // PHASE 2 — ignition + rhythmic colour snaps
+    const snap = Math.floor((t - T_IGNITE) / SNAP);
+    const st = STATES[snap % 3], take = TAKES[snap % 4];
+    ctx.fillStyle = st.bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    toDesign();
+    drawRibbonSet(HP, t, [st.a, st.b], r => ({
+      reveal: easeOut((t - T_IGNITE - r.delay) / 1.3),
+      sp: take.sp, th: take.th, waves: take.waves, warp: 0.55,
+      phase: t * 1.4 + snap * 1.9, flow: 22 + snap * 3, breathe: 0.12,
+    }));
+    drawParticles(t, 1 - smooth(T_IGNITE, T_IGNITE + 1.6, t));
+    label = `PHASE 2 // FANNED RIBBON · STATE ${snap % 3 + 1}`;
+  } else {
+    // PHASE 3 — compression, brand lockup, telemetry
+    const st = STATES[2];
+    ctx.fillStyle = st.bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    toDesign();
+    const c = smooth(T_LOCKUP, T_LOCKUP + 1.8, t);
+    const hpColors = [st.a, '#FFC9E6'];
+    if (c < 1) drawRibbonSet(HP, t, hpColors, () => ({
+      reveal: 1, sp: lerp(1, 0.55, c), th: lerp(0.55, 1.35, c), waves: 9, warp: 0.55 * (1 - c),
+      phase: t * 1.4 * (1 - c), flow: 22 * (1 - c), breathe: 0.12 * (1 - c),
+    }));
+    drawSolid(HP, hpColors, smooth(T_LOCKUP + 1.3, T_LOCKUP + 1.9, t));
+
+    const bc = smooth(18.0, 18.8, t);
+    if (bc < 1) drawRibbonSet(BRAND, t, ['#FFFFFF', '#FFFFFF'], r => ({
+      reveal: easeOut((t - 15.6 - r.delay) / 1.1),
+      sp: lerp(1, 0.6, bc), th: lerp(0.45, 1.3, bc), waves: 5, warp: 1 - bc,
+      phase: t * 2, flow: 14 * (1 - bc), breathe: 0.2 * (1 - bc),
+    }));
+    drawSolid(BRAND, ['#FFFFFF', '#FFFFFF'], smooth(18.5, 18.9, t));
+
+    const ty0 = smooth(17.4, 19.4, t), shown = Math.floor(TELEMETRY.length * ty0);
+    const cursor = shown < TELEMETRY.length || Math.floor(t * 2.5) % 2 === 0 ? '▍' : ' ';
+    monoText(TELEMETRY.slice(0, shown) + (t > 17.4 ? cursor : ''), 0, 575, 17, '#FFFFFF', 1);
+    const la = smooth(18.2, 19.2, t);
+    for (const l of LABELS) monoText(l.text, l.x, l.y, 11, '#FF9ED2', la * 0.85);
+    label = 'PHASE 3 // HARDWARE MANIFESTATION';
+  }
+
+  // loop fade
+  const fade = smooth(T_LOOP - 0.8, T_LOOP, t);
+  if (fade > 0) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = fade; ctx.fillStyle = PHASE1_BG; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+  }
+  hud.textContent = `${label} — ${t.toFixed(1).padStart(4, '0')}s`;
+}
+
+/* ---------- clock ---------- */
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const qT = parseFloat(new URLSearchParams(location.search).get('t'));
+let t0 = 0, last = 0;
+
+function start(at) {
+  seedParticles();
+  // fast-forward the physics so a seek lands on the correct state
+  const ff = Math.min(at, T_IGNITE + 2);
+  for (let s = 0; s < ff; s += 1 / 60) stepParticles(s, 1 / 60);
+  t0 = performance.now() / 1000 - at;
+  last = at;
+}
+
+function frame(now) {
+  let t = now / 1000 - t0;
+  if (reduced) t = T_HOLD + 1;
+  else if (t >= T_LOOP) { start(0); t = 0; }
+  const dt = Math.min(1 / 30, Math.max(0, t - last)); last = t;
+  if (t < T_IGNITE + 2 && dt > 0) stepParticles(t, dt);
+  render(t);
+  requestAnimationFrame(frame);
+}
+
+const restart = () => start(0);
+canvas.addEventListener('click', restart);
+window.addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); restart(); } });
+
+start(Number.isFinite(qT) ? qT : 0);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

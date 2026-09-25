@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SHYLENCE VIBRAS — Three.js</title>
+<title>VIBRAS MODULAR — Three.js</title>
 <style>
   html, body { margin: 0; height: 100%; background: #0A0508; overflow: hidden; }
   canvas { display: block; cursor: pointer; }
@@ -13,15 +13,17 @@
   }
   #hud { left: 16px; top: 14px; color: #fff; mix-blend-mode: difference; opacity: .6; }
   #telemetry { left: 50%; bottom: 4.5vh; transform: translateX(-50%); color: #fff; font-size: clamp(10px, 1.4vw, 15px); }
+  #subhead { color: #fff; font-size: clamp(11px, 1.5vw, 16px); letter-spacing: .6em; transform: translate(-50%, -50%); opacity: 0; }
   .label { color: #FF9ED2; font-size: 10px; transform: translate(-50%, -50%); opacity: 0; }
 </style>
 </head>
 <body>
 <div id="hud" class="mono"></div>
 <div id="telemetry" class="mono"></div>
+<div id="subhead" class="mono"></div>
 <script type="module">
 /* =====================================================================
-   SHYLENCE VIBRAS — Fanned Ribbon Engine (Three.js / WebGL)
+   VIBRAS MODULAR — Fanned Ribbon Engine (Three.js / WebGL)
    Same ribbon maths as the Canvas 2D build, lifted into 3D planes.
    Every slat is one instance of a unit box in an InstancedMesh.
    Mouse = parallax orbit.  Click / Space = restart.  ?t=12 = seek.
@@ -31,6 +33,7 @@ import * as THREE from 'https://esm.sh/three@0.170.0';
 const TAU = Math.PI * 2;
 const hud = document.getElementById('hud');
 const telemetryEl = document.getElementById('telemetry');
+const subheadEl = document.getElementById('subhead');
 
 // ---------- palette ----------
 const PHASE1_BG = '#0A0508';
@@ -139,33 +142,35 @@ HP.push(new Ribbon3(polyRibbon([[-360, 440], [360, 440]], 0), 54, PLANE_XY, { de
 HP.push(new Ribbon3(polyRibbon([[-360, 440], [360, 440]], 0), 120, PLANE_XY, { delay: 1.05, tone: 1, mode: 'axis', sp: 8, seed: 5.9 })); // base plate depth
 
 const GLYPHS = {
+  V: [[[0, 0], [0, 1.6], [1, 3], [2, 1.6], [2, 0]]],
+  I: [[[0, 0], [2, 0]], [[1, 0], [1, 3]], [[0, 3], [2, 3]]],
+  B: [[[0, 1.5], [1.6, 1.5], [1.6, 0], [0, 0], [0, 3], [2, 3], [2, 1.5], [1.4, 1.5]]],
+  R: [[[0, 3], [0, 0], [2, 0], [2, 1.5], [0.6, 1.5]], [[1.3, 1.5], [2, 3]]],
+  A: [[[0, 3], [0, 0], [2, 0], [2, 3]], [[0, 1.6], [2, 1.6]]],
   S: [[[2, 0], [0, 0], [0, 1.5], [2, 1.5], [2, 3], [0, 3]]],
-  H: [[[0, 0], [0, 3]], [[2, 0], [2, 3]], [[0, 1.5], [2, 1.5]]],
-  Y: [[[0, 0], [0, 1.5], [2, 1.5], [2, 0]], [[1, 1.5], [1, 3]]],
-  L: [[[0, 0], [0, 3], [2, 3]]],
-  E: [[[2, 0], [0, 0], [0, 3], [2, 3]], [[0, 1.5], [1.7, 1.5]]],
-  N: [[[0, 3], [0, 0], [2, 0], [2, 3]]],
-  C: [[[2, 0], [0, 0], [0, 3], [2, 3]]],
 };
 const BRAND = [];
 {
-  const u = 30, W = u * 0.72, gap = u * 0.95, word = 'SHYLENCE';
+  const u = 36, W = u * 0.72, gap = u * 0.95, word = 'VIBRAS';
   const total = word.length * 2 * u + (word.length - 1) * gap;
   word.split('').forEach((ch, li) => {
-    const ox = -total / 2 + li * (2 * u + gap), oy = -565;
+    const ox = -total / 2 + li * (2 * u + gap), oy = -600;
     for (const stroke of GLYPHS[ch]) {
       BRAND.push(new Ribbon3(polyRibbon(stroke.map(([x, y]) => [ox + x * u, oy + y * u]), W / 2), W, PLANE_XY,
         { delay: li * 0.12, sp: 4.6, seed: li, dep: 8 }));
     }
   });
 }
-const TELEMETRY = 'SHYLENCE // VIBRAS MODULAR // ARCHITECTURE LAB 2026';
+const TELEMETRY = 'VIBRAS // PRISTINE DSP LABS';
+const SUBHEAD = 'MODULAR';
 const LABELS = [
   { text: 'MOD-01 / HEADBAND', at: V3(0, 250, 0) },
   { text: 'MOD-02 / L-DRIVER', at: V3(-360, -392, 0) },
   { text: 'MOD-03 / R-DRIVER + DIAL', at: V3(360, -392, 0) },
   { text: 'MOD-04 / BATTERY BASE', at: V3(0, -505, 0) },
+  { text: SUBHEAD, at: V3(0, 458, 0), el: subheadEl, fade: [18.6, 19.4] },
 ].map(l => {
+  if (l.el) { l.el.textContent = l.text; return l; }
   const el = document.createElement('div');
   el.className = 'mono label'; el.textContent = l.text; document.body.appendChild(el);
   return { ...l, el };
@@ -187,7 +192,7 @@ function resize() {
   renderer.setSize(w, h);
   camera.aspect = w / h;
   const tanH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-  const dist = Math.max(6.7 / tanH, 5.6 / (tanH * camera.aspect));
+  const dist = Math.max(6.95 / tanH, 5.6 / (tanH * camera.aspect));
   camera.position.set(0, 0, dist);
   camera.near = dist * 0.2; camera.far = dist * 3;
   scene.fog.near = dist - 2; scene.fog.far = dist + 26;
@@ -403,7 +408,7 @@ function render(t) {
     proj.copy(l.at).applyMatrix4(root.matrixWorld).project(camera);
     l.el.style.left = `${(proj.x * 0.5 + 0.5) * window.innerWidth}px`;
     l.el.style.top = `${(-proj.y * 0.5 + 0.5) * window.innerHeight}px`;
-    l.el.style.opacity = la * 0.9;
+    l.el.style.opacity = l.fade ? smooth(l.fade[0], l.fade[1], t) * (1 - fade) * 0.85 : la * 0.9;
   }
   hud.textContent = `${label} — ${t.toFixed(1).padStart(4, '0')}s`;
   renderer.render(scene, camera);

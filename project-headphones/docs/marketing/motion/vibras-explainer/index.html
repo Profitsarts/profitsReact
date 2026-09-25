@@ -92,16 +92,15 @@ function drawPhoto(st, a) { // follows the dither's centre and scale, so the dis
 const off = document.createElement('canvas'); off.width = OW; off.height = OH;
 const oc = off.getContext('2d', { willReadFrequently: true });
 
-// ---------- SHYLENCE geometry (from index.html), one entry per stroke ----------
+// ---------- VIBRAS wordmark: stroke geometry in the old SVG language (100 u tall, 9 u stroke), one entry per stroke ----------
+const LOGO_W = 498;
 const LOGO = [
-  [0, 'M66 16C60 8 49 4.5 36 4.5C17 4.5 6 13 6 26C6 40 18 44 36 49C55 54 67 59 67 74C67 88 55 95.5 35 95.5C20 95.5 9 90 3 83'],
-  [81, 'M4.5 0V100'], [81, 'M65.5 0V100'], [81, 'M4.5 50H65.5'],
-  [171, 'M2 0L43.5 62L85 0'], [171, 'M43.5 62V100'],
-  [277, 'M4.5 0V95.5H65'],
-  [362, 'M0 4.5H64'], [362, 'M0 50H64'], [362, 'M0 95.5H64'],
-  [457, 'M4.5 100V4L75.5 96V0'],
-  [563, 'M83 18C76 9 63 4.5 48 4.5C22 4.5 5 24 5 50C5 76 22 95.5 48 95.5C63 95.5 76 91 83 82'],
-  [676, 'M0 4.5H64'], [676, 'M0 50H64'], [676, 'M0 95.5H64'],
+  [0, 'M2 0L43.5 100L85 0'],
+  [107, 'M4.5 0V100'],
+  [136, 'M4.5 0V100'], [136, 'M4.5 4.5H40C56 4.5 66 13 66 27C66 41 56 50 40 50H4.5'], [136, 'M4.5 50H44C61 50 71 59 71 72.75C71 86.5 61 95.5 44 95.5H4.5'],
+  [232, 'M4.5 100V4.5H42C59 4.5 69 14 69 28C69 42 59 51.5 42 51.5H4.5'], [232, 'M40 51.5L72 100'],
+  [326, 'M2 100L41 0L80 100'], [326, 'M16 64H66'],
+  [428, 'M66 16C60 8 49 4.5 36 4.5C17 4.5 6 13 6 26C6 40 18 44 36 49C55 54 67 59 67 74C67 88 55 95.5 35 95.5C20 95.5 9 90 3 83'],
 ].map(([tx, d]) => {
   const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', d);
   return { tx, path: new Path2D(d), len: p.getTotalLength() };
@@ -192,8 +191,8 @@ function drawLogo(t, x, y, s, bright) {
   const cB = `rgb(${lerp(0x4a, 0x8a, bright) | 0},${lerp(0x4a, 0x8a, bright) | 0},${lerp(0x4a, 0x8a, bright) | 0})`;
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.lineWidth = 9; ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
   LOGO.forEach((st, i) => {
-    const p = eio(seg(t, .12 + i * .06, .12 + i * .06 + .55)); if (p <= 0) return;
-    const g = ctx.createLinearGradient(-st.tx, 0, 740 - st.tx, 0); g.addColorStop(0, cA); g.addColorStop(1, cB);
+    const p = eio(seg(t, .12 + i * .09, .12 + i * .09 + .55)); if (p <= 0) return;
+    const g = ctx.createLinearGradient(-st.tx, 0, LOGO_W - st.tx, 0); g.addColorStop(0, cA); g.addColorStop(1, cB);
     ctx.save(); ctx.translate(st.tx, 0); ctx.strokeStyle = g;
     ctx.setLineDash([st.len + 1, st.len + 1]); ctx.lineDashOffset = (st.len + 1) * (1 - p);
     ctx.stroke(st.path); ctx.restore();
@@ -321,7 +320,7 @@ function drawCaptions(t) {
   }
   // end card
   const a = 8.95;
-  [['SHYLENCE · VIBRAS', 382, 14, `500 14px ${MONO}`, COL.orange, '2px'], ['The headphone', 470, 84, `300 84px ${SANS}`, COL.ink, '-1.5px'],
+  [['VIBRAS · MODULAR', 382, 14, `500 14px ${MONO}`, COL.orange, '2px'], ['The headphone', 470, 84, `300 84px ${SANS}`, COL.ink, '-1.5px'],
     ['that comes apart.', 562, 84, `300 84px ${SANS}`, COL.ink, '-1.5px'], ['4 MODULES  ·  0 SCREWS  ·  TOOL: NONE', 624, 15, `400 15px ${MONO}`, COL.g1, '1.5px']]
     .forEach(([s, y, size, font, col, ls], i) => maskLine(s, X, y, size, font, col, seg(t, a + i * .07, a + i * .07 + .45), 0, ls));
 }
@@ -330,11 +329,11 @@ function drawHeader(t) {
   const p = seg(t, 2.25, 2.7); if (p <= 0) return;
   ctx.save(); ctx.globalAlpha = p;
   ctx.fillStyle = COL.hair; ctx.fillRect(120, 96, 1680 * eo(p), 1);
-  ctx.fillStyle = 'rgba(255,255,255,.15)'; ctx.fillRect(284, 48, 1, 20);
-  ctx.globalAlpha = p * (.55 + .45 * Math.abs(Math.sin(t * 3))); ctx.fillStyle = COL.orange; ctx.beginPath(); ctx.arc(302, 58, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.15)'; ctx.fillRect(236, 48, 1, 20);
+  ctx.globalAlpha = p * (.55 + .45 * Math.abs(Math.sin(t * 3))); ctx.fillStyle = COL.orange; ctx.beginPath(); ctx.arc(254, 58, 4, 0, Math.PI * 2); ctx.fill();
   ctx.globalAlpha = p;
-  text('VIBRAS', 318, 64, `700 15px ${SANS}`, '#fff', 'left', '3px');
-  text('// ARCHITECTURE LAB 2026', 408, 63, `400 13px ${MONO}`, COL.dim, 'left', '1px');
+  text('MODULAR', 270, 63, `400 13px ${MONO}`, COL.dim, 'left', '3px');
+  text('// PRISTINE DSP LABS', 368, 63, `400 13px ${MONO}`, COL.dim, 'left', '1px');
   const f = Math.floor(t * FPS), tc = `00:${String(Math.floor(t)).padStart(2, '0')}:${String(f % FPS).padStart(2, '0')}`;
   text('FIG.01 — MODULAR TEARDOWN', 1640, 63, `400 13px ${MONO}`, COL.dim, 'right', '1px');
   text(tc, 1800, 63, `500 13px ${MONO}`, COL.ink, 'right', '1px');
@@ -417,9 +416,9 @@ function render(t) {
   drawPhoto(st, photo);
   drawImpact(t, st);
   drawCallout(t, st);
-  // SHYLENCE: centre stage → header slot
+  // VIBRAS: centre stage → header slot
   const lp = eio(seg(t, 1.9, 2.5));
-  drawLogo(t, lerp(442, 120, lp), lerp(470, 48, lp), lerp(1.4, .2, lp), 1 - lp);
+  drawLogo(t, lerp(960 - LOGO_W * .9, 120, lp), lerp(450, 48, lp), lerp(1.8, .2, lp), 1 - lp);
   drawHeader(t);
   drawHUD(t, st);
   drawCaptions(t);

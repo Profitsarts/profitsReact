@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import PlateRail from './PlateRail';
 
 /**
  * FlagshipMandrilizate — project 21 as the flagship interactive hero.
@@ -112,90 +113,6 @@ function PosterFrame() {
         </button>
       </div>
     </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Plate rail + viewer                                                 */
-/* ------------------------------------------------------------------ */
-
-function PlateRail() {
-  const dialogRef = useRef(null);
-  const lastTrigger = useRef(null);
-  const [index, setIndex] = useState(0);
-
-  const open = (i, event) => {
-    lastTrigger.current = event.currentTarget;
-    setIndex(i);
-    dialogRef.current?.showModal();
-  };
-
-  const step = (delta) => setIndex((i) => (i + delta + PLATES.length) % PLATES.length);
-
-  const onKeyDown = (event) => {
-    if (event.key === 'ArrowLeft') { event.preventDefault(); step(-1); }
-    if (event.key === 'ArrowRight') { event.preventDefault(); step(1); }
-  };
-
-  const plate = PLATES[index];
-
-  return (
-    <>
-      <div className="plates">
-        <div className="plates-head">
-          <h3 className="h-md">Screenprint plates</h3>
-          <p className="eyebrow">6 sheets · 1170×780 · tap to enlarge</p>
-        </div>
-
-        <div className="rail od-rail" role="list" aria-label="Screenprint plates">
-          {PLATES.map((p, i) => (
-            <button
-              key={p.id}
-              className="plate"
-              type="button"
-              role="listitem"
-              onClick={(event) => open(i, event)}
-            >
-              <img src={p.src} width="1170" height="780" alt={p.alt} loading="lazy" />
-              <span className="plate-cap">Plate {p.id}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <dialog
-        className="viewer"
-        ref={dialogRef}
-        aria-labelledby="viewer-title"
-        onKeyDown={onKeyDown}
-        onClose={() => lastTrigger.current?.focus()}
-      >
-        <div className="viewer-head">
-          <div>
-            <span className="label">Mandrilizate</span>
-            <span className="h-md" id="viewer-title">Plate {plate.id}</span>
-          </div>
-          <button
-            className="btn"
-            type="button"
-            onClick={() => dialogRef.current?.close()}
-            aria-label="Close the plate viewer"
-          >
-            Close
-          </button>
-        </div>
-
-        <div className="viewer-body">
-          <img src={plate.src} width="1170" height="780" alt={plate.alt} />
-        </div>
-
-        <div className="viewer-foot">
-          <button className="btn" type="button" onClick={() => step(-1)}>← Previous</button>
-          <span className="eyebrow">{plate.id} / 06</span>
-          <button className="btn" type="button" onClick={() => step(1)}>Next →</button>
-        </div>
-      </dialog>
-    </>
   );
 }
 
@@ -353,7 +270,7 @@ const FlagshipMandrilizate = () => (
       </dl>
 
       <PosterFrame />
-      <PlateRail />
+      <PlateRail plates={PLATES} title="Screenprint plates" note="6 sheets · 1170×780 · tap to enlarge" label="Mandrilizate" />
 
       <div className="lineage">
         <p className="lineage-specimen">Mandrilizate</p>

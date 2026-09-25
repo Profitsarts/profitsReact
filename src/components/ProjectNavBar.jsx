@@ -1,30 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Grid3X3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+// Buttons reuse the home .btn archetype (globals.css): 0 radius, --frame border,
+// uppercase Avant Garde, --signal hover, 2px press offset.
 const ProjectNavBar = ({ prevProject, nextProject, isFirst, isLast, sticky = true }) => {
     return (
-        <div className={`${sticky ? 'sticky top-0 z-[99] bg-[#f8f8f8]/95 backdrop-blur-sm' : ''} border-y border-dotted border-[#939fb0]`}>
+        <div className={sticky
+            ? 'sticky top-0 z-[99] bg-[color-mix(in_srgb,var(--paper)_92%,transparent)] backdrop-blur-[8px] border-b-[3px] border-solid border-[var(--rule-color)]'
+            : 'border-y-[3px] border-solid border-[var(--rule-color)]'}>
             <div className="flex items-center justify-between py-4">
                 {/* Left Group: Previous */}
                 <div className="flex-1 flex items-center justify-start min-w-0">
                     {!isFirst && prevProject ? (
                         <Link
                             to={`/project/${prevProject.id}`}
-                            className="group flex items-center gap-4 hover:opacity-75 transition-opacity max-w-full"
+                            className="btn max-w-full"
+                            title={`Previous: ${prevProject.title}`}
+                            aria-label={`Previous project: ${prevProject.title}`}
                         >
-                            {/* Arrow Box */}
-                            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#e1e1e1] rounded-[2px] group-hover:bg-[#323a45] group-hover:text-[#f8f8f8] transition-colors">
-                                <ChevronLeft className="w-4 h-4 text-inherit" strokeWidth={2.5} />
-                            </div>
-                            {/* Text Label */}
-                            <div className="hidden sm:flex flex-col items-start truncate">
-                                <div className="text-[10px] font-bold uppercase tracking-widest text-[#939fb0] mb-0.5">Previous</div>
-                                <div className="font-['ITCAVANTGARDEGOTHICLTMEDIUM'] font-medium text-[#323a45] text-sm md:text-base truncate">{prevProject.title}</div>
-                            </div>
+                            <ChevronLeft strokeWidth={2.5} />
+                            <span className="hidden sm:inline truncate max-w-[220px]">{prevProject.title}</span>
                         </Link>
                     ) : (
-                        <div className="w-10 h-10" /> /* Spacer */
+                        <div className="w-11 h-11" /> /* Spacer */
                     )}
                 </div>
 
@@ -33,12 +32,13 @@ const ProjectNavBar = ({ prevProject, nextProject, isFirst, isLast, sticky = tru
                     <Link
                         to="/"
                         state={{ scrollTo: 'see' }}
-                        className="w-10 h-10 flex items-center justify-center border border-[#323a45] rounded-[2px] hover:bg-[#323a45] hover:text-[#f8f8f8] transition-all group"
+                        className="btn !px-0"
                         title="Back to Portfolio"
+                        aria-label="Back to Portfolio"
                     >
                         <div className="grid grid-cols-3 gap-[2px]">
                             {[...Array(9)].map((_, i) => (
-                                <div key={i} className="w-[3px] h-[3px] bg-[#323a45] group-hover:bg-[#f8f8f8] transition-colors" />
+                                <div key={i} className="w-[3px] h-[3px] bg-current" />
                             ))}
                         </div>
                     </Link>
@@ -49,20 +49,15 @@ const ProjectNavBar = ({ prevProject, nextProject, isFirst, isLast, sticky = tru
                     {!isLast && nextProject ? (
                         <Link
                             to={`/project/${nextProject.id}`}
-                            className="group flex items-center gap-4 hover:opacity-75 transition-opacity max-w-full"
+                            className="btn max-w-full"
+                            title={`Next: ${nextProject.title}`}
+                            aria-label={`Next project: ${nextProject.title}`}
                         >
-                            {/* Text Label */}
-                            <div className="hidden sm:flex flex-col items-end truncate">
-                                <div className="text-[10px] font-bold uppercase tracking-widest text-[#939fb0] mb-0.5">Next</div>
-                                <div className="font-['ITCAVANTGARDEGOTHICLTMEDIUM'] font-medium text-[#323a45] text-sm md:text-base truncate">{nextProject.title}</div>
-                            </div>
-                            {/* Arrow Box */}
-                            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#e1e1e1] rounded-[2px] group-hover:bg-[#323a45] group-hover:text-[#f8f8f8] transition-colors">
-                                <ChevronRight className="w-4 h-4 text-inherit" strokeWidth={2.5} />
-                            </div>
+                            <span className="hidden sm:inline truncate max-w-[220px]">{nextProject.title}</span>
+                            <ChevronRight strokeWidth={2.5} />
                         </Link>
                     ) : (
-                        <div className="w-10 h-10" /> /* Spacer */
+                        <div className="w-11 h-11" /> /* Spacer */
                     )}
                 </div>
             </div>

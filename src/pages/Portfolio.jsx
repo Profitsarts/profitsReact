@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { projects } from '../data/projects_v2';
-import FlagshipMandrilizate from '../components/FlagshipMandrilizate';
+import FlagshipVibras from '../components/FlagshipVibras';
 import ProjectIndexRow from '../components/ProjectIndexRow';
 
 /**
@@ -16,7 +16,7 @@ import ProjectIndexRow from '../components/ProjectIndexRow';
  * In their place: the flagship, one statement, one ruled index.
  */
 
-const FLAGSHIP_ID = '21';
+const FLAGSHIP_ID = '36';
 
 const FILTERS = [
   { label: 'All', value: 'all' },
@@ -64,7 +64,7 @@ const Portfolio = () => {
 
   return (
     <>
-      <FlagshipMandrilizate />
+      <FlagshipVibras />
 
       {/* ---------------------------------------------------------------- */}
       <section className="ground-paper pad-y" aria-labelledby="statement-title">
@@ -170,6 +170,7 @@ const Portfolio = () => {
                 <ProjectIndexRow
                   key={project.id}
                   project={project}
+                  number={projects.indexOf(project) + 1}
                   flagship={project.id === FLAGSHIP_ID}
                 />
               ))

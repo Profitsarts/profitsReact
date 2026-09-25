@@ -1,10 +1,17 @@
+/* ============================================================================
+   PROJECT DETAIL — SCREENPRINT BRUTALIST HEADER + MEDIUM READING COLUMN
+   Spec: profits-2026-screenprint-brutalist-1.0.0 · docs/INNER-SCREENS-SPEC.md
+   The reading column metrics (680px / 19px / 1.62 / heading scale) are the
+   Medium layout and stay fixed; only colours and font stacks read tokens.
+   ========================================================================= */
+
 .pageWrapper {
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 40px 0;
-  background-color: #f8f8f8;
-  color: rgba(0, 0, 0, 0.84);
+  padding: var(--s-6) 0 var(--s-12) 0;
+  background-color: var(--ground);
+  color: var(--fg);
 }
 
 .article {
@@ -14,34 +21,44 @@
   padding: 0 20px;
 }
 
-/* --- HEADERS (FULL WIDTH) --- */
+/* --- HEADER: BRUTALIST ARCHETYPE (FULL WIDTH) --- */
+/* --signal is barred from labels under 18px (tokens.css), so the kicker is dim. */
 .kicker {
-  font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: #6B6B6B;
+  font-family: var(--font-sans);
+  font-size: var(--t-meta);
+  font-weight: 700;
+  color: var(--fg-dim);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 8px;
+  letter-spacing: var(--track-meta);
+  margin-bottom: var(--s-3);
 }
 
 .h1 {
-  font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
-  font-size: 42px;
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 12px;
-  color: #111111;
+  font-family: var(--font-display);
+  font-size: var(--t-3xl);
+  font-weight: 400;
+  line-height: var(--lh-display);
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  color: var(--fg);
+  margin-bottom: var(--s-4);
 }
 
 .subtitle {
-  font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
-  font-size: 22px;
+  font-family: var(--font-serif);
+  font-size: var(--t-lg);
   font-weight: 400;
-  line-height: 1.4;
-  color: #6B6B6B;
-  margin-bottom: 40px;
+  line-height: var(--lh-body);
+  color: var(--fg-dim);
+  max-width: 680px;
+  margin-bottom: var(--s-8);
+}
+
+/* Optional live-site link (project.url), between subtitle and cover */
+.liveLink {
+  margin-top: calc(-1 * var(--s-4));
+  margin-bottom: var(--s-8);
 }
 
 /* --- FIGURE & IMAGE (FULL WIDTH) --- */
@@ -53,15 +70,16 @@
 .figureImg {
   width: 100%;
   height: auto;
-  border-radius: 4px;
+  border-radius: var(--radius);
+  border: var(--frame) solid var(--rule-color);
   cursor: pointer !important;
 }
 
 .caption {
-  font-family: "Charter", Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 14px;
   font-style: italic;
-  color: #6B6B6B;
+  color: var(--fg-dim);
   text-align: center;
   margin-top: 14px;
   line-height: normal;
@@ -72,17 +90,17 @@
   width: 100%;
   max-width: 680px;
   margin: 0 auto;
-  font-family: "Charter", Georgia, serif; /* Force scoped inheritance */
+  font-family: var(--font-serif); /* Force scoped inheritance */
 }
 
 .contentWrapper p,
 .contentWrapper div,
 .contentWrapper span,
 .contentWrapper strong {
-  font-family: "Charter", Georgia, serif;
+  font-family: var(--font-serif);
   font-size: 19px;
   line-height: 1.62;
-  color: rgba(0, 0, 0, 0.84);
+  color: var(--fg);
   margin-bottom: 1.5rem;
   letter-spacing: normal;
 }
@@ -98,7 +116,7 @@
 .contentWrapper h4,
 .contentWrapper h5,
 .contentWrapper h6 {
-  color: rgba(0, 0, 0, 0.84);
+  color: var(--fg);
   letter-spacing: -0.02em;
 }
 
@@ -108,17 +126,17 @@
 .contentWrapper h3,
 .contentWrapper h4,
 .contentWrapper h6 {
-  font-family: "Charter", Georgia, serif;
+  font-family: var(--font-serif);
   font-weight: 700;
 }
 
 /* Meta Labels (now H5) - Sans-Serif, Sentence Case, Governing Standard */
 .contentWrapper h5 {
-    font-family: 'ITCAVANTGARDEGOTHICLTMEDIUM', 'Open Sans', sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px;
     font-weight: 700;
     text-transform: none;
-    color: rgba(0, 0, 0, 0.84);
+    color: var(--fg);
     margin-top: 2em;
     margin-bottom: 0.5em;
     letter-spacing: 0.05em;
@@ -149,28 +167,62 @@
   margin-bottom: 0.1em;
 }
 
+/* --- LEGACY CMS MARKUP (projects_v2 content) --------------------------------
+   The old HTML wraps copy in Bootstrap-era .row/.span* divs. globals.css owns
+   .row as the home index grid (56px first track), which crushed the text into
+   one word per line. Neutralise it inside the reading column only. */
+.contentWrapper :global(.row) {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+@media (hover: hover) {
+  .contentWrapper :global(.row):hover {
+    background: none;
+    color: inherit;
+  }
+}
+
+/* Legacy section titles are h5.work-def; read them as Medium H2 (Charter). */
+.contentWrapper h5:global(.work-def) {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  margin-top: 1.9em;
+  margin-bottom: 0.1em;
+}
+
+/* Legacy media note (small.work-def-sm) reads as a caption. */
+.contentWrapper :global(.work-def-sm) {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-style: italic;
+  line-height: normal;
+  color: var(--fg-dim);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
 .contentWrapper blockquote {
-    font-family: "Charter", Georgia, serif;
+    font-family: var(--font-serif);
     font-style: italic;
     font-size: 19px;
     line-height: 1.62;
-    border-left: 3px solid #f61067;
+    border-left: 3px solid var(--signal);
     padding-left: 20px;
     margin-left: -23px;
     margin-bottom: 1.5rem;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--fg-dim);
 }
 
 /* --- RESPONSIVE DOWN-SCALING --- */
 @media (max-width: 768px) {
-  .body {
-    font-size: 18px;
-    line-height: 1.6;
-  }
   .h1 {
-    font-size: 32px;
-  }
-  .subtitle {
-    font-size: 18px;
+    font-size: clamp(36px, 10vw, 54px);
   }
 }

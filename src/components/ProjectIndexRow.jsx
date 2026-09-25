@@ -33,7 +33,9 @@ function tagText(project) {
   return tags.map((t) => TAG_LABEL[t] || t).join(' · ');
 }
 
-const ProjectIndexRow = ({ project, flagship = false }) => {
+// `number` is the entry's position in the full index; project.id stays the
+// route key (ids have gaps, e.g. no 01 or 03).
+const ProjectIndexRow = ({ project, number, flagship = false }) => {
   const thumb = project.thumbnail;
 
   return (
@@ -47,7 +49,7 @@ const ProjectIndexRow = ({ project, flagship = false }) => {
         loading="lazy"
       />
 
-      <span className="row-id">{project.id}</span>
+      <span className="row-id">{String(number).padStart(2, '0')}</span>
 
       <span className="row-title">{project.title}</span>
 

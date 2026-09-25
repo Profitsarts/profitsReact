@@ -92,8 +92,8 @@ Apply with `.ground-ink` or `.ground-paper` on the section.
 
 | Role | Family | Rule |
 |---|---|---|
-| Display | `MOD` | Flagship headline, section markers, specimen only. Limited glyph coverage — never body copy. |
-| Structure | `ITCAVANTGARDEGOTHICLTMEDIUM` | Navigation, labels, metadata, titles, buttons |
+| Display | `MOD` | Flagship headline, project H1, specimen only. Limited glyph coverage — never body copy. |
+| Structure | `ITCAVANTGARDEGOTHICLTMEDIUM` | Navigation, labels, metadata, titles, section markers (`.marker-t`), buttons |
 | Narrative | `Charter`, Georgia | Long-form case-study prose only |
 | Data | `IBM Plex Mono`, Courier New | Numerals, IDs, captions, eyebrows |
 

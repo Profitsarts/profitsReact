@@ -1191,6 +1191,53 @@ export const projects_v2 = [
     ],
     "imagePath": "assets/img/portfolio/full/",
     "content": ""
+  },
+  {
+    "id": "36",
+    "title": "Vibras",
+    "description": "Concept launch site for modular, fully repairable over-ear headphones. Scroll drives a millimetric exploded view.",
+    "tags": [
+      "ux_ui",
+      "web"
+    ],
+    "url": "https://project-headphones-three.vercel.app",
+    "thumbnail": "assets/img/portfolio/thumb/vibras-THMB.jpg",
+    "images": [
+      {
+        "name": "vibras-01-FULL.jpg",
+        "text": "Vibras Modular — hero"
+      },
+      {
+        "name": "vibras-02-FULL.jpg",
+        "text": "Battery cartridge"
+      },
+      {
+        "name": "vibras-03-FULL.jpg",
+        "text": "Exploded view"
+      },
+      {
+        "name": "vibras-04-FULL.jpg",
+        "text": "Specs"
+      },
+      {
+        "name": "vibras-05-FULL.jpg",
+        "text": "Four subsystems"
+      },
+      {
+        "name": "vibras-06-FULL.jpg",
+        "text": "Reassembled"
+      },
+      {
+        "name": "vibras-07-FULL.jpg",
+        "text": "In use"
+      },
+      {
+        "name": "vibras-08-FULL.jpg",
+        "text": "Materials"
+      }
+    ],
+    "imagePath": "assets/img/portfolio/full/",
+    "content": ""
   }
 ];
 

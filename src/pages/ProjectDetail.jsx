@@ -58,9 +58,9 @@ const ProjectDetail = () => {
     const coverImageAt2x = coverImageSrc ? coverImageSrc.replace(/\.(jpg|png|webp)/, '@2x.$1') : '';
 
     return (
-        <div className="bg-[#f8f8f8] min-h-screen pb-20">
+        <div className="ground-paper bg-[var(--ground)] text-[var(--fg)] min-h-screen pb-20">
             {/* Sticky Navigation */}
-            <div className="sticky top-0 z-[99] bg-[#f8f8f8]/95 backdrop-blur-sm">
+            <div className="sticky top-0 z-[99] bg-[color-mix(in_srgb,var(--paper)_92%,transparent)] backdrop-blur-[8px]">
                 <div className="max-w-5xl mx-auto px-6">
                     <ProjectNavBar
                         prevProject={prevProject}
@@ -82,6 +82,11 @@ const ProjectDetail = () => {
                         </p>
                         <h1 className={styles.h1}>{project.title}</h1>
                         <p className={styles.subtitle}>{project.description}</p>
+                        {project.url && (
+                            <a className={`btn btn-solid ${styles.liveLink}`} href={project.url} target="_blank" rel="noopener noreferrer">
+                                Visit the live site
+                            </a>
+                        )}
 
                         {/* COVER IMAGE: Full Width */}
                         {coverImageSrc && (
@@ -129,13 +134,13 @@ const ProjectDetail = () => {
                                             // Clean up inline styles that might break Medium look
                                             const blockquotes = el.querySelectorAll('blockquote');
                                             blockquotes.forEach(bq => {
-                                                bq.style.backgroundColor = '#f4f4f4';
-                                                bq.style.borderLeft = '3px solid #323a45';
+                                                bq.style.backgroundColor = 'transparent';
+                                                bq.style.borderLeft = '3px solid var(--signal)';
                                                 bq.style.padding = '15px 20px';
                                                 bq.style.fontStyle = 'italic';
-                                                bq.style.color = 'rgba(0, 0, 0, 0.7)';
+                                                bq.style.color = 'var(--fg-dim)';
                                                 bq.style.boxShadow = 'none';
-                                                bq.style.borderRadius = '2px';
+                                                bq.style.borderRadius = '0';
                                             });
                                         }
                                     }}
@@ -143,7 +148,9 @@ const ProjectDetail = () => {
                             ) : (
                                 <div className="space-y-12">
                                     {/* Fallback for projects with only an image array and no HTML content */}
-                                    {project.images.slice(1).map((img, index) => {
+                                    {project.images.slice(1).map((img, index, list) => {
+                                        // Most projects repeat one caption on every image; show it only where it changes.
+                                        const showCaption = img.text && (index === 0 || img.text !== list[index - 1].text);
                                         const basePath = project.imagePath || 'assets/img/portfolio/full/';
                                         const src = `${basePath}${img.name}`;
                                         const at2x = src.replace(/\.(jpg|png|webp)/, '@2x.$1');
@@ -154,11 +161,11 @@ const ProjectDetail = () => {
                                                     srcSet={`${src} 1x, ${at2x} 2x`}
                                                     alt={img.text || project.title}
                                                     data-zoomable
-                                                    className="w-full h-auto rounded-[4px] cursor-pointer"
+                                                    className="w-full h-auto rounded-none border-[3px] border-solid border-[var(--rule-color)] cursor-pointer"
                                                     style={{ width: '100%', marginBottom: '0.5em' }}
                                                 />
-                                                {img.text && (
-                                                    <figcaption className="text-center text-sm text-gray-500 mt-2 italic">
+                                                {showCaption && (
+                                                    <figcaption className="text-center text-sm text-[var(--fg-dim)] mt-2 italic">
                                                         {img.text}
                                                     </figcaption>
                                                 )}
